@@ -61,6 +61,7 @@ export namespace AuthenticationActions {
 
   export const logoutRequest = () => {
     return (dispatch: Dispatch) => {
+      localStorage.removeItem('accessToken');
       dispatch(logout());
     }
   };
