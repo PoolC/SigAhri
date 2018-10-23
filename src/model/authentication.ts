@@ -4,6 +4,7 @@ export interface AuthenticationModel {
   },
   status: {
     isLogin: boolean,
+    isAdmin: boolean
   }
 }
 
