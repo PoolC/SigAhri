@@ -6,6 +6,7 @@ import { Dispatch, compose } from 'redux';
 import { returntypeof } from 'react-redux-typescript';
 import { connect } from 'react-redux';
 import { AuthenticationActions } from '../../actions';
+import './App.scss';
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   tokenApplyRequest: (token: string) => {
@@ -27,7 +28,7 @@ class App extends React.Component<Props> {
 
   render() {
     return (
-      <div className="app container">
+      <div className="app my-container">
         <Header/>
         <Switch>
           <Route exact path="/" component={Home}/>

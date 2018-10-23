@@ -37,7 +37,17 @@ class Header extends React.Component<Props, State> {
     let authenticationButton = (
       <li className="nav-item">
         <Link to="/login" className="nav-link">
-          로그인
+          <button className="btn btn-outline-secondary btn-sm">
+            로그인
+          </button>
+        </Link>
+      </li>
+    );
+
+    let infoButton = (
+      <li className="nav-item">
+        <Link to="/register" className="nav-link nav-underline">
+          가입 신청
         </Link>
       </li>
     );
@@ -46,17 +56,25 @@ class Header extends React.Component<Props, State> {
       authenticationButton = (
         <li className="nav-item">
           <a className="nav-link">
-            <button onClick={() => this.handleLogout()}>
+            <button className="btn btn-outline-secondary btn-sm" onClick={() => this.handleLogout()}>
               로그아웃
             </button>
           </a>
+        </li>
+      );
+
+      infoButton = (
+        <li className="nav-item">
+          <Link to="/info" className="nav-link nav-underline">
+            내 정보
+          </Link>
         </li>
       );
     }
 
     return (
       <div>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light header">
+        <nav className="navbar navbar-expand-lg navbar-light header">
           <Link className="navbar-brand logo" to="/">PoolC</Link>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
                   aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,22 +83,18 @@ class Header extends React.Component<Props, State> {
           <div id="navbarNavDropdown" className="collapse navbar-collapse">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link to="/board" className="nav-link">
+                <Link to="/board" className="nav-link nav-underline">
                   게시판
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/project" className="nav-link">
+                <Link to="/project" className="nav-link nav-underline">
                   프로젝트
                 </Link>
               </li>
             </ul>
             <ul className="navbar-nav">
-              <li className="nav-item">
-                <Link to="/register" className="nav-link">
-                  가입 신청
-                </Link>
-              </li>
+              {infoButton}
               {authenticationButton}
             </ul>
           </div>

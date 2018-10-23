@@ -8,4 +8,12 @@ nav.header {
   .logo {
     font-weight: bold;
   }
+
+  border-bottom: 2px solid lightgrey;
+  font-size: 20px;
+}
+
+@media screen and (max-width: 992px) {
+  .nav-underline {
+  }
 }
