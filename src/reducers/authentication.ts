@@ -9,7 +9,8 @@ const initialState: RootState.AuthenticationState = {
     status: 'INIT'
   },
   status: {
-    isLogin: false
+    isLogin: false,
+    isAdmin: false
   }
 };
 
@@ -45,10 +46,25 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
           status: { $set: 'INIT' }
         },
         status: {
-          isLogin: { $set: false }
+          isLogin: { $set: false },
+          isAdmin: { $set: false }
         }
       });
-    }
+    },
+    [AuthenticationActions.Type.AUTH_LOGIN_INIT]: (state, action) => {
+      return update(state, {
+        login: {
+          status: { $set: 'INIT' }
+        }
+      });
+    },
+    [AuthenticationActions.Type.AUTH_ADMIN_LOGIN]: (state, action) => {
+      return update(state, {
+        status: {
+          isAdmin: { $set: true }
+        }
+      });
+    },
   },
   initialState
 );

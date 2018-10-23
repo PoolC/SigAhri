@@ -2,10 +2,30 @@ import * as React from 'react';
 import { Home } from '../../components';
 import { Login, Register, Board, Project, Header } from '../';
 import { Route, Switch } from 'react-router-dom';
+import { Dispatch, compose } from 'redux';
+import { returntypeof } from 'react-redux-typescript';
+import { connect } from 'react-redux';
+import { AuthenticationActions } from '../../actions';
 
-type Props = {}
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  tokenApplyRequest: (token: string) => {
+    return dispatch(AuthenticationActions.tokenApplyRequest(token) as any);
+  }
+});
 
-const App: React.SFC<Props> = () => {
+const actionProps = returntypeof(mapDispatchToProps);
+
+type Props = typeof actionProps;
+
+class App extends React.Component<Props> {
+  componentDidMount() {
+    const token = localStorage.getItem('accessToken');
+    if(token !== null) {
+      this.props.tokenApplyRequest(token);
+    }
+  }
+
+  render() {
     return (
       <div className="app container">
         <Header/>
@@ -18,6 +38,7 @@ const App: React.SFC<Props> = () => {
         </Switch>
       </div>
     );
-};
+  }
+}
 
-export { App };
+export default compose(connect(null, mapDispatchToProps))(App);

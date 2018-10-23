@@ -68,6 +68,9 @@ module.exports = {
       template: './resources/index.html',
       filename: './index.html',
       hash: true,
+    }),
+    new webpack.DefinePlugin({
+      apiUrl: JSON.stringify('http://nagase.lynlab.co.kr/graphql')
     })
   ]
 };

@@ -34,7 +34,6 @@ class Login extends React.Component<Props, State> {
   }
 
   render(): JSX.Element {
-    console.log(this.props.status);
     return (
       <Authentication mode={true} handleLogin={this.handleLogin}/>
     );

@@ -5,17 +5,18 @@ import { Provider } from 'react-redux';
 import { configureStore } from './store';
 import { App } from './containers';
 import {Route, Switch} from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import history from './history/history'
 
 const store = configureStore();
 
 ReactDOM.render(
-  <BrowserRouter>
+  <Router history={history}>
     <Provider store={store}>
       <Switch>
         <Route path="/" component={App} />
       </Switch>
     </Provider>
-  </BrowserRouter>,
+  </Router>,
   document.getElementById('root')
 );
