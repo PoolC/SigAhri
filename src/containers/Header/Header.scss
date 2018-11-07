@@ -11,6 +11,10 @@ nav.header {
 
   border-bottom: 2px solid lightgrey;
   font-size: 20px;
+
+  .nav-link {
+    line-height: 2.0;
+  }
 }
 
 @media screen and (max-width: 992px) {
