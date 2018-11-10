@@ -31,7 +31,7 @@ export namespace AuthenticationActions {
           'Content-Type': 'application/graphql'
         },
         data: `mutation {
-          createAccessToken(Login:{
+          createAccessToken(LoginInput:{
             loginID: "${id}"
             password: "${pw}"
           }) {
@@ -68,6 +68,7 @@ export namespace AuthenticationActions {
 
   export const tokenApplyRequest = (token: string) => {
     return (dispatch: Dispatch) => {
+      console.log(token);
       if(token === null) {
         return;
       }
@@ -85,6 +86,7 @@ export namespace AuthenticationActions {
         }`
       }).then((msg) => {
         const data = msg.data;
+        console.log(data);
         if('errors' in data) {
           dispatch(loginInit());
         } else {
@@ -96,6 +98,8 @@ export namespace AuthenticationActions {
       }).catch((msg) => {
         console.log("token apply error -----");
         console.log(msg);
+        // token expired
+        logoutRequest()(dispatch);
       });
     }
   }

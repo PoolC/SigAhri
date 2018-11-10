@@ -37,7 +37,7 @@ class Header extends React.Component<Props, State> {
     let authenticationButton = (
       <li className="nav-item">
         <Link to="/login" className="nav-link">
-          <button className="btn btn-outline-secondary btn-sm">
+          <button className="btn btn-outline-secondary">
             로그인
           </button>
         </Link>
@@ -56,7 +56,7 @@ class Header extends React.Component<Props, State> {
       authenticationButton = (
         <li className="nav-item">
           <a className="nav-link">
-            <button className="btn btn-outline-secondary btn-sm" onClick={() => this.handleLogout()}>
+            <button className="btn btn-outline-secondary" onClick={() => this.handleLogout()}>
               로그아웃
             </button>
           </a>

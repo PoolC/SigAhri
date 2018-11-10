@@ -129,7 +129,7 @@ export class Authentication extends React.Component<Authentication.Props, Partia
         'Content-Type': 'application/graphql'
       },
       data: `mutation {
-          createMember(Member:{
+          createMember(MemberInput:{
             loginID: "${id}"
             password: "${pw}"
             email: "${email}"
