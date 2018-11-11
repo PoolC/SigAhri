@@ -44,6 +44,7 @@ export class Board extends React.Component<Board.Props, Board.State> {
       }`
     }).then((msg) => {
       // TODO: data가 BoardInfo 의 Array인지 typing
+        console.log(msg)
       const data = msg.data.data.boards;
       this.setState({
         boards: data
@@ -67,12 +68,12 @@ export class Board extends React.Component<Board.Props, Board.State> {
         <div className="board-content">
           <Switch>
             <Route exact path="/board"
-                   render={()=>(<PostList type="notice" typeInteger={1}/>)}
+                   render={()=>(<PostList type="notice" typeId={1}/>)}
             />
             {this.state.boards.map((board) => {
               return (
                 <Route exact path={`/board/${board.urlPath}`}
-                       render={()=>(<PostList type={board.urlPath} typeInteger={board.id}/>)}
+                       render={()=>(<PostList type={board.urlPath} typeId={board.id}/>)}
                        key={board.id}
                 />
               )
