@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Home } from '../../components';
-import { Login, Register, Board, Project, Header } from '../';
+import {Login, Register, BoardContainer, Project, Header, PostContainer} from '../';
 import { Route, Switch } from 'react-router-dom';
 import { Dispatch, compose } from 'redux';
 import { returntypeof } from 'react-redux-typescript';
@@ -32,7 +32,8 @@ class App extends React.Component<Props> {
         <Header/>
         <Switch>
           <Route exact path="/" component={Home}/>
-          <Route path="/board" component={Board}/>
+          <Route path="/board" component={BoardContainer}/>
+          <Route path="/posts/:postId" component={PostContainer}/>
           <Route path="/project" component={Project}/>
           <Route path="/register" component={Register}/>
           <Route path="/login" component={Login}/>

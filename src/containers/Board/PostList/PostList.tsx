@@ -1,7 +1,7 @@
 import * as React from 'react';
 import axios from "axios";
-import {PostListItem} from "../PostListItem/PostListItem";
-import {Link} from "react-router-dom";
+import { PostListItem } from '../../../components';
+import history from '../../../history/history';
 
 export namespace PostList {
   export interface Props {
@@ -16,6 +16,7 @@ export namespace PostList {
   export interface PostInfo {
     id: number,
     author: {[key:string]:string},
+    createdAt: string,
     title: string
   }
 }
@@ -39,14 +40,20 @@ export class PostList extends React.Component<PostList.Props, PostList.State> {
       data: `query {
         posts(boardID: ${this.props.typeId}) {
           id,
-            author { name },
-            ${ /* TODO: insert created_at */'' }
+          author { name },
+          createdAt,
           title
         }
       }`
     }).then((msg) => {
       // TODO: data가 BoardInfo 의 Array인지 typing
       const data = msg.data.data.posts;
+      if(data === null) {
+        // TODO: 읽기 권한이 없을때 404 페이지로 이동
+        history.push('/');
+        return;
+      }
+
       this.setState({
         posts: data
       })
@@ -57,7 +64,6 @@ export class PostList extends React.Component<PostList.Props, PostList.State> {
 
   render() {
     const { posts } = this.state;
-    console.log(posts);
     return (
       <ul>
         { posts.map(post => {
