@@ -11,17 +11,20 @@ export namespace Board {
 
 export const Board: React.SFC<Board.Props> = (props) => {
   return (
-    <div>
-      <div className="board-nav">
-        <ul>
+    <div className="row">
+      <div className="board-nav col-2">
+        <div className="board-list list-group">
           {props.boards.map((board: BoardContainer.BoardInfo) => {
             return (
-              <li key={board.id}><Link to={`/board/${board.urlPath}`}>{board.name}</Link></li>
+              <Link to={`/board/${board.urlPath}`}
+                    className="board-item list-group-item list-group-item-action"
+                    key={board.id}>{board.name}
+              </Link>
             )
           })}
-        </ul>
+        </div>
       </div>
-      <div className="board-content">
+      <div className="board-content col">
         <Switch>
           <Route exact path="/board"
                  render={()=>(<PostList type="notice" typeId={1}/>)}
@@ -29,7 +32,12 @@ export const Board: React.SFC<Board.Props> = (props) => {
           {props.boards.map((board: BoardContainer.BoardInfo) => {
             return (
               <Route exact path={`/board/${board.urlPath}`}
-                     render={()=>(<PostList type={board.urlPath} typeId={board.id}/>)}
+                     render={()=>(
+                       <div>
+                         <h2 className="board-name">{board.name}</h2>
+                         <PostList type={board.urlPath} typeId={board.id}/>
+                       </div>
+                     )}
                      key={board.id}
               />
             )

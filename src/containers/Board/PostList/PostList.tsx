@@ -100,16 +100,22 @@ class PostListClass extends React.Component<PostList.Props, PostList.State> {
     console.log("render2");
     const { posts } = this.state;
     return (
-      <ul>
-        { posts.map(post => {
-          return (
-            <PostListItem
-              post={post}
-              key={post.id}
-            />
-          )
-        }) }
-      </ul>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">작성일</th>
+          </tr>
+        </thead>
+        <tbody>
+          { posts.map(post => {
+            return (
+              <PostListItem post={post} key={post.id}/>
+            )
+          }) }
+        </tbody>
+      </table>
     );
   }
 }

@@ -12,10 +12,11 @@ export const PostListItem: React.SFC<PostListItem.Props> = (props) => {
   const { post } = props;
   return (
     <React.Fragment>
-      <li>
-        <Link to={`/posts/${post.id}`}>{post.title}</Link>
-        <p>{post.author.name}</p>
-      </li>
+      <tr>
+        <td><Link to={`/posts/${post.id}`}>{post.title}</Link></td>
+        <td>{post.author.name}</td>
+        <td>{post.createdAt}</td>
+      </tr>
     </React.Fragment>
   )
 };

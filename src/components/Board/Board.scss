@@ -1,12 +1,13 @@
 .board-nav {
-  float: left;
-
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+  .board-list {
+    .board-item {
+      color: #212529;
+    }
   }
 }
 
 .board-content {
+  .board-name {
+    margin-bottom: 20px;
+  }
 }
