@@ -21,6 +21,10 @@
   margin-bottom: 10px;
 }
 
+.authentication-input:disabled {
+  font-weight: bold;
+}
+
 .authentication-button {
   margin-top: 20px;
   width: 100%;
