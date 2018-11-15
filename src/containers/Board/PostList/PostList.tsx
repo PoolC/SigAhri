@@ -49,15 +49,6 @@ class PostListClass extends React.Component<PostList.Props, PostList.State> {
     this.handleGetPostList();
   }
 
-  componentDidUpdate(prevProps: PostList.Props) {
-    // 로그아웃을 한 경우에 다시 업데이트를 해준다.
-    // redux를 통해 props가 업데이트 되는경우 새로 Mount하지 않고 update만 하게 되는데, 이때는 componentDidMount가 불리지 않으므로
-    // 직접 props가 변경되었는지 확인하여 새로 게시판 목록을 불러온다.
-    if(this.props.isLogin !== prevProps.isLogin || this.props.isAdmin !== prevProps.isAdmin) {
-      this.handleGetPostList();
-    }
-  }
-
   handleGetPostList() {
     const headers: any = {
       'Content-Type': 'application/graphql'
