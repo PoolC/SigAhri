@@ -42,6 +42,15 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     this.handleGetBoard();
   }
 
+  componentDidUpdate(prevProps: BoardContainer.Props) {
+    // redux를 통해 props가 업데이트 되는경우 새로 Mount하지 않고 update만 하게 되는데, 이때는 componentDidMount가 불리지 않으므로
+    // 직접 props가 변경되었는지 확인하여 새로 게시판 목록을 불러온다.
+    if(this.props.isLogin !== prevProps.isLogin || this.props.isAdmin !== prevProps.isAdmin) {
+      this.handleGetBoard();
+    }
+  }
+
+
   handleGetBoard() {
     const headers: any = {
       'Content-Type': 'application/graphql'

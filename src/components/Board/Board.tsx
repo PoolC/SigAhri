@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
-import { PostList, BoardContainer } from '../../containers';
+import {PostList, BoardContainer, PostContainer} from '../../containers';
 import './Board.scss';
 
 export namespace Board {
@@ -27,21 +27,19 @@ export const Board: React.SFC<Board.Props> = (props) => {
       <div className="board-content col">
         <Switch>
           <Route exact path="/board"
-                 render={()=>(<PostList type="notice" typeId={1}/>)}
+               render={()=>(<PostList type="notice" typeId={1} name="공지사항"/>)}
           />
           {props.boards.map((board: BoardContainer.BoardInfo) => {
             return (
               <Route exact path={`/board/${board.urlPath}`}
-                     render={()=>(
-                       <div>
-                         <h2 className="board-name">{board.name}</h2>
-                         <PostList type={board.urlPath} typeId={board.id}/>
-                       </div>
-                     )}
-                     key={board.id}
+                   render={()=>(
+                       <PostList type={board.urlPath} typeId={board.id} name={board.name}/>
+                   )}
+                   key={board.id}
               />
             )
           })}
+          <Route exact path="/posts/:postId" component={PostContainer} />
         </Switch>
       </div>
     </div>

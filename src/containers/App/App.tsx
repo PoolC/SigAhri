@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Home } from '../../components';
-import {Login, Register, BoardContainer, Project, Header, PostContainer} from '../';
+import {Login, Register, BoardContainer, Project, Header} from '../';
 import { Route, Switch } from 'react-router-dom';
 import { Dispatch, compose } from 'redux';
 import { returntypeof } from 'react-redux-typescript';
@@ -21,7 +21,7 @@ type Props = typeof actionProps;
 class App extends React.Component<Props> {
   componentDidMount() {
     const token = localStorage.getItem('accessToken');
-    if(token !== null) {
+    if (token !== null) {
       this.props.tokenApplyRequest(token);
     }
   }
@@ -33,7 +33,7 @@ class App extends React.Component<Props> {
         <Switch>
           <Route exact path="/" component={Home}/>
           <Route path="/board" component={BoardContainer}/>
-          <Route path="/posts/:postId" component={PostContainer}/>
+          <Route path="/posts" component={BoardContainer}/>
           <Route path="/project" component={Project}/>
           <Route path="/register" component={Register}/>
           <Route path="/login" component={Login}/>
