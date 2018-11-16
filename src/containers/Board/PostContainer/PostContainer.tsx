@@ -67,6 +67,10 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     this.handleGetPost = this.handleGetPost.bind(this);
   }
 
+  ShouldComponentUpdate(nextProps:any, nextState:any) {
+    return !(this.state.info.comments !== nextState.info.comments);
+  }
+
   componentDidMount() {
     this.handleGetPost();
   }
@@ -117,13 +121,48 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     });
   }
 
+  handleNewComment = (comment: string) => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: `mutation {
+        createComment(postID:${this.state.info.id}, body:"${comment}") {
+          author{
+            name
+          },
+          body,
+          createdAt,
+          id
+        }
+      }`
+    }).then((msg) => {
+      const { info } = this.state;
+      const newComment = msg.data.data.createComment;
+      this.setState({
+        info: {
+          ...info,
+          comments: [...info.comments, newComment]
+        }
+      });
+    })
+  };
+
   render() {
     if((typeof this.state.info === 'undefined') || this.state.info.id === -1)
       return null;
 
-    console.log('render');
     return (
-      <Post info={this.state.info}/>
+      <Post
+        info={this.state.info}
+        onNewComment={this.handleNewComment}
+      />
     )
   }
 }
