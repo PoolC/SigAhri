@@ -18,11 +18,7 @@ export namespace PostList {
   export interface SubProps {
     type: string,
     typeId: number,
-<<<<<<< HEAD
     name: string
-=======
-    typeName: string
->>>>>>> e787c6bdd90feb59238d02190f47f51157fee335
   }
 
   export type Props = typeof statePropTypes & SubProps
