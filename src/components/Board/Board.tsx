@@ -10,6 +10,9 @@ export namespace Board {
 }
 
 export const Board: React.SFC<Board.Props> = (props) => {
+  if(window.location.pathname === "/board") {
+    window.location.pathname = "/board/notice";
+  }
   return (
     <div className="row">
       <div className="board-nav col-2">
@@ -26,16 +29,16 @@ export const Board: React.SFC<Board.Props> = (props) => {
       </div>
       <div className="board-content col">
         <Switch>
-          <Route exact path="/board"
-                 render={()=>(<PostList type="notice" typeId={1}/>)}
+          <Route path="/board/notice"
+                 render={()=>(<PostList type="notice" typeId={1} typeName="공지사항"/>)}
           />
           {props.boards.map((board: BoardContainer.BoardInfo) => {
+            console.log(board);
             return (
               <Route exact path={`/board/${board.urlPath}`}
                      render={()=>(
                        <div>
-                         <h2 className="board-name">{board.name}</h2>
-                         <PostList type={board.urlPath} typeId={board.id}/>
+                         <PostList type={board.urlPath} typeId={board.id} typeName={board.name}/>
                        </div>
                      )}
                      key={board.id}

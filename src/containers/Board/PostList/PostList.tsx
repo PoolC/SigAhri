@@ -17,7 +17,8 @@ const statePropTypes = returntypeof(mapStateToProps);
 export namespace PostList {
   export interface SubProps {
     type: string,
-    typeId: number
+    typeId: number,
+    typeName: string
   }
 
   export type Props = typeof statePropTypes & SubProps
@@ -97,25 +98,27 @@ class PostListClass extends React.Component<PostList.Props, PostList.State> {
   }
 
   render() {
-    console.log("render2");
     const { posts } = this.state;
     return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">제목</th>
-            <th scope="col">작성자</th>
-            <th scope="col">작성일</th>
-          </tr>
-        </thead>
-        <tbody>
-          { posts.map(post => {
-            return (
-              <PostListItem post={post} key={post.id}/>
-            )
-          }) }
-        </tbody>
-      </table>
+      <React.Fragment>
+        <h2 className="board-name">{this.props.typeName}</h2>
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">제목</th>
+              <th scope="col">작성자</th>
+              <th scope="col">작성일</th>
+            </tr>
+          </thead>
+          <tbody>
+            { posts.map(post => {
+              return (
+                <PostListItem post={post} key={post.id}/>
+              )
+            }) }
+          </tbody>
+        </table>
+      </React.Fragment>
     );
   }
 }
