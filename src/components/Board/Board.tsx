@@ -10,6 +10,9 @@ export namespace Board {
 }
 
 export const Board: React.SFC<Board.Props> = (props) => {
+  if(window.location.pathname === "/board") {
+    window.location.pathname = "/board/notice";
+  }
   return (
     <div className="row">
       <div className="board-nav col-2">

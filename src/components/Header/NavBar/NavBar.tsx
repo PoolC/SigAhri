@@ -69,7 +69,7 @@ export class NavBar extends React.Component<NavBar.Props> {
                     <div id="navbarNavDropdown" className="collapse navbar-collapse">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item">
-                                <Link to="/board" className="nav-link nav-underline">
+                                <Link to="/board/notice" className="nav-link nav-underline">
                                     게시판
                                 </Link>
                             </li>
