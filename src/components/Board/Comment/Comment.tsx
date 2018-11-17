@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export namespace Comment {
   export interface Props {
-    onNewComment?: (comment:string) => void
+    onCreateComment?: (comment:string) => void
   }
 
   export interface State {
@@ -26,8 +26,8 @@ export class Comment extends React.Component<Comment.Props, Comment.State> {
     if(!comment) {
       return;
     }
-    const { onNewComment } = this.props;
-    onNewComment(comment);
+    const { onCreateComment } = this.props;
+    onCreateComment(comment);
     this.setState({
       comment: ""
     })
@@ -49,7 +49,7 @@ export class Comment extends React.Component<Comment.Props, Comment.State> {
                  onChange={this.updateComment}
                  value={this.state.comment}
           />
-          <input type="button" value="등록" onClick={this.handleNewComment} />
+          <input type="button" value="댓글 달기" onClick={this.handleNewComment} />
         </form>
       </div>
     )

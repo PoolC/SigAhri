@@ -17,6 +17,8 @@ const statePropTypes = returntypeof(mapStateToProps);
 
 export namespace PostContainer {
   export interface SubProps extends RouteComponentProps<MatchParams>{
+    boardID: number,
+    boardName: string
   }
 
   export type Props = typeof statePropTypes & SubProps
@@ -56,7 +58,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       info: {
         id: -1,
         title: "",
-        author: { name: ""},
+        author: { name: "" },
         body: "",
         comments: [],
         createdAt: "",
@@ -121,7 +123,126 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     });
   }
 
-  handleNewComment = (comment: string) => {
+  handleCreatePost = ({title, body}:{title:string, body:string }) => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: `mutation {
+        createPost(boardID: ${this.props.boardID}, PostInput: {
+          title: ${title},
+          body: ${body}
+        }) {
+          id,
+          title,
+          author { name },
+          body,
+          comments {
+            id,
+            author { name },
+            body,
+            createdAt
+          },
+          createdAt,
+          updatedAt
+        }
+      }`
+    }).then((msg) => {
+      const { info } = this.state;
+      const newComment = msg.data.data.createComment;
+      this.setState({
+        info: {
+          ...info,
+          comments: [...info.comments, newComment]
+        }
+      });
+    })
+  };
+
+  handleUpdatePost = ({title, body}:{title:string, body:string }) => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: `mutation {
+        updatePost(postID: ${this.state.info.id}, PostInput: {
+          title: ${title},
+          body: ${body}
+        }) {
+          id,
+          title,
+          author { name },
+          body,
+          comments {
+            id,
+            author { name },
+            body,
+            createdAt
+          },
+          createdAt,
+          updatedAt
+        }
+      }`
+    }).then((msg) => {
+      const { info } = this.state;
+      const newComment = msg.data.data.createComment;
+      this.setState({
+        info: {
+          ...info,
+          comments: [...info.comments, newComment]
+        }
+      });
+    })
+  };
+
+  handleDeletePost = () => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: `mutation {
+        deletePost(postID: ${this.state.info.id}) {
+          id,
+          title,
+          author { name },
+          body,
+          comments {
+            id,
+            author { name },
+            body,
+            createdAt
+          },
+          createdAt,
+          updatedAt
+        }
+      }`
+    }).then((msg) => {
+      const { info } = this.state;
+      //const deletedPost = msg.data.data.deletePost;
+      const name = this.props.boardName === "공지사항" ? "notice" : "free";
+      window.location.pathname = `/board/${name}`;
+    })
+  };
+
+  handleCreateComment = (comment: string) => {
     const headers: any = {
       'Content-Type': 'application/graphql'
     };
@@ -154,6 +275,37 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     })
   };
 
+  handleDeleteComment = (id:number) => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: `mutation {
+        deleteComment(commentID: ${id}) {
+          id,
+          author { name },
+          body
+          createdAt
+        }
+      }`
+    }).then((msg) => {
+      const { info } = this.state;
+      const deletedComment = msg.data.data.deleteComment;
+      this.setState({
+        info: {
+          ...info,
+          comments: info.comments.filter(comment => comment.id !== deletedComment.id)
+        }
+      });
+    })
+  };
+
   render() {
     if((typeof this.state.info === 'undefined') || this.state.info.id === -1)
       return null;
@@ -161,7 +313,10 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     return (
       <Post
         info={this.state.info}
-        onNewComment={this.handleNewComment}
+        boardName={this.props.boardName}
+        onDeletePost={this.handleDeletePost}
+        onCreateComment={this.handleCreateComment}
+        onDeleteComment={this.handleDeleteComment}
       />
     )
   }
