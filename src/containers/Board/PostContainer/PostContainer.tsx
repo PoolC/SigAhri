@@ -33,6 +33,7 @@ export namespace PostContainer {
 
   export interface Info {
     id: number,
+    board: { name: string },
     title: string,
     author: { name: string },
     body: string,
@@ -60,6 +61,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         title: "",
         author: { name: "" },
         body: "",
+        board: { name: "" },
         comments: [],
         createdAt: "",
         updatedAt: ""
@@ -95,6 +97,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
           id,
           title,
           body,
+          board { name },
           createdAt,
           updatedAt,
           comments {
@@ -310,10 +313,10 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     if((typeof this.state.info === 'undefined') || this.state.info.id === -1)
       return null;
 
+    console.log(this.state.info);
     return (
       <Post
         info={this.state.info}
-        boardName={this.props.boardName}
         onDeletePost={this.handleDeletePost}
         onCreateComment={this.handleCreateComment}
         onDeleteComment={this.handleDeleteComment}
