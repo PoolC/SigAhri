@@ -12,3 +12,4 @@ type PartialPick<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 
 // webpack DefinePlugin
 declare const apiUrl: string;
+declare const uploadUrl: string;
