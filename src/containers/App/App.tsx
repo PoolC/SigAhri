@@ -32,8 +32,8 @@ class App extends React.Component<Props> {
         <Header/>
         <Switch>
           <Route exact path="/" component={Home}/>
-          <Route path="/board" component={BoardContainer}/>
-          <Route path="/posts" component={BoardContainer}/>
+          <Route path="/board" render={(props)=>(<BoardContainer {...props} type="postList"/>)}/>
+          <Route path="/posts" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
           <Route path="/project" component={Project}/>
           <Route path="/register" component={Register}/>
           <Route path="/login" component={Login}/>

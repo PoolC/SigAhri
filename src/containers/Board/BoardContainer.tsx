@@ -14,10 +14,14 @@ const mapStateToProps = (state: RootState) => ({
 const statePropTypes = returntypeof(mapStateToProps);
 
 export namespace BoardContainer {
-  export type Props = typeof statePropTypes & {}
+  export type Props = typeof statePropTypes & {
+    type: string // postList or post
+  }
 
   export interface State {
-    boards: Array<BoardInfo>
+    boards: Array<BoardInfo>,
+    boardID: number,
+    boardName: string
   }
 
   export interface BoardInfo {
@@ -32,10 +36,24 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   constructor(props: BoardContainer.Props) {
     super(props);
 
+    if(window.location.pathname === "/board") {
+      window.location.pathname = "/board/notice";
+    }
+
     this.state = {
-      boards: []
+      boards: [],
+      boardID: 1,  // default as notice
+      boardName: "공지사항"
     };
     this.handleGetBoard = this.handleGetBoard.bind(this);
+    this.setBoardID = this.setBoardID.bind(this);
+  }
+
+  setBoardID(id:number, name:string) {
+    this.setState({
+      boardID: id,
+      boardName: name
+    });
   }
 
   componentDidMount() {
@@ -49,7 +67,6 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
       this.handleGetBoard();
     }
   }
-
 
   handleGetBoard() {
     const headers: any = {
@@ -96,8 +113,10 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   }
 
   render() {
+    console.log(this.state);
     return (
-      <Board boards={this.state.boards}/>
+      <Board boards={this.state.boards} boardID={this.state.boardID}
+             boardName={this.state.boardName} setBoardID={this.setBoardID}/>
     );
   }
 }

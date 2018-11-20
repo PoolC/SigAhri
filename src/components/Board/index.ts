@@ -1,5 +1,6 @@
-import { PostListItem } from './PostListItem/PostListItem';
+import { PostList } from './PostList/PostList';
 import { Board } from './Board';
 import { Post } from './Post/Post';
+import { PostForm } from './PostForm/PostForm';
 
-export { PostListItem, Board, Post };
+export { Board, Post, PostList, PostForm };

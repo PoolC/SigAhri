@@ -1,27 +1,14 @@
 import * as React from 'react';
 import axios from "axios";
-import { PostListItem } from '../../../components';
+import { PostList } from '../../../components';
 import history from '../../../history/history';
-import { RootState } from '../../../reducers';
-import { returntypeof } from 'react-redux-typescript';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 
-const mapStateToProps = (state: RootState) => ({
-  isLogin: state.authentication.status.isLogin,
-  isAdmin: state.authentication.status.isAdmin
-});
-
-const statePropTypes = returntypeof(mapStateToProps);
-
-export namespace PostList {
-  export interface SubProps {
+export namespace PostListContainer {
+  export interface Props {
     type: string,
     typeId: number,
     name: string
   }
-
-  export type Props = typeof statePropTypes & SubProps
 
   export interface State {
     posts: Array<PostInfo>
@@ -35,8 +22,8 @@ export namespace PostList {
   }
 }
 
-class PostListClass extends React.Component<PostList.Props, PostList.State> {
-  constructor(props: PostList.Props) {
+export class PostListContainer extends React.Component<PostListContainer.Props, PostListContainer.State> {
+  constructor(props: PostListContainer.Props) {
     super(props);
 
     this.state = {
@@ -88,31 +75,9 @@ class PostListClass extends React.Component<PostList.Props, PostList.State> {
     });
   }
 
-  // TODO: board-name 클래스 이름을 바꾸고 container에서 마크업은 뺴야함
   render() {
-    const { posts } = this.state;
     return (
-      <div>
-        <h2 className="board-name">{this.props.name}</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">제목</th>
-              <th scope="col">작성자</th>
-              <th scope="col">작성일</th>
-            </tr>
-          </thead>
-          <tbody>
-            { posts.map(post => {
-              return (
-                <PostListItem post={post} key={post.id}/>
-              )
-            }) }
-          </tbody>
-        </table>
-      </div>
+      <PostList posts={this.state.posts} name={this.props.name} typeId={this.props.typeId}/>
     );
   }
 }
-
-export const PostList = compose(connect(mapStateToProps))(PostListClass);

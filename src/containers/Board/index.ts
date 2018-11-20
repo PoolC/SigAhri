@@ -1,5 +1,5 @@
 import { BoardContainer } from './BoardContainer';
 import { PostContainer } from './PostContainer/PostContainer';
-import { PostList } from './PostList/PostList';
+import { PostListContainer } from './PostListContainer/PostListContainer';
 
-export { BoardContainer, PostContainer, PostList };
+export { BoardContainer, PostContainer, PostListContainer };

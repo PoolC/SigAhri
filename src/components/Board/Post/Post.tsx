@@ -44,6 +44,7 @@ class PostClass extends React.Component<Post.Props> {
 
   render() {
     const {info, onCreateComment, onDeleteComment} = this.props;
+    console.log(this.props.boardName);
     return (
       <React.Fragment>
         <h2>{info.title}</h2>
