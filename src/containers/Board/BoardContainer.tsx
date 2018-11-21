@@ -42,8 +42,8 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
 
     this.state = {
       boards: [],
-      boardID: 1,  // default as notice
-      boardName: "공지사항"
+      boardID: 0,
+      boardName: ""
     };
     this.handleGetBoard = this.handleGetBoard.bind(this);
     this.setBoardID = this.setBoardID.bind(this);
@@ -105,7 +105,7 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
 
       this.setState({
         boards: data
-      })
+      });
     }).catch((msg) => {
       console.log("boards API error");
       console.log(msg);
@@ -113,7 +113,6 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   }
 
   render() {
-    console.log(this.state);
     return (
       <Board boards={this.state.boards} boardID={this.state.boardID}
              boardName={this.state.boardName} setBoardID={this.setBoardID}/>
