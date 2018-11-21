@@ -37,7 +37,9 @@ export const Board: React.SFC<Board.Props> = (props) => {
             return (
               <Route exact path={`/board/${board.urlPath}`}
                      render={(props) => (
-                       <PostListContainer {...props} type={board.urlPath} typeId={board.id} name={board.name}/>
+                       <PostListContainer {...props} type={board.urlPath} typeId={board.id} name={board.name}
+                                          writePermission={board.writePermission}
+                       />
                      )}
                      key={board.id}
               />

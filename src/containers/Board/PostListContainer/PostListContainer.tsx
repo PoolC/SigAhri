@@ -7,7 +7,8 @@ export namespace PostListContainer {
   export interface Props {
     type: string,
     typeId: number,
-    name: string
+    name: string,
+    writePermission: boolean
   }
 
   export interface State {
@@ -77,7 +78,8 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
 
   render() {
     return (
-      <PostList posts={this.state.posts} name={this.props.name} typeId={this.props.typeId}/>
+      <PostList posts={this.state.posts} name={this.props.name}
+                typeId={this.props.typeId} writePermission={this.props.writePermission}/>
     );
   }
 }

@@ -26,7 +26,8 @@ export namespace PostList {
   export interface Props {
     posts: Array<PostInfo>,
     name: string,
-    typeId: number
+    typeId: number,
+    writePermission: boolean
   }
 
   export interface PostInfo {
@@ -42,7 +43,11 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
     <div>
       <div className="post-list-head">
         <h2 className="post-list-name">{props.name}</h2>
-        <Link to={"/posts/new/"+props.typeId}><button className="btn btn-primary post-list-new">글쓰기</button></Link>
+        {
+          props.writePermission ?
+            (<Link to={"/posts/new/"+props.typeId}><button className="btn btn-primary post-list-new">글쓰기</button></Link>) :
+            (null)
+        }
       </div>
       <table className="table">
         <thead>

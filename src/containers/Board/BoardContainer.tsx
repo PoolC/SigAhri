@@ -28,7 +28,16 @@ export namespace BoardContainer {
     id: number,
     name: string,
     urlPath: string,
-    readPermission: string
+    readPermission: string,
+    writePermission: boolean
+  }
+
+  export interface BoardResponseInfo {
+    id: number,
+    name: string,
+    urlPath: string,
+    readPermission: string,
+    writePermission: string
   }
 }
 
@@ -86,25 +95,44 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
           id,
           name,
           urlPath,
-          readPermission
+          readPermission,
+          writePermission
         }
       }`
     }).then((msg) => {
       // TODO: data가 BoardInfo 의 Array인지 typing
-      let data = msg.data.data.boards;
+      let data = msg.data.data.boards as Array<BoardContainer.BoardResponseInfo>;
       if(!this.props.isAdmin) {
-        data = data.filter((board: BoardContainer.BoardInfo) => {
+        data = data.filter((board: BoardContainer.BoardResponseInfo) => {
           return (board.readPermission !== 'ADMIN');
         });
       }
       if(!this.props.isLogin) {
-        data = data.filter((board: BoardContainer.BoardInfo) => {
+        data = data.filter((board: BoardContainer.BoardResponseInfo) => {
           return (board.readPermission !== 'MEMBER');
         });
       }
 
+      let boards = [];
+      if(this.props.isAdmin) {
+        boards = data.map((boardResponseInfo: BoardContainer.BoardResponseInfo) => ({
+          ...boardResponseInfo,
+          writePermission: true
+        }));
+      } else if(this.props.isLogin) {
+        boards = data.map((boardResponseInfo: BoardContainer.BoardResponseInfo) => ({
+          ...boardResponseInfo,
+          writePermission: (boardResponseInfo.writePermission === 'MEMBER')
+        }));
+      } else {
+        boards = data.map((boardResponseInfo: BoardContainer.BoardResponseInfo) => ({
+          ...boardResponseInfo,
+          writePermission: false
+        }));
+      }
+
       this.setState({
-        boards: data
+        boards: boards
       });
     }).catch((msg) => {
       console.log("boards API error");
