@@ -230,17 +230,12 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
       'Content-Type': 'application/graphql'
     };
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
     axios({
       url: apiUrl,
       method: 'post',
       headers: headers,
       data: `query {
-        boards {
-          id,
+        board(boardID: ${this.props.match.params.boardID}) {
           name,
           writePermission
         }
@@ -248,8 +243,10 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     }).then((msg) => {
       // TODO: typing
       const data = msg.data.data;
-      console.log(data);
-      // TODO: set boardName, 권한이 없으면 404
+
+      this.setState({
+        boardName: data.board.name
+      });
     }).catch((msg) => {
       console.log("boards API error");
       console.log(msg);
@@ -262,29 +259,35 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     let voteForm: JSX.Element = null;
     if(this.state.vote !== null) {
       voteForm = (
-        <div>
+        <div className="post-form-vote-container">
           <h3>투표</h3>
           <div>
-            <div>
-              제목 <br />
-              <input onChange={this.handleVoteTitleChange}/>
+            <div className="post-form-block">
+              <h5>제목</h5>
+              <input className="post-form-input" onChange={this.handleVoteTitleChange}/>
             </div>
 
-            <div>
-              투표 기간 <input type="number" min="1" max="365" onChange={this.handleVoteDurationChange}/>일
+            <div className="post-form-block">
+              <h5 className="inline-block">투표 기간</h5>
+              <input className="post-form-input post-form-input-small" type="number" onChange={this.handleVoteDurationChange}/>일
             </div>
 
-            <input type="checkbox" value="isMultipleSelectable" onChange={this.handleVoteIsMultipleSelectableChange}/>
-            다중선택가능 <br />
-          </div>
-          <div>
-            <input id="post-vote-option" />
-            <button className="btn btn-secondary" onClick={this.handleVoteOptionAdd}>추가</button>
-            <ul>
-              {this.state.vote.optionText.map((text) => (
-                <li key={text}>{text} (<a onClick={()=>this.handleVoteOptionDelete(text)}>삭제</a>)</li>
-              ))}
-            </ul>
+            <div className="post-form-block">
+              <h5 className="inline-block no-margin">다중선택가능</h5>
+              <input className="post-form-checkbox" type="checkbox" value="isMultipleSelectable" onChange={this.handleVoteIsMultipleSelectableChange}/>
+            </div>
+
+            <br />
+            <div className="post-form-block">
+              <h5>투표 항목 추가</h5>
+              <input id="post-vote-option" className="post-form-input-not-full"/>
+              <button className="btn btn-secondary post-form-option-add-button" onClick={this.handleVoteOptionAdd}>추가</button>
+              <ul>
+                {this.state.vote.optionText.map((text) => (
+                  <li key={text}>{text} (<a href="#" onClick={()=>this.handleVoteOptionDelete(text)}>삭제</a>)</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       );
@@ -292,17 +295,18 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
 
     return (
       <div>
-        <h2>{this.state.boardName}</h2>
+        <h2 className="post-form-title">{this.state.boardName}</h2>
         <div>
-          <div className="post-form-title">
-            <div>제목</div>
+          <div className="post-form-block">
+            <h5>제목</h5>
             <input
+              className="post-form-input post-form-input-title"
               value={this.state.postTitle}
               onChange={this.handleTitleChange}
             />
           </div>
-          <div className="post-form-content">
-            <div>본문</div>
+          <div className="post-form-block">
+            <h5>본문</h5>
             <SimpleMDE
               value={this.state.postContent}
               onChange={this.handleContentChange}
@@ -314,14 +318,14 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
             />
           </div>
           {this.state.vote !== null ? voteForm : null}
-          <div className="post-form-button">
+          <div className="post-form-button-container">
             {
               this.state.vote === null ?
-              (<button className="btn btn-secondary" onClick={this.handleAddVote}>투표 첨부</button>) :
-              (<button className="btn btn-danger" onClick={this.handleDeleteVote}>투표 삭제</button>)
+              (<button className="btn btn-lg btn-secondary" onClick={this.handleAddVote}>투표 첨부</button>) :
+              (<button className="btn btn-lg btn-danger" onClick={this.handleDeleteVote}>투표 삭제</button>)
             }
-            <Link to="/upload" target="_blank"><button className="btn btn-secondary">파일 첨부</button></Link>
-            <button className="btn btn-primary" onClick={() => this.handleSubmit()}>작성</button>
+            <Link to="/upload" target="_blank"><button className="btn btn-lg btn-secondary">파일 첨부</button></Link>
+            <button className="btn btn-lg btn-primary" onClick={() => this.handleSubmit()}>작성</button>
           </div>
         </div>
       </div>
