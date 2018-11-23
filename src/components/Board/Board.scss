@@ -20,7 +20,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .board-nav {
     flex: 0 0 80%;
     max-width: 80%;
@@ -30,6 +30,13 @@
     table tr td:nth-child(3) {
       font-size: 12px;
     }
+  }
+}
+
+@media (min-width: 768px) {
+  .board-title {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 }
 
