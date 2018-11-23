@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import './PostList.scss';
+import * as moment from 'moment';
+import 'moment/locale/ko';
 
 namespace PostListItem {
   export interface Props {
@@ -15,7 +17,7 @@ const PostListItem: React.SFC<PostListItem.Props> = (props) => {
       <tr>
         <td><Link to={`/posts/${post.id}`}>{post.title}</Link></td>
         <td>{post.author.name}</td>
-        <td>{post.createdAt}</td>
+        <td>{moment(post.createdAt).format('YYYY-MM-DD')}</td>
       </tr>
     </React.Fragment>
   )

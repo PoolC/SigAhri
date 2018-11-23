@@ -17,7 +17,7 @@ export const Board: React.SFC<Board.Props> = (props) => {
   const { boards } = props;
   return (
     <div className="row">
-      <div className="board-nav col-2">
+      <div className="board-nav">
         <div className="board-list list-group">
           {boards.map((board: BoardContainer.BoardInfo) => {
             return (
