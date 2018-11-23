@@ -17,7 +17,6 @@ const statePropTypes = returntypeof(mapStateToProps);
 export namespace Post {
   export interface SubProps {
     info: PostContainer.Info,
-    boardName: string,
     onDeletePost?: () => void
     onCreateComment?: (comment: string) => void
     onDeleteComment?: (id: number) => void
@@ -27,6 +26,15 @@ export namespace Post {
 }
 
 class PostClass extends React.Component<Post.Props> {
+
+  getDate = (date:string) : string => {
+    const dsplit = date.split("T");
+    const datepart = dsplit[0];
+    const timepart = dsplit[1].slice(0, dsplit[1].indexOf('.'));
+
+    const newTime = `${datepart} ${timepart}`;
+    return newTime;
+  };
 
   handleUpdate = (event:React.MouseEvent<HTMLButtonElement>) => {
     window.location.pathname += "/edit"
@@ -38,18 +46,26 @@ class PostClass extends React.Component<Post.Props> {
   };
 
   handleToBoard = (event:React.MouseEvent<HTMLButtonElement>) => {
-    const name = this.props.boardName === "공지사항" ? "notice" : "free";
-    window.location.pathname = `/board/${name}`;
+    const { urlPath } = this.props.info.board;
+    window.location.pathname = `/board/${urlPath}`;
   };
 
   render() {
     const {info, onCreateComment, onDeleteComment} = this.props;
-    console.log(this.props.boardName);
     return (
       <React.Fragment>
-        <h2>{info.title}</h2>
-        <p>{`${info.author.name} | ${info.createdAt}`}</p>
+        <h2 className="mt-4 mb-4">{info.board.name}</h2>
+        <h4 className="post-title">{info.title}</h4>
+        <div className="row author-info">
+          <div className="col-auto mr-0 content-left">
+            <span>{info.author.name}</span>
+          </div>
+          <div className="col-auto mr-auto content-right">
+            <span>{this.getDate(info.createdAt)}</span>
+          </div>
+        </div>
         <p>{info.body}</p>
+        <hr className="post-end"/>
         <CommentList
           comments={info.comments}
           onDeleteComment={onDeleteComment}
@@ -57,9 +73,11 @@ class PostClass extends React.Component<Post.Props> {
         <Comment
           onCreateComment={onCreateComment}
         />
-        <button onClick={this.handleUpdate}>수정</button>
-        <button onClick={this.handleDelete}>삭제</button>
-        <button onClick={this.handleToBoard}>목록</button>
+        <div className="post-menu">
+          <button onClick={this.handleToBoard} className="btn float-right">목록</button>
+          <button onClick={this.handleDelete} className="btn float-right">삭제</button>
+          <button onClick={this.handleUpdate} className="btn float-right last">수정</button>
+        </div>
       </React.Fragment>
     )
   }

@@ -32,3 +32,50 @@
     }
   }
 }
+
+.post-end {
+  border-top: 2.4px solid rgba(0,0,0,0.3)!important;
+}
+
+.content-left {
+  padding-left: 0px!important;
+}
+
+.content-right {
+  border-left: 1px solid rgba(0,0,0,0.7)!important;
+}
+
+.author-info {
+  margin: 10px 0;
+}
+
+.btn.delete-comment {
+  font-size: 0.9rem!important;
+  padding: 0.2rem 0.4rem;
+}
+
+.comment-body {
+  padding: 0!important;
+  .comment-date {
+    color: #6c757d;
+    font-size: 12px;
+  }
+}
+
+.comments {
+  padding-bottom: 7px;
+}
+
+.post-title {
+  line-height: 1.6;
+}
+
+.post-menu {
+  margin-top: 7px;
+  button {
+    margin-left: 5px;
+  }
+  button.last {
+    margin-left: 0px;
+  }
+}

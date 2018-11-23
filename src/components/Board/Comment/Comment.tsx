@@ -42,16 +42,23 @@ export class Comment extends React.Component<Comment.Props, Comment.State> {
 
  render() {
     return (
-      <div className="comments">
-        <h4>댓글 달기</h4>
-        <form>
-          <input type="text" name="Comment" placeholder="댓글을 입력하세요."
-                 onChange={this.updateComment}
-                 value={this.state.comment}
-          />
-          <input type="button" value="댓글 달기" onClick={this.handleNewComment} />
-        </form>
-      </div>
+      <form>
+        <div className="form-row align-items-center">
+          <div className="col-8">
+            <label className="sr-only">댓글</label>
+            <input type="text" className="form-control" placeholder="댓글을 입력하세요"
+                   onChange={this.updateComment}
+                   value={this.state.comment}
+            />
+          </div>
+          <div className="col-4">
+            <button type="submit" className="btn float-right btn-primary"
+                    onClick={this.handleNewComment}>
+              댓글 달기
+            </button>
+          </div>
+        </div>
+      </form>
     )
   }
 }

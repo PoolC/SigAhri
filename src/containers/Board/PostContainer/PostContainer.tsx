@@ -17,8 +17,7 @@ const statePropTypes = returntypeof(mapStateToProps);
 
 export namespace PostContainer {
   export interface SubProps extends RouteComponentProps<MatchParams>{
-    boardID: number,
-    boardName: string
+    // Intentionally empty
   }
 
   export type Props = typeof statePropTypes & SubProps
@@ -33,6 +32,7 @@ export namespace PostContainer {
 
   export interface Info {
     id: number,
+    board: { name: string, urlPath: string },
     title: string,
     author: { name: string },
     body: string,
@@ -60,6 +60,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         title: "",
         author: { name: "" },
         body: "",
+        board: { name: "", urlPath: "" },
         comments: [],
         createdAt: "",
         updatedAt: ""
@@ -95,6 +96,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
           id,
           title,
           body,
+          board { name, urlPath },
           createdAt,
           updatedAt,
           comments {
@@ -135,7 +137,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       method: 'post',
       headers: headers,
       data: `mutation {
-        createPost(boardID: ${this.props.boardID}, PostInput: {
+        createPost(boardID: ${this.state.info.id}, PostInput: {
           title: ${title},
           body: ${body}
         }) {
@@ -143,6 +145,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
           title,
           author { name },
           body,
+          board { name, urlPath },
           comments {
             id,
             author { name },
@@ -220,25 +223,12 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       headers: headers,
       data: `mutation {
         deletePost(postID: ${this.state.info.id}) {
-          id,
-          title,
-          author { name },
-          body,
-          comments {
-            id,
-            author { name },
-            body,
-            createdAt
-          },
-          createdAt,
-          updatedAt
+          board { urlPath }
         }
       }`
     }).then((msg) => {
-      const { info } = this.state;
-      //const deletedPost = msg.data.data.deletePost;
-      const name = this.props.boardName === "공지사항" ? "notice" : "free";
-      window.location.pathname = `/board/${name}`;
+      const { urlPath } = msg.data.data.deletePost.board;
+      window.location.pathname = `/board/${urlPath}`;
     })
   };
 
@@ -313,7 +303,6 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     return (
       <Post
         info={this.state.info}
-        boardName={this.props.boardName}
         onDeletePost={this.handleDeletePost}
         onCreateComment={this.handleCreateComment}
         onDeleteComment={this.handleDeleteComment}

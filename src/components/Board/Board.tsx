@@ -46,7 +46,7 @@ export const Board: React.SFC<Board.Props> = (props) => {
             )
           })}
           <Route exact path="/posts/:postId"
-                 render={(prop) => (<PostContainer {...prop} boardID={props.boardID} boardName={props.boardName} />)}
+                 render={(prop) => (<PostContainer {...prop} />)}
           />
           <Route exact path="/posts/new/:boardID"
                  render={(props) => {
