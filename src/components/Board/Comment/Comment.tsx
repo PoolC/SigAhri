@@ -44,15 +44,15 @@ export class Comment extends React.Component<Comment.Props, Comment.State> {
     return (
       <form>
         <div className="form-row align-items-center">
-          <div className="col-9">
+          <div className="col-8">
             <label className="sr-only">댓글</label>
             <input type="text" className="form-control" placeholder="댓글을 입력하세요"
                    onChange={this.updateComment}
                    value={this.state.comment}
             />
           </div>
-          <div className="col-2">
-            <button type="submit" className="btn btn-primary"
+          <div className="col-4">
+            <button type="submit" className="btn float-right btn-primary"
                     onClick={this.handleNewComment}>
               댓글 달기
             </button>

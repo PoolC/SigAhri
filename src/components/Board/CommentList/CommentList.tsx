@@ -23,20 +23,16 @@ export const CommentList: React.SFC<CommentList.Props> = (props) => {
       {props.comments.map((comment: PostContainer.Comment) => {
         return (
           <div className="row comments" key={comment.id}>
-            <div className="col-10">
-              <div className="row">
-                <div className="col-3">
-                  {comment.author.name}
-                </div>
-                <div className="col-9 comment-body">
-                  {comment.body}&nbsp;
-                  <span className="comment-date">{getDate(comment.createdAt)}</span>
-                </div>
-              </div>
+            <div className="col-3">
+              {comment.author.name}
             </div>
-            <div className="col-2">
+            <div className="col-6 comment-body">
+              {comment.body}&nbsp;
+              <span className="comment-date">{getDate(comment.createdAt)}</span>
+            </div>
+            <div className="col-3">
               <button onClick={ () => { props.onDeleteComment(comment.id); } }
-                      className="btn btn-outline-secondary delete-comment"
+                      className="btn float-right btn-outline-secondary delete-comment"
               >삭제</button>
             </div>
           </div>

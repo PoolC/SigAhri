@@ -46,12 +46,8 @@ class PostClass extends React.Component<Post.Props> {
   };
 
   handleToBoard = (event:React.MouseEvent<HTMLButtonElement>) => {
-    const { name } = this.props.info.board;
-    const boardList : {[key:string]:string} = {
-      "자유게시판": "free",
-      "공지사항": "notice"
-    };
-    window.location.pathname = `/board/${boardList[name]}`;
+    const { urlPath } = this.props.info.board;
+    window.location.pathname = `/board/${urlPath}`;
   };
 
   render() {
