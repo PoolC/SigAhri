@@ -54,7 +54,7 @@ class PostClass extends React.Component<Post.Props> {
     const {info, onCreateComment, onDeleteComment} = this.props;
     return (
       <React.Fragment>
-        <h2 className="mt-4 mb-4">{info.board.name}</h2>
+        <h2 className="board-title">{info.board.name}</h2>
         <h4 className="post-title">{info.title}</h4>
         <div className="row author-info">
           <div className="col-auto mr-0 content-left">
