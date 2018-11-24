@@ -24,7 +24,7 @@ export namespace PostForm {
 
   interface Vote {
     title: string,
-    duration: number,
+    deadline: string,
     isMultipleSelectable: boolean,
     optionText: Array<string>
   }
@@ -48,7 +48,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     this.handleSubmit = this.handleSubmit.bind(this);
 
     this.handleVoteTitleChange = this.handleVoteTitleChange.bind(this);
-    this.handleVoteDurationChange = this.handleVoteDurationChange.bind(this);
+    this.handleVoteDeadlineChange = this.handleVoteDeadlineChange.bind(this);
     this.handleVoteIsMultipleSelectableChange = this.handleVoteIsMultipleSelectableChange.bind(this);
     this.handleVoteOptionAdd = this.handleVoteOptionAdd.bind(this);
     this.handleVoteOptionDelete = this.handleVoteOptionDelete.bind(this);
@@ -70,7 +70,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     this.setState({
       vote: {
         title: "",
-        duration: 0,
+        deadline: "",
         isMultipleSelectable: false,
         optionText: []
       }
@@ -92,11 +92,11 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     })
   }
 
-  handleVoteDurationChange(event: React.ChangeEvent<HTMLInputElement>) {
+  handleVoteDeadlineChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({
       vote: {
         ...this.state.vote,
-        duration: Number(event.currentTarget.value)
+        deadline: event.currentTarget.value
       }
     })
   }
@@ -157,8 +157,8 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
       if (voteInfo.title === '') {
         alert('투표 제목을 입력해주세요.');
         return;
-      } else if (voteInfo.duration < 1 || voteInfo.duration > 365) {
-        alert('투표 기간은 1~365의 숫자를 입력해주세요.');
+      } else if (voteInfo.deadline === "") {
+        alert('투표 마감을 설정해주세요.');
         return;
       } else if(voteInfo.optionText.length === 0) {
         alert('투표 항목을 입력해주세요');
@@ -189,7 +189,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           body: "${body}"
         }, VoteInput: {
           title: "${voteInfo.title}",
-          deadline: "${moment().add(voteInfo.duration, 'd').format()}",
+          deadline: "${moment(voteInfo.deadline).format()}",
           isMultipleSelectable: ${voteInfo.isMultipleSelectable?'true':'false'},
           optionTexts: [${voteInfo.optionText.map((text) => ('"'+text+'"'))}]
         }) {
@@ -254,7 +254,6 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
   }
 
   render() {
-    //console.log(moment().add(7, 'd').format());
     console.log(this.state.vote);
     let voteForm: JSX.Element = null;
     if(this.state.vote !== null) {
@@ -268,8 +267,8 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
             </div>
 
             <div className="post-form-block">
-              <h5 className="inline-block">투표 기간</h5>
-              <input className="post-form-input post-form-input-small" type="number" onChange={this.handleVoteDurationChange}/>일
+              <h5>투표 마감</h5>
+              <input className="post-form-input" type="datetime-local" onChange={this.handleVoteDeadlineChange}/>
             </div>
 
             <div className="post-form-block">
