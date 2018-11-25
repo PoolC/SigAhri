@@ -271,6 +271,10 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
       'Content-Type': 'application/graphql'
     };
 
+    if (localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+
     if (this.props.type === PostFormType.edit) {
       axios({
         url: apiUrl,
