@@ -38,7 +38,8 @@ export namespace PostContainer {
     body: string,
     comments: Array<Comment>,
     createdAt: string,
-    updatedAt: string
+    updatedAt: string,
+    vote: Vote
   }
 
   export interface Comment {
@@ -46,6 +47,15 @@ export namespace PostContainer {
     author: { name: string },
     body: string,
     createdAt: string
+  }
+
+  export interface Vote {
+    id: number,
+    title: string,
+    options: { id:number, text:string, votersCount:number, voters: { studentID: string } }[],
+    deadline: string,
+    isMultipleSelectable: boolean,
+    totalVotersCount: number
   }
 }
 
@@ -58,12 +68,13 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       info: {
         id: -1,
         title: "",
-        author: { name: "" },
+        author: {name: ""},
         body: "",
-        board: { name: "", urlPath: "" },
+        board: {name: "", urlPath: ""},
         comments: [],
         createdAt: "",
-        updatedAt: ""
+        updatedAt: "",
+        vote: null
       }
     };
 
@@ -107,7 +118,15 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
             createdAt,
             id
           },
-          author {name}
+          author { name },
+          vote {
+            id,
+            title,
+            options { id, text, votersCount },
+            deadline,
+            isMultipleSelectable,
+            totalVotersCount
+          }
         }
       }`
     }).then((msg) => {
@@ -211,6 +230,46 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     })
   };
 
+  handleVoteSubmit = (selectedOptions : number[]) => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: `mutation {
+        selectVoteOption(optionIDs: [${selectedOptions}], voteID: ${this.state.info.vote.id}) {
+          id,
+          title,
+          totalVotersCount,
+          isMultipleSelectable,
+          deadline,
+          options {
+            id,
+            text,
+            votersCount,
+            voters {
+              studentID
+            }
+          }
+        }
+      }`
+    }).then((msg) => {
+      const { info } = this.state;
+      const voteData : PostContainer.Vote = msg.data.data.selectVoteOption;
+      this.setState({
+        info: {
+          ...info,
+          vote: voteData
+        }
+      });
+    })
+  };
+
   render() {
     if((typeof this.state.info === 'undefined') || this.state.info.id === -1)
       return null;
@@ -221,6 +280,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         onDeletePost={this.handleDeletePost}
         onCreateComment={this.handleCreateComment}
         onDeleteComment={this.handleDeleteComment}
+        onVoteSubmit={this.handleVoteSubmit}
       />
     )
   }

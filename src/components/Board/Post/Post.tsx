@@ -6,6 +6,7 @@ import { CommentList } from "../CommentList/CommentList";
 import {RootState} from "../../../reducers";
 import {compose} from "redux";
 import {connect} from "react-redux";
+import {PostBody} from "../PostBody/PostBody"
 
 const mapStateToProps = (state: RootState) => ({
   isLogin: state.authentication.status.isLogin,
@@ -17,24 +18,16 @@ const statePropTypes = returntypeof(mapStateToProps);
 export namespace Post {
   export interface SubProps {
     info: PostContainer.Info,
-    onDeletePost?: () => void
-    onCreateComment?: (comment: string) => void
-    onDeleteComment?: (id: number) => void
+    onDeletePost?: () => void,
+    onCreateComment?: (comment: string) => void,
+    onDeleteComment?: (id: number) => void,
+    onVoteSubmit?: (selectedOptions : number[]) => void
   }
 
   export type Props = typeof statePropTypes & SubProps
 }
 
 class PostClass extends React.Component<Post.Props> {
-
-  getDate = (date:string) : string => {
-    const dsplit = date.split("T");
-    const datepart = dsplit[0];
-    const timepart = dsplit[1].slice(0, dsplit[1].indexOf('.'));
-
-    const newTime = `${datepart} ${timepart}`;
-    return newTime;
-  };
 
   handleUpdate = (event:React.MouseEvent<HTMLButtonElement>) => {
     window.location.pathname += "/edit"
@@ -51,20 +44,11 @@ class PostClass extends React.Component<Post.Props> {
   };
 
   render() {
-    const {info, onCreateComment, onDeleteComment} = this.props;
+    const {info, onCreateComment, onDeleteComment, onVoteSubmit} = this.props;
     return (
       <React.Fragment>
         <h2 className="board-title">{info.board.name}</h2>
-        <h4 className="post-title">{info.title}</h4>
-        <div className="row author-info">
-          <div className="col-auto mr-0 content-left">
-            <span>{info.author.name}</span>
-          </div>
-          <div className="col-auto mr-auto content-right">
-            <span>{this.getDate(info.createdAt)}</span>
-          </div>
-        </div>
-        <p>{info.body}</p>
+        <PostBody post={info} onVoteSubmit={onVoteSubmit} />
         <hr className="post-end"/>
         <CommentList
           comments={info.comments}
