@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 import { PostListContainer, BoardContainer, PostContainer } from '../../containers';
 import { PostForm } from '../';
+import { PostFormType } from './PostForm/PostForm';
 import './Board.scss';
 
 export namespace Board {
@@ -50,7 +51,13 @@ export const Board: React.SFC<Board.Props> = (props) => {
           />
           <Route exact path="/posts/new/:boardID"
                  render={(props) => {
-                   return <PostForm {...props}
+                   return <PostForm {...props} type={PostFormType.new}
+                   />
+                 }}
+          />
+          <Route exact path="/posts/:postID/edit"
+                 render={(props) => {
+                   return <PostForm {...props} type={PostFormType.edit}
                    />
                  }}
           />
