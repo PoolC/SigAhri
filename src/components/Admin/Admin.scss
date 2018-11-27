@@ -14,22 +14,11 @@
   }
 }
 
-.admin-content {
-  table th {
-    min-width: 90px;
-  }
-}
-
 @media (max-width: 767px) {
   .admin-nav {
     flex: 0 0 80%;
     max-width: 80%;
     margin: 0 auto 20px;
-  }
-  .admin-content {
-    table tr td:nth-child(3) {
-      font-size: 12px;
-    }
   }
 }
 
