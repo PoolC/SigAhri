@@ -186,7 +186,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         `mutation {
         createPost(boardID: ${this.props.match.params.boardID}, PostInput: {
           title: "${title}",
-          body: "${body}"
+          body: """${body}"""
         }) {
           id
         }
@@ -194,7 +194,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         `mutation {
         createPost(boardID: ${this.props.match.params.boardID}, PostInput: {
           title: "${title}",
-          body: "${body}"
+          body: """${body}"""
         }, VoteInput: {
           title: "${voteInfo.title}",
           deadline: "${moment(voteInfo.deadline).format()}",
@@ -212,6 +212,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         data: data
       }).then((msg) => {
         const data = msg.data;
+        console.log(data);
 
         if ('errors' in data) {
           const error = data.errors[0];
