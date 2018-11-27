@@ -1,0 +1,41 @@
+.admin-nav {
+  flex: 0 0 16.666667%;
+  max-width: 16.666667%;
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+
+  .admin-list {
+    .admin-item {
+      color: #212529;
+    }
+  }
+}
+
+.admin-content {
+  table th {
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-nav {
+    flex: 0 0 80%;
+    max-width: 80%;
+    margin: 0 auto 20px;
+  }
+  .admin-content {
+    table tr td:nth-child(3) {
+      font-size: 12px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .admin-title {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
