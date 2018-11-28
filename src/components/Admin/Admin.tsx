@@ -1,8 +1,10 @@
 import * as React from 'react';
-import {Link, Route, Switch} from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import './Admin.scss';
-import {Board} from './Board/Board';
-import {BoardForm, BoardFormType} from './Board/BoardForm/BoardForm';
+import { Board } from './Board/Board';
+import { BoardForm, BoardFormType } from './Board/BoardForm/BoardForm';
+import { Project } from './Project/Project';
+import { ProjectForm, ProjectFormType } from './Project/ProjectForm/ProjectForm';
 import axios from 'axios';
 import history from '../../history/history';
 
@@ -101,11 +103,11 @@ export class Admin extends React.Component<Admin.Props, Admin.State> {
             <Route exact path="/admin/boards/edit/:boardID"
                    render={(props) => (<BoardForm {...props} type={BoardFormType.edit} />)} />
 
-            <Route exact path="/admin/projects"
-                   render={(props) => (
-                     <div>프로젝트관리</div>
-                   )}
-            />
+            <Route exact path="/admin/projects" component={Project}/>
+            <Route exact path="/admin/projects/new"
+                   render={(props) => (<ProjectForm {...props} type={ProjectFormType.new} />)} />
+            <Route exact path="/admin/projects/edit/:projectID"
+                   render={(props) => (<ProjectForm {...props} type={ProjectFormType.edit} />)} />
           </Switch>
         </div>
       </div>
