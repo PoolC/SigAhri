@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Home, Upload, UploadSuccess } from '../../components';
+import { Home, Upload, UploadSuccess, Admin } from '../../components';
 import { Login, Register, Board, Project, Header } from '../';
 import { Route, Switch } from 'react-router-dom';
 import { Dispatch, compose } from 'redux';
@@ -38,6 +38,8 @@ class App extends React.Component<Props> {
           <Route path="/login" component={Login}/>
           <Route exact path="/upload" component={Upload}/>
           <Route exact path="/upload/success/:filename" component={UploadSuccess}/>
+
+          <Route path="/admin" component={Admin}/>
         </Switch>
       </div>
     );
