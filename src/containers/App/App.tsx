@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Home } from '../../components';
 import { Login, Register, Board, Project, Header, Info } from '../';
+import { Home, Upload, UploadSuccess, Admin } from '../../components';
 import { Route, Switch } from 'react-router-dom';
 import { Dispatch, compose } from 'redux';
 import { returntypeof } from 'react-redux-typescript';
@@ -37,6 +37,10 @@ class App extends React.Component<Props> {
           <Route path="/register" component={Register}/>
           <Route path="/login" component={Login}/>
           <Route path="/info" component={Info}/>
+          <Route exact path="/upload" component={Upload}/>
+          <Route exact path="/upload/success/:filename" component={UploadSuccess}/>
+
+          <Route path="/admin" component={Admin}/>
         </Switch>
       </div>
     );

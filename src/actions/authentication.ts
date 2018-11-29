@@ -68,6 +68,7 @@ export namespace AuthenticationActions {
     return (dispatch: Dispatch) => {
       localStorage.removeItem('accessToken');
       dispatch(logout());
+      history.push('/');
     }
   };
 

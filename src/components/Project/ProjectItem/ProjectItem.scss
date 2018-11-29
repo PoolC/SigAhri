@@ -1,0 +1,25 @@
+.project-item-container {
+  text-align: center;
+}
+
+.project-item-thumbnail {
+  width: 100%;
+  max-height: 400px;
+  margin-bottom: 50px;
+}
+
+.project-item-title {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #aaa;
+
+  h2 {
+    font-weight: bold;
+  }
+}
+
+.project-item-content {
+  width: 80%;
+  margin: 0 auto;
+  text-align: left;
+}
