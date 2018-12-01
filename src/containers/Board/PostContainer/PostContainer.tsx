@@ -10,7 +10,8 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = (state: RootState) => ({
   isLogin: state.authentication.status.isLogin,
-  isAdmin: state.authentication.status.isAdmin
+  isAdmin: state.authentication.status.isAdmin,
+  id: state.authentication.userInfo.id
 });
 
 const statePropTypes = returntypeof(mapStateToProps);
@@ -27,14 +28,15 @@ export namespace PostContainer {
   }
 
   export interface State {
-    info: Info
+    info: Info,
+    hasWritePermissions: boolean
   }
 
   export interface Info {
     id: number,
     board: { name: string, urlPath: string },
     title: string,
-    author: { name: string },
+    author: { name: string, loginID: string },
     body: string,
     comments: Array<Comment>,
     createdAt: string,
@@ -44,7 +46,7 @@ export namespace PostContainer {
 
   export interface Comment {
     id: number,
-    author: { name: string },
+    author: { name: string, loginID: string },
     body: string,
     createdAt: string
   }
@@ -68,14 +70,15 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       info: {
         id: -1,
         title: "",
-        author: {name: ""},
+        author: {name: "", loginID: ""},
         body: "",
         board: {name: "", urlPath: ""},
         comments: [],
         createdAt: "",
         updatedAt: "",
         vote: null
-      }
+      },
+      hasWritePermissions: false
     };
 
     this.handleGetPost = this.handleGetPost.bind(this);
@@ -112,7 +115,8 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
           updatedAt,
           comments {
             author {
-              name
+              name,
+              loginID
             },
             body,
             createdAt,
@@ -131,6 +135,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       }`
     }).then((msg) => {
       const data = msg.data.data.post;
+      const { isAdmin } = this.props;
       if(data === null) {
         // TODO: 읽기 권한이 없을때 404 페이지로 이동
         // TODO: 해당 글이 없을 때 또한 404 페이지로 이동
@@ -138,7 +143,8 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         return;
       }
       this.setState({
-        info: data
+        info: data,
+        hasWritePermissions: isAdmin || (this.props.id === data.author.loginID)
       })
     }).catch((msg) => {
     });
@@ -180,7 +186,8 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       data: `mutation {
         createComment(postID:${this.state.info.id}, body:"${comment}") {
           author{
-            name
+            name,
+            loginID
           },
           body,
           createdAt,
@@ -213,7 +220,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       data: `mutation {
         deleteComment(commentID: ${id}) {
           id,
-          author { name },
+          author { name, loginID },
           body
           createdAt
         }
@@ -281,6 +288,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         onCreateComment={this.handleCreateComment}
         onDeleteComment={this.handleDeleteComment}
         onVoteSubmit={this.handleVoteSubmit}
+        hasWritePermissions={this.state.hasWritePermissions}
       />
     )
   }

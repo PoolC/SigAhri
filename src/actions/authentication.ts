@@ -10,7 +10,7 @@ export namespace AuthenticationActions {
     AUTH_LOGIN_FAILURE = "AUTH_LOGIN_FAILURE",
     AUTH_LOGOUT = "AUTH_LOGOUT",
     AUTH_LOGIN_INIT = "AUTH_LOGIN_INIT",
-    AUTH_CHECK_PERMISSIONS = "AUTH_CHECK_PERMISSIONS"
+    AUTH_GET_USERID = "AUTH_GET_USERID"
   }
 
   const login = createAction(Type.AUTH_LOGIN);
@@ -18,7 +18,7 @@ export namespace AuthenticationActions {
   const loginFailure = createAction(Type.AUTH_LOGIN_FAILURE);
   const logout = createAction(Type.AUTH_LOGOUT);
   const loginInit = createAction(Type.AUTH_LOGIN_INIT);
-  const adminLogin = createAction(Type.AUTH_CHECK_PERMISSIONS);
+  const setUserID = createAction(Type.AUTH_GET_USERID);
 
   export const loginRequest = (id: string, pw: string) => {
     return (dispatch: Dispatch) => {
@@ -92,7 +92,7 @@ export namespace AuthenticationActions {
           dispatch(loginInit());
         } else {
           dispatch(loginSuccess(me.isAdmin));
-          dispatch(adminLogin(me.loginID));
+          dispatch(setUserID(me.loginID));
         }
       }).catch((msg) => {
         console.log("token apply error -----");

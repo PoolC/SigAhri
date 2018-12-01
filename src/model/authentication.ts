@@ -8,8 +8,6 @@ export interface AuthenticationModel {
   },
   userInfo: {
     id: string,
-    pw: string,
-    readPermissions: string,
-    writePermissions: string
+    pw: string
   }
 }

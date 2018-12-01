@@ -14,9 +14,7 @@ const initialState: RootState.AuthenticationState = {
   },
   userInfo: {
     id: "",
-    pw: "",
-    readPermissions: "PUBLIC",
-    writePermissions: "PUBLIC"
+    pw: ""
   }
 };
 
@@ -57,9 +55,7 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
           isAdmin: { $set: false }
         },
         userInfo: {
-          id: { $set: "" },
-          readPermissions: { $set: "" },
-          writePermissions: { $set: "" }
+          id: { $set: "" }
         }
       });
     },
@@ -70,15 +66,10 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
         }
       });
     },
-    [AuthenticationActions.Type.AUTH_CHECK_PERMISSIONS]: (state, action) => {
+    [AuthenticationActions.Type.AUTH_GET_USERID]: (state, action) => {
       return update(state, {
-        status: {
-
-        },
         userInfo: {
-          id: { $set: action.payload },
-          readPermissions: { $set: state.status.isAdmin ? "ADMIN" : (state.status.isLogin ? "MEMBER" : "PUBLIC") },
-          writePermissions: { $set: state.status.isAdmin ? "ADMIN" : (state.status.isLogin ? "MEMBER" : "PUBLIC") }
+          id: { $set: action.payload }
         }
       });
     },

@@ -8,10 +8,7 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = (state: RootState) => ({
   isLogin: state.authentication.status.isLogin,
-  isAdmin: state.authentication.status.isAdmin,
-  id: state.authentication.userInfo.id,
-  writePermissions: state.authentication.userInfo.writePermissions,
-  readPermissions: state.authentication.userInfo.readPermissions
+  isAdmin: state.authentication.status.isAdmin
 });
 
 const statePropTypes = returntypeof(mapStateToProps);
@@ -24,7 +21,7 @@ export namespace BoardContainer {
   export interface State {
     boards: Array<BoardInfo>,
     boardID: number,
-    boardName: string
+    userPermissions: string
   }
 
   export interface BoardInfo {
@@ -55,21 +52,15 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     this.state = {
       boards: [],
       boardID: 0,
-      boardName: ""
+      userPermissions: "PUBLIC"
     };
     this.handleGetBoard = this.handleGetBoard.bind(this);
     this.setBoardID = this.setBoardID.bind(this);
   }
 
-  setBoardID(id:number, name:string) {
-    this.setState({
-      boardID: id,
-      boardName: name
-    });
-  }
-
   componentDidMount() {
     this.handleGetBoard();
+    this.setUserPermissions();
   }
 
   componentDidUpdate(prevProps: BoardContainer.Props) {
@@ -80,15 +71,17 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     }
   }
 
-  hasReadPermissions : (targetPermissions: string) => boolean = (targetPermissions: string) => {
-    const { readPermissions } = this.props;
-    return permissions[readPermissions].indexOf(targetPermissions) >= 0
+  setUserPermissions = () => {
+    this.setState({
+      userPermissions: this.props.isAdmin ? "ADMIN" : (this.props.isLogin ? "MEMBER" : "PUBLIC")
+    })
   };
 
-  hasWritePermissions : (targetPermissions: string) => boolean = (targetPermissions: string) => {
-    const { writePermissions } = this.props;
-    return permissions[writePermissions].indexOf(targetPermissions) >= 0
-  };
+  setBoardID(id:number, name:string) {
+    this.setState({
+      boardID: id,
+    });
+  }
 
   handleGetBoard() {
     const headers: any = {
@@ -114,14 +107,15 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
       }`
     }).then((msg) => {
       // TODO: data가 BoardInfo 의 Array인지 typing
-      const { readPermissions, writePermissions } = this.props;
+      const { userPermissions } = this.state;
+
       const data = msg.data.data.boards.filter((board: BoardContainer.BoardResponseInfo) => {
-        return this.hasReadPermissions(board.readPermission);  // 권한이 있을 경우
+        return permissions[userPermissions].indexOf(board.readPermission) >= 0;
       });
 
       const boards = data.map((boardResponseInfo: BoardContainer.BoardResponseInfo) => ({
         ...boardResponseInfo,
-        writePermission: this.hasWritePermissions(boardResponseInfo.writePermission)
+        writePermission: permissions[userPermissions].indexOf(boardResponseInfo.writePermission) >= 0
       }));
 
       this.setState({
@@ -136,7 +130,7 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   render() {
     return (
       <Board boards={this.state.boards} boardID={this.state.boardID}
-             boardName={this.state.boardName} setBoardID={this.setBoardID}
+             setBoardID={this.setBoardID}
       />
     );
   }
