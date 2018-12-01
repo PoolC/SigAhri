@@ -38,6 +38,30 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
     }
   }
 
+  componentDidMount() {
+    this.checkHasVoted();
+  }
+
+  checkHasVoted = () => {
+    const { post, id } = this.props;
+    if(post.vote !== null) {
+      let hasVoted : boolean = false;
+      post.vote.options.forEach((option) => {
+        option.voters.forEach((voter) => {
+          if(voter.loginID === id) {
+            hasVoted = true;
+          }
+        })
+      });
+
+      this.setState((prevState, props) => {
+        if(prevState.hasVoted !== hasVoted) {
+          return { hasVoted: hasVoted }
+        }
+      })
+    }
+  };
+
   checkVote = (event : React.FormEvent<HTMLInputElement>) => {
     const { selectedOptions } = this.state;
     const { isMultipleSelectable } = this.props.post.vote;

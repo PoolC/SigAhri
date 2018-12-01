@@ -49,6 +49,7 @@ const resizeVoteDiv = () => {
 export const PostBody : React.SFC<PostBody.Props> = (props) => {
   const { post, hasVoted, checkVote, handleVoteSubmit, handleReVote, hasLogin } = props;
   resizeVoteDiv();
+
   return (
     <React.Fragment>
       <h4 className="post-title">{post.title}</h4>
@@ -64,7 +65,7 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
       {!hasVoted && post.vote !== null && (
         <form>
           <fieldset>
-            {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { studentID: string } }) => {
+            {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { loginID: string }[] }) => {
               return (
                 <div className="form-check" key={option.id}>
                   <input className="form-check-input" name={`vote${post.vote.id}`} type={post.vote.isMultipleSelectable ? "checkbox" : "radio"}
@@ -81,7 +82,7 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
       )}
       {hasVoted && post.vote !== null && (
         <div className="container-fluid vote-progress">
-          {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { studentID: string } }) => {
+          {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { loginID: string }[] }) => {
             const { totalVotersCount } = post.vote;
             const selectRatio = totalVotersCount > 0 ? option.votersCount / totalVotersCount : 0;
             return (

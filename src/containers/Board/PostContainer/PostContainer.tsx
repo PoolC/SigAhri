@@ -55,7 +55,7 @@ export namespace PostContainer {
   export interface Vote {
     id: number,
     title: string,
-    options: { id:number, text:string, votersCount:number, voters: { studentID: string } }[],
+    options: { id:number, text:string, votersCount:number, voters: { loginID: string }[] }[],
     deadline: string,
     isMultipleSelectable: boolean,
     totalVotersCount: number
@@ -127,7 +127,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
           vote {
             id,
             title,
-            options { id, text, votersCount },
+            options { id, text, votersCount, voters { loginID } },
             deadline,
             isMultipleSelectable,
             totalVotersCount
@@ -269,7 +269,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
             text,
             votersCount,
             voters {
-              studentID
+              loginID
             }
           }
         }
