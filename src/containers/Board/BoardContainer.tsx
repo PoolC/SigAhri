@@ -8,14 +8,17 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = (state: RootState) => ({
   isLogin: state.authentication.status.isLogin,
-  isAdmin: state.authentication.status.isAdmin
+  isAdmin: state.authentication.status.isAdmin,
+  id: state.authentication.userInfo.id,
+  writePermissions: state.authentication.userInfo.writePermissions,
+  readPermissions: state.authentication.userInfo.readPermissions
 });
 
 const statePropTypes = returntypeof(mapStateToProps);
 
 export namespace BoardContainer {
   export type Props = typeof statePropTypes & {
-    type: string // postList or post
+    type: string
   }
 
   export interface State {
@@ -77,6 +80,16 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     }
   }
 
+  hasReadPermissions : (targetPermissions: string) => boolean = (targetPermissions: string) => {
+    const { readPermissions } = this.props;
+    return permissions[readPermissions].indexOf(targetPermissions) >= 0
+  };
+
+  hasWritePermissions : (targetPermissions: string) => boolean = (targetPermissions: string) => {
+    const { writePermissions } = this.props;
+    return permissions[writePermissions].indexOf(targetPermissions) >= 0
+  };
+
   handleGetBoard() {
     const headers: any = {
       'Content-Type': 'application/graphql'
@@ -101,35 +114,15 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
       }`
     }).then((msg) => {
       // TODO: data가 BoardInfo 의 Array인지 typing
-      let data = msg.data.data.boards as Array<BoardContainer.BoardResponseInfo>;
-      if(!this.props.isAdmin) {
-        data = data.filter((board: BoardContainer.BoardResponseInfo) => {
-          return (board.readPermission !== 'ADMIN');
-        });
-      }
-      if(!this.props.isLogin) {
-        data = data.filter((board: BoardContainer.BoardResponseInfo) => {
-          return (board.readPermission !== 'MEMBER');
-        });
-      }
+      const { readPermissions, writePermissions } = this.props;
+      const data = msg.data.data.boards.filter((board: BoardContainer.BoardResponseInfo) => {
+        return this.hasReadPermissions(board.readPermission);  // 권한이 있을 경우
+      });
 
-      let boards = [];
-      if(this.props.isAdmin) {
-        boards = data.map((boardResponseInfo: BoardContainer.BoardResponseInfo) => ({
-          ...boardResponseInfo,
-          writePermission: true
-        }));
-      } else if(this.props.isLogin) {
-        boards = data.map((boardResponseInfo: BoardContainer.BoardResponseInfo) => ({
-          ...boardResponseInfo,
-          writePermission: (boardResponseInfo.writePermission === 'MEMBER')
-        }));
-      } else {
-        boards = data.map((boardResponseInfo: BoardContainer.BoardResponseInfo) => ({
-          ...boardResponseInfo,
-          writePermission: false
-        }));
-      }
+      const boards = data.map((boardResponseInfo: BoardContainer.BoardResponseInfo) => ({
+        ...boardResponseInfo,
+        writePermission: this.hasWritePermissions(boardResponseInfo.writePermission)
+      }));
 
       this.setState({
         boards: boards
@@ -143,7 +136,8 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   render() {
     return (
       <Board boards={this.state.boards} boardID={this.state.boardID}
-             boardName={this.state.boardName} setBoardID={this.setBoardID}/>
+             boardName={this.state.boardName} setBoardID={this.setBoardID}
+      />
     );
   }
 }

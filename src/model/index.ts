@@ -1,3 +1,3 @@
-import { AuthenticationModel, AuthenticationActionModel } from './authentication';
+import { AuthenticationModel } from './authentication';
 
-export { AuthenticationModel, AuthenticationActionModel}
+export { AuthenticationModel }

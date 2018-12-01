@@ -5,12 +5,11 @@ export interface AuthenticationModel {
   status: {
     isLogin: boolean,
     isAdmin: boolean
+  },
+  userInfo: {
+    id: string,
+    pw: string,
+    readPermissions: string,
+    writePermissions: string
   }
-}
-
-export interface AuthenticationActionModel {
-  id: string,
-  pw: string,
-  readPermissions: string,
-  writePermissions: string
 }

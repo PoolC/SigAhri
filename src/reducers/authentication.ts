@@ -1,24 +1,23 @@
 import { handleActions } from "redux-actions";
 import { RootState } from "./state";
 import { AuthenticationActions } from "../actions";
-import { AuthenticationModel, AuthenticationActionModel } from "../model";
+import { AuthenticationModel } from "../model";
 const update = require('react-addons-update');
 
-const initialAuthState: RootState.AuthenticationState = {
+const initialState: RootState.AuthenticationState = {
   login: {
     status: 'INIT'
   },
   status: {
     isLogin: false,
     isAdmin: false
+  },
+  userInfo: {
+    id: "",
+    pw: "",
+    readPermissions: "PUBLIC",
+    writePermissions: "PUBLIC"
   }
-};
-
-const initialInfoState: RootState.UserInfo = {
-  id: "",
-  pw: "",
-  readPermissions: "",
-  writePermissions: ""
 };
 
 export const authenticationReducer = handleActions<RootState.AuthenticationState, AuthenticationModel>(
@@ -36,7 +35,8 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
           status: { $set: 'SUCCESS' }
         },
         status: {
-          isLogin: { $set: true }
+          isLogin: { $set: true },
+          isAdmin: { $set: action.payload }
         }
       });
     },
@@ -55,6 +55,11 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
         status: {
           isLogin: { $set: false },
           isAdmin: { $set: false }
+        },
+        userInfo: {
+          id: { $set: "" },
+          readPermissions: { $set: "" },
+          writePermissions: { $set: "" }
         }
       });
     },
@@ -65,33 +70,18 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
         }
       });
     },
-    [AuthenticationActions.Type.AUTH_ADMIN_LOGIN]: (state, action) => {
+    [AuthenticationActions.Type.AUTH_CHECK_PERMISSIONS]: (state, action) => {
       return update(state, {
         status: {
-          isAdmin: { $set: true }
+
+        },
+        userInfo: {
+          id: { $set: action.payload },
+          readPermissions: { $set: state.status.isAdmin ? "ADMIN" : (state.status.isLogin ? "MEMBER" : "PUBLIC") },
+          writePermissions: { $set: state.status.isAdmin ? "ADMIN" : (state.status.isLogin ? "MEMBER" : "PUBLIC") }
         }
       });
     },
   },
-  initialAuthState
+  initialState
 );
-
-export const actionReducer = handleActions<RootState.UserInfo, AuthenticationActionModel>(
-  {
-    [AuthenticationActions.Type.AUTH_LOGIN_SUCCESS]: (state, action) => {
-      return update(state, {
-        id: { $set: action.payload },
-        readPermissions: { $set: "" /*state.status.isAdmin ? "ADMIN" : (state.status.isLogin ? "MEMBER" : "PUBLIC")*/ },
-        writePermissions: { $set: "" /*state.status.isAdmin ? "ADMIN" : (state.status.isLogin ? "MEMBER" : "PUBLIC")*/ }
-      });
-    },
-    [AuthenticationActions.Type.AUTH_LOGOUT]: (state, action) => {
-      return update(state, {
-        id: { $set: "" },
-        readPermissions: { $set: "" },
-        writePermissions: { $set: "" }
-      });
-    }
-  },
-  initialInfoState
-)
