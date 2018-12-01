@@ -1,5 +1,6 @@
 import * as React from "react";
 import {PostContainer} from "../../../containers/Board";
+import * as moment from 'moment';
 
 export namespace CommentList {
   export interface Props {
@@ -8,13 +9,8 @@ export namespace CommentList {
   }
 }
 
-const getDate = (date:string) : string => {
-  const dsplit = date.split("T");
-  const datepart = dsplit[0];
-  const timepart = dsplit[1].slice(0, dsplit[1].indexOf('.'));
-
-  const newTime = `${datepart} ${timepart}`;
-  return newTime;
+const getLocalTime = (time: string) => {
+  return moment.utc(time).local().format('YYYY-MM-DD HH:mm:ss');
 };
 
 export const CommentList: React.SFC<CommentList.Props> = (props) => {
@@ -28,13 +24,17 @@ export const CommentList: React.SFC<CommentList.Props> = (props) => {
             </div>
             <div className="col-6 comment-body">
               {comment.body}&nbsp;
-              <span className="comment-date">{getDate(comment.createdAt)}</span>
+              <span className="comment-date">{getLocalTime(comment.createdAt)}</span>
             </div>
-            <div className="col-3">
-              <button onClick={ () => { props.onDeleteComment(comment.id); } }
+            {comment.writePermission && <div className="col-3">
+              <button onClick={() => {
+                props.onDeleteComment(comment.id);
+              }}
                       className="btn float-right btn-outline-secondary delete-comment"
-              >삭제</button>
+              >삭제
+              </button>
             </div>
+            }
           </div>
         )
       })}

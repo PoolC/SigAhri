@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {PostContainer} from "../../../containers/Board";
 import './PostBody.scss';
+import * as moment from "moment";
 
 export namespace PostBody {
   export interface Props {
@@ -13,13 +14,8 @@ export namespace PostBody {
   }
 }
 
-const getDate = (date:string) : string => {
-  const dsplit = date.split("T");
-  const datepart = dsplit[0];
-  const timepart = dsplit[1].slice(0, dsplit[1].indexOf('.'));
-
-  const newTime = `${datepart} ${timepart}`;
-  return newTime;
+const getLocalTime = (time: string) => {
+  return moment.utc(time).local().format('YYYY-MM-DD HH:mm:ss');
 };
 
 const resizeVoteDiv = () => {
@@ -61,7 +57,7 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
           <span>{post.author.name}</span>
         </div>
         <div className="col-auto mr-auto content-right">
-          <span>{getDate(post.createdAt)}</span>
+          <span>{getLocalTime(post.createdAt)}</span>
         </div>
       </div>
       <p>{post.body}</p>

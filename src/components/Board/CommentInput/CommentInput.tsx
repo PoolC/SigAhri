@@ -11,7 +11,7 @@ export namespace Comment {
 
 }
 
-export class Comment extends React.Component<Comment.Props, Comment.State> {
+export class CommentInput extends React.Component<Comment.Props, Comment.State> {
   constructor(props: any) {
     super(props);
 

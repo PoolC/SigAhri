@@ -48,7 +48,8 @@ export namespace PostContainer {
     id: number,
     author: { name: string, loginID: string },
     body: string,
-    createdAt: string
+    createdAt: string,
+    writePermission: boolean
   }
 
   export interface Vote {
@@ -135,13 +136,21 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       }`
     }).then((msg) => {
       const data = msg.data.data.post;
-      const { isAdmin } = this.props;
+      const { isAdmin, id } = this.props;
       if(data === null) {
         // TODO: 읽기 권한이 없을때 404 페이지로 이동
         // TODO: 해당 글이 없을 때 또한 404 페이지로 이동
         history.push('/');
         return;
       }
+
+      // comment write permission 정하기
+      const comments = data.comments.map((comment: PostContainer.Comment) => ({
+        ...comment,
+        writePermission: isAdmin || (comment.author.loginID === id)
+      }));
+      data.comments = comments;
+
       this.setState({
         info: data,
         hasWritePermissions: isAdmin || (this.props.id === data.author.loginID)
@@ -289,6 +298,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         onDeleteComment={this.handleDeleteComment}
         onVoteSubmit={this.handleVoteSubmit}
         hasWritePermissions={this.state.hasWritePermissions}
+        hasLogin={this.props.isLogin}
       />
     )
   }

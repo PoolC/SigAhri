@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PostContainer } from '../../../containers';
-import { Comment } from '../Comment/Comment'
+import { CommentInput } from '../CommentInput/CommentInput'
 import { CommentList } from "../CommentList/CommentList";
 import {PostBodyContainer} from "../../../containers/Board/PostBodyContainer/PostBodyContainer";
 import history from '../../../history/history';
@@ -12,7 +12,8 @@ export namespace Post {
     onCreateComment?: (comment: string) => void,
     onDeleteComment?: (id: number) => void,
     onVoteSubmit?: (selectedOptions : number[]) => void,
-    hasWritePermissions: boolean
+    hasWritePermissions: boolean,
+    hasLogin: boolean
   }
 }
 
@@ -33,19 +34,14 @@ export class Post extends React.Component<Post.Props> {
   };
 
   render() {
-    const {info, onCreateComment, onDeleteComment, onVoteSubmit, hasWritePermissions} = this.props;
+    const {info, onCreateComment, onDeleteComment, onVoteSubmit, hasWritePermissions, hasLogin} = this.props;
     return (
       <React.Fragment>
         <h2 className="board-title">{info.board.name}</h2>
         <PostBodyContainer post={info} onVoteSubmit={onVoteSubmit} />
         <hr className="post-end"/>
-        <CommentList
-          comments={info.comments}
-          onDeleteComment={onDeleteComment}
-        />
-        <Comment
-          onCreateComment={onCreateComment}
-        />
+        <CommentList comments={info.comments} onDeleteComment={onDeleteComment} />
+        {hasLogin && <CommentInput onCreateComment={onCreateComment} /> }
         <div className="post-menu">
           <button onClick={this.handleToBoard} className="btn float-right">목록</button>
           {hasWritePermissions &&
