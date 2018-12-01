@@ -10,5 +10,7 @@ export interface AuthenticationModel {
 
 export interface AuthenticationActionModel {
   id: string,
-  pw: string
+  pw: string,
+  readPermissions: string,
+  writePermissions: string
 }

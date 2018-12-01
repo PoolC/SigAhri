@@ -9,7 +9,7 @@ export namespace AuthenticationActions {
     AUTH_LOGIN_SUCCESS = "AUTH_LOGIN_SUCCESS",
     AUTH_LOGIN_FAILURE = "AUTH_LOGIN_FAILURE",
     AUTH_LOGOUT = "AUTH_LOGOUT",
-    AUTH_LOGIN_INIT = "AUTN_LOGIN_INIT",
+    AUTH_LOGIN_INIT = "AUTH_LOGIN_INIT",
     AUTH_ADMIN_LOGIN = "AUTH_ADMIN_LOGIN"
   }
 
@@ -81,16 +81,17 @@ export namespace AuthenticationActions {
         },
         data: `query {
           me {
-            isAdmin
+            isAdmin,
+            loginID
           }
         }`
       }).then((msg) => {
         const data = msg.data;
-        console.log(data);
+        const me = data.data.me;
         if('errors' in data) {
           dispatch(loginInit());
         } else {
-          dispatch(loginSuccess());
+          dispatch(loginSuccess(me.loginID));
           if(data.data.me.isAdmin) {
             dispatch(adminLogin());
           }

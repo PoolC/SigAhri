@@ -1,10 +1,10 @@
 import { handleActions } from "redux-actions";
 import { RootState } from "./state";
 import { AuthenticationActions } from "../actions";
-import { AuthenticationModel } from "../model";
+import { AuthenticationModel, AuthenticationActionModel } from "../model";
 const update = require('react-addons-update');
 
-const initialState: RootState.AuthenticationState = {
+const initialAuthState: RootState.AuthenticationState = {
   login: {
     status: 'INIT'
   },
@@ -12,6 +12,13 @@ const initialState: RootState.AuthenticationState = {
     isLogin: false,
     isAdmin: false
   }
+};
+
+const initialInfoState: RootState.UserInfo = {
+  id: "",
+  pw: "",
+  readPermissions: "",
+  writePermissions: ""
 };
 
 export const authenticationReducer = handleActions<RootState.AuthenticationState, AuthenticationModel>(
@@ -66,6 +73,25 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
       });
     },
   },
-  initialState
+  initialAuthState
 );
 
+export const actionReducer = handleActions<RootState.UserInfo, AuthenticationActionModel>(
+  {
+    [AuthenticationActions.Type.AUTH_LOGIN_SUCCESS]: (state, action) => {
+      return update(state, {
+        id: { $set: action.payload },
+        readPermissions: { $set: "" /*state.status.isAdmin ? "ADMIN" : (state.status.isLogin ? "MEMBER" : "PUBLIC")*/ },
+        writePermissions: { $set: "" /*state.status.isAdmin ? "ADMIN" : (state.status.isLogin ? "MEMBER" : "PUBLIC")*/ }
+      });
+    },
+    [AuthenticationActions.Type.AUTH_LOGOUT]: (state, action) => {
+      return update(state, {
+        id: { $set: "" },
+        readPermissions: { $set: "" },
+        writePermissions: { $set: "" }
+      });
+    }
+  },
+  initialInfoState
+)
