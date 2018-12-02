@@ -5,10 +5,9 @@ export interface AuthenticationModel {
   status: {
     isLogin: boolean,
     isAdmin: boolean
+  },
+  userInfo: {
+    id: string,
+    pw: string
   }
-}
-
-export interface AuthenticationActionModel {
-  id: string,
-  pw: string
 }

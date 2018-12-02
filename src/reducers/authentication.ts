@@ -11,6 +11,10 @@ const initialState: RootState.AuthenticationState = {
   status: {
     isLogin: false,
     isAdmin: false
+  },
+  userInfo: {
+    id: "",
+    pw: ""
   }
 };
 
@@ -29,7 +33,8 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
           status: { $set: 'SUCCESS' }
         },
         status: {
-          isLogin: { $set: true }
+          isLogin: { $set: true },
+          isAdmin: { $set: action.payload }
         }
       });
     },
@@ -48,6 +53,9 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
         status: {
           isLogin: { $set: false },
           isAdmin: { $set: false }
+        },
+        userInfo: {
+          id: { $set: "" }
         }
       });
     },
@@ -58,14 +66,13 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
         }
       });
     },
-    [AuthenticationActions.Type.AUTH_ADMIN_LOGIN]: (state, action) => {
+    [AuthenticationActions.Type.AUTH_GET_USERID]: (state, action) => {
       return update(state, {
-        status: {
-          isAdmin: { $set: true }
+        userInfo: {
+          id: { $set: action.payload }
         }
       });
     },
   },
   initialState
 );
-

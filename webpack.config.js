@@ -71,6 +71,11 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       apiUrl: JSON.stringify('http://nagase.lynlab.co.kr/graphql'),
+      permissions: JSON.stringify({
+        "ADMIN": ["ADMIN", "MEMBER", "PUBLIC"],
+        "MEMBER": ["MEMBER", "PUBLIC"],
+        "PUBLIC": ["PUBLIC"]
+      }),
       uploadUrl: JSON.stringify('http://nagase.lynlab.co.kr/files')
     })
   ]

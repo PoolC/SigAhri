@@ -1,0 +1,97 @@
+.post-form-title {
+  margin-bottom: 25px;
+}
+
+.post-form-input {
+  padding: 6px 12px;
+  background: #fff;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-sizing: border-box;
+  font-size: 14px;
+
+  &.post-form-input-small {
+    /* type=number인 경우 생기는 화살표 없앰 */
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    margin-left: 15px;
+    margin-right: 5px;
+    width: 70px;
+  }
+
+  &.post-form-input-title {
+    font-size: 18px;
+  }
+}
+
+.post-form-input-not-full {
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.post-form-block {
+  margin-bottom: 10px;
+
+  h5 {
+    margin-bottom: 10px;
+  }
+
+  h5.no-margin {
+    margin-bottom: 0px;
+  }
+
+  .post-form-checkbox {
+    width: 23px;
+    height: 23px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
+}
+
+.post-form-button-container {
+  float: right;
+
+  button {
+    margin: 10px 10px;
+  }
+}
+
+.post-form-vote-container {
+  margin: 0 auto;
+  padding: 10px;
+  width: 350px;
+  background-color: #FAFAFA;
+
+  h3 {
+    margin-bottom: 15px;
+  }
+
+  .post-form-option-add-button {
+    margin-left: 10px;
+  }
+
+  ul > li {
+    margin-top: 5px;
+  }
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+@media (min-width: 768px) {
+  /* 모바일의 경우 투표는 가운데 정렬 */
+  .post-form-vote-container {
+    margin: 25px;
+  }
+}

@@ -9,8 +9,8 @@ export namespace AuthenticationActions {
     AUTH_LOGIN_SUCCESS = "AUTH_LOGIN_SUCCESS",
     AUTH_LOGIN_FAILURE = "AUTH_LOGIN_FAILURE",
     AUTH_LOGOUT = "AUTH_LOGOUT",
-    AUTH_LOGIN_INIT = "AUTN_LOGIN_INIT",
-    AUTH_ADMIN_LOGIN = "AUTH_ADMIN_LOGIN"
+    AUTH_LOGIN_INIT = "AUTH_LOGIN_INIT",
+    AUTH_GET_USERID = "AUTH_GET_USERID"
   }
 
   const login = createAction(Type.AUTH_LOGIN);
@@ -18,7 +18,7 @@ export namespace AuthenticationActions {
   const loginFailure = createAction(Type.AUTH_LOGIN_FAILURE);
   const logout = createAction(Type.AUTH_LOGOUT);
   const loginInit = createAction(Type.AUTH_LOGIN_INIT);
-  const adminLogin = createAction(Type.AUTH_ADMIN_LOGIN);
+  const setUserID = createAction(Type.AUTH_GET_USERID);
 
   export const loginRequest = (id: string, pw: string) => {
     return (dispatch: Dispatch) => {
@@ -74,7 +74,6 @@ export namespace AuthenticationActions {
 
   export const tokenApplyRequest = (token: string) => {
     return (dispatch: Dispatch) => {
-      console.log(token);
       if(token === null) {
         return;
       }
@@ -87,19 +86,18 @@ export namespace AuthenticationActions {
         },
         data: `query {
           me {
-            isAdmin
+            isAdmin,
+            loginID
           }
         }`
       }).then((msg) => {
         const data = msg.data;
-        console.log(data);
+        const me = data.data.me;
         if('errors' in data) {
           dispatch(loginInit());
         } else {
-          dispatch(loginSuccess());
-          if(data.data.me.isAdmin) {
-            dispatch(adminLogin());
-          }
+          dispatch(loginSuccess(me.isAdmin));
+          dispatch(setUserID(me.loginID));
         }
       }).catch((msg) => {
         console.log("token apply error -----");
