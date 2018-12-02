@@ -4,5 +4,6 @@ import { Register } from './Register/Register';
 import { BoardContainer, PostListContainer, PostContainer } from './Board';
 import { Project } from './Project/Project';
 import Header from './Header/Header';
+import { Info } from './Info/Info'
 
-export { App, Login, Register, BoardContainer, Project, Header, PostListContainer, PostContainer };
+export { App, Login, Register, BoardContainer, Project, Header, PostListContainer, PostContainer, Info };

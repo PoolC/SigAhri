@@ -76,6 +76,7 @@ module.exports = {
         "MEMBER": ["MEMBER", "PUBLIC"],
         "PUBLIC": ["PUBLIC"]
       })
+      uploadUrl: JSON.stringify('http://nagase.lynlab.co.kr/files')
     })
   ]
 };

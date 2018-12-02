@@ -35,7 +35,7 @@ class Login extends React.Component<Props, State> {
 
   render(): JSX.Element {
     return (
-      <Authentication mode={true} handleLogin={this.handleLogin}/>
+      <Authentication mode={1} handleLogin={this.handleLogin}/>
     );
   }
 }

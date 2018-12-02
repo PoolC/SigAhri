@@ -41,7 +41,12 @@ export namespace AuthenticationActions {
       }).then((msg) => {
         const data = msg.data;
         if('errors' in data) {
-          alert('아이디 혹은 비밀번호가 틀렸습니다.');
+          if(data.errors[0].message === "TKN000") {
+            alert('아이디 혹은 비밀번호가 틀렸습니다.');
+          } else {
+            console.log("login API error -----");
+            console.log(data);
+          }
           dispatch(loginFailure());
         } else {
           const token = data.data.createAccessToken.key;
@@ -63,6 +68,7 @@ export namespace AuthenticationActions {
     return (dispatch: Dispatch) => {
       localStorage.removeItem('accessToken');
       dispatch(logout());
+      history.push('/');
     }
   };
 
