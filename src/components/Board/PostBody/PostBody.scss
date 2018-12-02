@@ -3,3 +3,19 @@ form fieldset {
     margin-left: 15px;
   }
 }
+
+.content-left {
+  padding-left: 0px!important;
+}
+
+.content-right {
+  border-left: 1px solid rgba(0,0,0,0.7)!important;
+}
+
+.author-info {
+  margin: 10px 0;
+}
+
+.post-title {
+  line-height: 1.6;
+}

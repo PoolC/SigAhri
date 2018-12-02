@@ -4,6 +4,7 @@ import { CommentInput } from '../CommentInput/CommentInput'
 import { CommentList } from "../CommentList/CommentList";
 import {PostBodyContainer} from "../../../containers/Board/PostBodyContainer/PostBodyContainer";
 import history from '../../../history/history';
+import './Post.scss';
 
 export namespace Post {
   export interface Props {

@@ -68,7 +68,6 @@ export namespace AuthenticationActions {
 
   export const tokenApplyRequest = (token: string) => {
     return (dispatch: Dispatch) => {
-      console.log(token);
       if(token === null) {
         return;
       }

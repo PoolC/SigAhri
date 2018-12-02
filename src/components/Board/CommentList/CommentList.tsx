@@ -1,6 +1,7 @@
 import * as React from "react";
 import {PostContainer} from "../../../containers/Board";
 import * as moment from 'moment';
+import './CommentList.scss';
 
 export namespace CommentList {
   export interface Props {

@@ -212,7 +212,6 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         data: data
       }).then((msg) => {
         const data = msg.data;
-        console.log(data);
 
         if ('errors' in data) {
           const error = data.errors[0];
@@ -331,7 +330,6 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         }
 
         this.setState(nextState);
-        console.log(this.state);
       }).catch((msg) => {
         console.log("post API error");
         console.log(msg);

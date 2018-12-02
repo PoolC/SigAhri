@@ -1,0 +1,20 @@
+.post-end {
+  border-top: 2.4px solid rgba(0,0,0,0.3)!important;
+}
+
+.post-menu {
+  margin-top: 7px;
+  button {
+    margin-left: 5px;
+  }
+  button.last {
+    margin-left: 0px;
+  }
+}
+
+@media (min-width: 768px) {
+  .board-title {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}

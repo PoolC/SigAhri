@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './CommentInput.scss';
 
 export namespace Comment {
   export interface Props {
