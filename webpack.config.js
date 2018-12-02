@@ -75,7 +75,7 @@ module.exports = {
         "ADMIN": ["ADMIN", "MEMBER", "PUBLIC"],
         "MEMBER": ["MEMBER", "PUBLIC"],
         "PUBLIC": ["PUBLIC"]
-      })
+      }),
       uploadUrl: JSON.stringify('http://nagase.lynlab.co.kr/files')
     })
   ]
