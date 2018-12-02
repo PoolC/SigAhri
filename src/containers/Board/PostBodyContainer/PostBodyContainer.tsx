@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import {PostContainer} from "..";
 import {PostBody} from "../../../components/Board/PostBody/PostBody";
+import * as moment from "moment";
 
 const mapStateToProps = (state: RootState) => ({
   isLogin: state.authentication.status.isLogin,
@@ -22,7 +23,8 @@ export namespace PostBodyContainer {
 
   export interface State {
     selectedOptions: {[optionValue:number]: boolean},
-    hasVoted: boolean // TODO: 이미 투표했는지 정보 가져오기
+    hasVoted: boolean,
+    voteHasFinished: boolean
   }
 
   export type Props = typeof statePropTypes & SubProps
@@ -34,12 +36,14 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
 
     this.state = {
       selectedOptions: {},
-      hasVoted: false
+      hasVoted: false,
+      voteHasFinished: false
     }
   }
 
   componentDidMount() {
     this.checkHasVoted();
+    this.checkVoteHasFinished();
   }
 
   checkHasVoted = () => {
@@ -59,6 +63,20 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
           return { hasVoted: hasVoted }
         }
       })
+    }
+  };
+
+  checkVoteHasFinished = () => {
+    const { post } = this.props;
+    if(post.vote !== null) {
+      const deadlineInUTC = moment(moment.utc(post.vote.deadline), 'YYYY-MM-DD HH:mm:ss');
+      const now = moment(moment.utc(), 'YYYY-MM-DD HH:mm:ss');
+
+      if (now.diff(deadlineInUTC, "seconds") > 0) {
+        this.setState({
+          voteHasFinished: true
+        })
+      }
     }
   };
 
@@ -123,6 +141,7 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
       <PostBody post={this.props.post} handleVoteSubmit={this.handleVoteSubmit}
                 checkVote={this.checkVote} handleReVote={this.handleReVote}
                 hasVoted={this.state.hasVoted} hasLogin={this.props.isLogin}
+                voteHasFinished={this.state.voteHasFinished}
       />
     )
   }

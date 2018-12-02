@@ -34,6 +34,7 @@
     "react": "^16.5.2",
     "react-addons-update": "^15.6.2",
     "react-dom": "^16.5.2",
+    "react-markdown": "^4.0.4",
     "react-redux": "^5.0.7",
     "react-redux-typescript": "^3.0.0-rc.3",
     "react-router-dom": "^4.3.1",

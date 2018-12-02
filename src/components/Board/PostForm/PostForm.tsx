@@ -239,7 +239,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         data: `mutation {
           updatePost(postID: ${this.props.match.params.postID}, PostInput: {
           title: "${title}",
-          body: "${body}"
+          body: """${body}"""
           }) {
             id
           }
@@ -331,6 +331,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         }
 
         this.setState(nextState);
+        console.log(this.state);
       }).catch((msg) => {
         console.log("post API error");
         console.log(msg);
