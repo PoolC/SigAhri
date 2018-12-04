@@ -205,7 +205,8 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       }`
     }).then((msg) => {
       const { info } = this.state;
-      const newComment = msg.data.data.createComment;
+      let newComment = msg.data.data.createComment;
+      newComment.writePermission = this.props.isAdmin || (newComment.author.loginID === this.props.id);
       this.setState({
         info: {
           ...info,

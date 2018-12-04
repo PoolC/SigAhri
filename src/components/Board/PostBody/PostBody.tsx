@@ -53,7 +53,7 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
           </fieldset>
         </form>
       )}
-      {post.vote !== null && hasVoted  && (
+      {post.vote !== null && ((hasVoted) || (voteHasFinished)) && (
         <div className="container-fluid vote-progress">
           {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { loginID: string }[] }) => {
             const { totalVotersCount } = post.vote;

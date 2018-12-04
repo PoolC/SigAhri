@@ -146,7 +146,6 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
   }
 
   render() {
-    console.log(this.state);
     return (
       <PostList posts={this.state.posts} name={this.props.name}
                 typeId={this.props.typeId} writePermission={this.props.writePermission} pageInfo={this.state.pageInfo}
