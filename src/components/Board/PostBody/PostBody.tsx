@@ -34,7 +34,7 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
           <span>{getLocalTime(post.createdAt)}</span>
         </div>
       </div>
-      <ReactMarkdown source={post.body.replace(/\n/g, "  \n")} />
+      <ReactMarkdown className="post-content" source={post.body.replace(/\n/g, "  \n")} />
       {post.vote !== null && !hasVoted && !voteHasFinished && (
         <form>
           <fieldset>
