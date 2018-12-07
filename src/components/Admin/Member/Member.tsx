@@ -16,8 +16,8 @@ export namespace Member {
     loginID: string,
     email: string,
     phoneNumber: string,
-    isActivated: string,
-    isAdmin: string
+    isActivated: boolean,
+    isAdmin: boolean
   }
 }
 
@@ -72,7 +72,10 @@ export class Member extends React.Component<Member.Props, Member.State> {
     });
   }
 
-  handleToggleActivated(uuid: string) {
+  handleToggleActivated(uuid: string, name: string, register: boolean) {
+    if(!confirm(`${name}님을 ${register?'승인':'탈퇴'}시키겠습니까?`))
+      return false;
+
     const headers: any = {
       'Content-Type': 'application/graphql'
     };
@@ -100,7 +103,10 @@ export class Member extends React.Component<Member.Props, Member.State> {
     return false;
   }
 
-  handleToggleAdmin(uuid: string) {
+  handleToggleAdmin(uuid: string, name: string, register: boolean) {
+    if(!confirm(`${name}님의 관리자권한을 ${register?'임명':'해제'}하시겠습니까?`))
+      return false;
+
     const headers: any = {
       'Content-Type': 'application/graphql'
     };
@@ -161,11 +167,11 @@ export class Member extends React.Component<Member.Props, Member.State> {
                 {member.isActivated ?
                   (<a href="#" onClick={(event) => {
                     event.preventDefault();
-                    this.handleToggleActivated(member.uuid);
+                    this.handleToggleActivated(member.uuid, member.name, !member.isActivated);
                   }}>탈퇴</a>) :
                   (<a href="#" onClick={(event) => {
                     event.preventDefault();
-                    this.handleToggleActivated(member.uuid);
+                    this.handleToggleActivated(member.uuid, member.name, !member.isActivated);
                   }}>승인</a>)}
               </td>
               <td>{member.isAdmin ? 'O' : 'X'}</td>
@@ -173,11 +179,11 @@ export class Member extends React.Component<Member.Props, Member.State> {
                 {member.isAdmin ?
                   (<a href="#" onClick={(event) => {
                     event.preventDefault();
-                    this.handleToggleAdmin(member.uuid);
+                    this.handleToggleAdmin(member.uuid, member.name, !member.isAdmin);
                   }}>해제</a>) :
                   (<a href="#" onClick={(event) => {
                     event.preventDefault();
-                    this.handleToggleAdmin(member.uuid);
+                    this.handleToggleAdmin(member.uuid, member.name, !member.isAdmin);
                   }}>임명</a>)}
               </td>
             </tr>
