@@ -9,7 +9,8 @@ import { connect } from 'react-redux';
 import { NavBar } from '../../components/Header/NavBar'
 
 const mapStateToProps = (state: RootState) => ({
-  isLogin: state.authentication.status.isLogin
+  isLogin: state.authentication.status.isLogin,
+  isAdmin: state.authentication.status.isAdmin
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -36,7 +37,7 @@ class Header extends React.Component<Props, State> {
 
   render() {
     return (
-        <NavBar isLogin={this.props.isLogin} onLogout={this.handleLogout}/>
+        <NavBar isLogin={this.props.isLogin} isAdmin={this.props.isAdmin} onLogout={this.handleLogout}/>
     );
   }
 }
