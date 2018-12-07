@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 import './Admin.scss';
+import { Member } from './Member/Member';
 import { Board } from './Board/Board';
 import { BoardForm, BoardFormType } from './Board/BoardForm/BoardForm';
 import { Project } from './Project/Project';
@@ -91,11 +92,7 @@ export class Admin extends React.Component<Admin.Props, Admin.State> {
         </div>
         <div className="col">
           <Switch>
-            <Route exact path="/admin/members"
-                   render={(props) => (
-                     <div>회원관리</div>
-                   )}
-            />
+            <Route exact path="/admin/members" component={Member} />
 
             <Route exact path="/admin/boards" component={Board} />
             <Route exact path="/admin/boards/new"
