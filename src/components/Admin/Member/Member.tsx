@@ -31,6 +31,7 @@ export class Member extends React.Component<Member.Props, Member.State> {
 
     this.handleLoadMembers = this.handleLoadMembers.bind(this);
     this.handleToggleActivated = this.handleToggleActivated.bind(this);
+    this.handleToggleAdmin = this.handleToggleAdmin.bind(this);
   }
 
   componentDidMount() {
@@ -99,6 +100,34 @@ export class Member extends React.Component<Member.Props, Member.State> {
     return false;
   }
 
+  handleToggleAdmin(uuid: string) {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: `mutation {
+        toggleMemberIsAdmin(memberUUID: "${uuid}") {
+          uuid
+        }
+      }`
+    }).then((msg) => {
+      this.handleLoadMembers();
+    }).catch((msg) => {
+      console.log("me API error");
+      console.log(msg);
+    });
+
+    return false;
+  }
+
   render() {
     return (
       <div className="admin-member-container">
@@ -114,6 +143,7 @@ export class Member extends React.Component<Member.Props, Member.State> {
             <th scope="col">이메일</th>
             <th scope="col">연락처</th>
             <th scope="col">승인</th>
+            <th scope="col">동작</th>
             <th scope="col">관리자</th>
             <th scope="col">동작</th>
           </tr>
@@ -127,7 +157,6 @@ export class Member extends React.Component<Member.Props, Member.State> {
               <td>{member.email}</td>
               <td>{member.phoneNumber}</td>
               <td>{member.isActivated ? 'O' : 'X'}</td>
-              <td>{member.isAdmin ? 'O' : 'X'}</td>
               <td>
                 {member.isActivated ?
                   (<a href="#" onClick={(event) => {
@@ -138,6 +167,18 @@ export class Member extends React.Component<Member.Props, Member.State> {
                     event.preventDefault();
                     this.handleToggleActivated(member.uuid);
                   }}>승인</a>)}
+              </td>
+              <td>{member.isAdmin ? 'O' : 'X'}</td>
+              <td>
+                {member.isAdmin ?
+                  (<a href="#" onClick={(event) => {
+                    event.preventDefault();
+                    this.handleToggleAdmin(member.uuid);
+                  }}>해제</a>) :
+                  (<a href="#" onClick={(event) => {
+                    event.preventDefault();
+                    this.handleToggleAdmin(member.uuid);
+                  }}>임명</a>)}
               </td>
             </tr>
           ))}
