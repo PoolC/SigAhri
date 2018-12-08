@@ -49,6 +49,7 @@ export class Authentication extends React.Component<Authentication.Props, Partia
         pw: ""
       };
       this.handleLogin = this.handleLogin.bind(this);
+      this.loginKeyPress = this.loginKeyPress.bind(this);
     } else if(this.props.mode === 2) {
       this.state = {
         id: "",
@@ -123,6 +124,12 @@ export class Authentication extends React.Component<Authentication.Props, Partia
     this.props.handleInfoModify(pw, email, phone);
   }
 
+  loginKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+    if(e.keyCode === 13) {
+      this.handleLogin();
+    }
+  }
+
   public render(): JSX.Element {
     function getInputBox(label: string, inputName: string, inputType: string, classPointer: Authentication,
                          value: string, placeHolder: string = "", disabled: boolean = false): JSX.Element {
@@ -136,7 +143,9 @@ export class Authentication extends React.Component<Authentication.Props, Partia
             placeholder={placeHolder}
             value={value}
             onChange={classPointer.handleChange}
-            disabled={disabled}/>
+            disabled={disabled}
+            onKeyDown={classPointer.props.mode === 1 ? classPointer.loginKeyPress : null}
+          />
         </div>
       );
     }

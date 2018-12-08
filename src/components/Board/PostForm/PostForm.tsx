@@ -59,6 +59,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     this.handleVoteIsMultipleSelectableChange = this.handleVoteIsMultipleSelectableChange.bind(this);
     this.handleVoteOptionAdd = this.handleVoteOptionAdd.bind(this);
     this.handleVoteOptionDelete = this.handleVoteOptionDelete.bind(this);
+    this.voteAddKeyPress = this.voteAddKeyPress.bind(this);
   }
 
   handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -123,7 +124,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
       alert("투표 항목의 이름을 입력해주세요.");
       return;
     }
-    if (newOption in this.state.vote.optionText) {
+    if (this.state.vote.optionText.indexOf(newOption) != -1) {
       alert("동일한 이름의 투표가 존재합니다.");
       return;
     }
@@ -360,6 +361,12 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     }
   }
 
+  voteAddKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+    if(e.keyCode === 13) {
+      this.handleVoteOptionAdd();
+    }
+  }
+
   render() {
     const isEdit = this.props.type === PostFormType.edit;
 
@@ -397,7 +404,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
               {
                 isEdit ? null :
                   (<div>
-                    <input id="post-vote-option" className="post-form-input-not-full"/>
+                    <input id="post-vote-option" className="post-form-input-not-full" onKeyDown={this.voteAddKeyPress}/>
                     <button className="btn btn-secondary post-form-option-add-button" onClick={this.handleVoteOptionAdd}>추가</button>
                   </div>)
               }
