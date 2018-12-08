@@ -7,6 +7,7 @@ import { returntypeof } from 'react-redux-typescript';
 import { connect } from 'react-redux';
 import { AuthenticationActions } from '../../actions';
 import './App.scss';
+import axios from 'axios';
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   tokenApplyRequest: (token: string) => {
@@ -19,12 +20,58 @@ const actionProps = returntypeof(mapDispatchToProps);
 type Props = typeof actionProps;
 
 class App extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+
+    this.tokenRefreshRequest = this.tokenRefreshRequest.bind(this);
+  }
+
+  tokenRefreshRequest() {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+
+      axios({
+        url: apiUrl,
+        method: 'post',
+        headers: headers,
+        data: `mutation {
+          refreshAccessToken{
+            key
+          }
+        }`
+      }).then((msg) => {
+        const data = msg.data;
+        if('errors' in data) {
+          console.log("refresh token API error -----");
+          console.log(data);
+        } else {
+          const token = data.data.refreshAccessToken.key;
+          localStorage.setItem('accessToken', token);
+          console.log("refreshed");
+          console.log(token);
+        }
+      }).catch((msg) => {
+        console.log("refresh API Error -----");
+        console.log(msg);
+      });
+    }
+
+    setTimeout(() => {
+      this.tokenRefreshRequest()
+    }, 60*60*1000);
+  };
+
   componentDidMount() {
     const token = localStorage.getItem('accessToken');
-    if (token !== null) {
-      this.props.tokenApplyRequest(token);
-    }
+    this.props.tokenApplyRequest(token);
+
+    this.tokenRefreshRequest();
   }
+
 
   render() {
     return (
