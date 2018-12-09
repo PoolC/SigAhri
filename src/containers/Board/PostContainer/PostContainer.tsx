@@ -123,7 +123,7 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
             createdAt,
             id
           },
-          author { name },
+          author { name, loginID },
           vote {
             id,
             title,
@@ -151,6 +151,8 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       }));
       data.comments = comments;
 
+      console.log(data.author.loginID);
+      console.log(this.props.id);
       this.setState({
         info: data,
         hasWritePermissions: isAdmin || (this.props.id === data.author.loginID)
