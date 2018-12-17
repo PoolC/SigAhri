@@ -7,5 +7,6 @@ import { UploadSuccess } from './Upload/UploadSuccess/UploadSuccess';
 import { Admin } from './Admin/Admin'
 import { ProjectList } from './Project/ProjectList/ProjectList';
 import { ProjectItem } from './Project/ProjectItem/ProjectItem';
+import { Footer } from './Footer/Footer'
 
-export { Home, Authentication, RegisterSuccess, Board, Post, PostList, PostForm, Upload, UploadSuccess, ProjectList, ProjectItem, Admin};
+export { Home, Authentication, RegisterSuccess, Board, Post, PostList, PostForm, Upload, UploadSuccess, ProjectList, ProjectItem, Admin, Footer};

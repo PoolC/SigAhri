@@ -1,9 +1,22 @@
+html, body, div#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#content {
+  min-height: 100%;
+}
+
 .my-container {
   width: 100%;
   padding-right: 15px;
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
+  // 250px is for footer
+  min-height: calc(100% - 200px);
+  position: relative;
 }
 
 @media (min-width: 576px) {
