@@ -25,6 +25,9 @@ export class Post extends React.Component<Post.Props> {
   };
 
   handleDelete = (event:React.MouseEvent<HTMLButtonElement>) => {
+    if(!confirm("정말로 삭제하시겠습니까?")) {
+      return;
+    }
     const { onDeletePost } = this.props;
     onDeletePost();
   };

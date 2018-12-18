@@ -5,7 +5,7 @@ import * as moment from 'moment';
 
 namespace PostListItem {
   export interface Props {
-    post: PostList.PostInfo
+    post: PostList.PostInfo,
   }
 }
 
@@ -27,7 +27,12 @@ export namespace PostList {
     posts: Array<PostInfo>,
     name: string,
     typeId: number,
-    writePermission: boolean
+    writePermission: boolean,
+    pageInfo: pageInfo,
+
+    afterPageAction: () => void,
+    beforePageAction: () => void,
+    firstPageAction: () => void
   }
 
   export interface PostInfo {
@@ -35,6 +40,11 @@ export namespace PostList {
     author: {[key:string]:string},
     createdAt: string,
     title: string
+  }
+
+  export interface pageInfo {
+    hasNext: boolean,
+    hasPrevious: boolean
   }
 }
 
@@ -65,6 +75,17 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
         }) }
         </tbody>
       </table>
+      <div>
+        <button onClick={() => props.firstPageAction()}><a href="#">첫 페이지</a></button>
+        { props.pageInfo.hasPrevious ?
+          (<button onClick={() => props.afterPageAction()}><a href="#">이전 페이지</a></button>) :
+          null
+        }
+        { props.pageInfo.hasNext ?
+          (<button onClick={() => props.beforePageAction()}><a href="#">다음 페이지</a></button>) :
+          null
+        }
+      </div>
     </div>
   );
-}
+};

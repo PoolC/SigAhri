@@ -5,7 +5,7 @@ form fieldset {
 }
 
 .content-left {
-  padding-left: 0px!important;
+  padding-left: 0!important;
 }
 
 .content-right {
@@ -18,4 +18,14 @@ form fieldset {
 
 .post-title {
   line-height: 1.6;
+}
+
+.post-content {
+  img {
+    max-width: 90%;
+  }
+}
+
+.progress {
+  background: #B0B0B0;
 }
