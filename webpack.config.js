@@ -76,7 +76,8 @@ module.exports = {
         "MEMBER": ["MEMBER", "PUBLIC"],
         "PUBLIC": ["PUBLIC"]
       }),
-      uploadUrl: JSON.stringify('http://nagase.lynlab.co.kr/files')
+      uploadUrl: JSON.stringify('http://nagase.lynlab.co.kr/files'),
+      logoUrl: JSON.stringify('https://poolc.org/static/spec/poolc.vertical.svg')
     })
   ]
 };

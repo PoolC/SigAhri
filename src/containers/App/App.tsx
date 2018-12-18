@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Login, Register, BoardContainer, Project, Header, Info } from '../';
-import { Home, Upload, UploadSuccess, Admin } from '../../components';
+import { Home, Upload, UploadSuccess, Admin, Footer } from '../../components';
 import { Route, Switch } from 'react-router-dom';
 import { Dispatch, compose } from 'redux';
 import { returntypeof } from 'react-redux-typescript';
@@ -77,6 +77,7 @@ class App extends React.Component<Props> {
     return (
       <div className="app my-container">
         <Header/>
+        <div id='content'>
         <Switch>
           <Route exact path="/" component={Home}/>
           <Route exact path="/page/about" component={Home}/>
@@ -92,6 +93,8 @@ class App extends React.Component<Props> {
 
           <Route path="/admin" component={Admin}/>
         </Switch>
+        </div>
+        <Footer />
       </div>
     );
   }
