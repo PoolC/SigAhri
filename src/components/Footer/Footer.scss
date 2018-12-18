@@ -1,19 +1,15 @@
 footer {
-  width: calc(100% - 30px);
-  margin-left: 15px;
-  height: 200px;
-  position: absolute;
-  bottom: -200px;
-  left: 0;
+  margin-top: 20px;
+  position: relative;
   color: white;
   background-color: #666666;
-  padding: 20px 40px;
+  padding: 10px 20px;
 }
 
 .footer-content {
   height: 100%;
-  margin-right: 50px;
   float: left;
+  margin-right: 10px;
 }
 
 .footer-content > img {
@@ -38,5 +34,25 @@ footer {
     margin-left: 5px;
     margin-right: 5px;
     color: white;
+  }
+}
+
+@media (min-width: 992px) {
+  footer {
+    width: calc(100% - 30px);
+    margin-left: 15px;
+    height: 200px;
+    position: absolute;
+    bottom: -200px;
+    left: 0;
+    color: white;
+    background-color: #666666;
+    padding: 20px 40px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .footer-content {
+    margin-right: 50px
   }
 }

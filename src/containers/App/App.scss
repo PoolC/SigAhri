@@ -14,8 +14,6 @@ html, body, div#root {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
-  // 250px is for footer
-  min-height: calc(100% - 200px);
   position: relative;
 }
 
@@ -34,6 +32,8 @@ html, body, div#root {
 @media (min-width: 992px) {
   .my-container {
     width: 960px;
+    // 250px is for footer
+    min-height: calc(100% - 200px);
   }
 }
 
