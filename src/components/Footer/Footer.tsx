@@ -3,7 +3,7 @@ import './Footer.scss';
 
 export const Footer: React.SFC = (props) => {
   return (
-    <footer className="row">
+    <footer className="justify-content-center">
       <span className="footer-content">
         <img src={logoUrl} />
       </span>

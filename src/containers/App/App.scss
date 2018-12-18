@@ -4,47 +4,49 @@ html, body, div#root {
   height: 100%;
 }
 
-#content {
-  min-height: 100%;
+.app-container {
+  position: relative;
+  height: 100%;
 }
 
-.my-container {
+.app-content-container {
   width: 100%;
+  // subtract footer, header height, footer margin
+  min-height: calc(100% - 200px - 75px - 20px);
   padding-right: 15px;
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
-  position: relative;
 }
 
 @media (min-width: 576px) {
-  .my-container {
+  .app-content-container {
     width: 540px;
   }
 }
 
 @media (min-width: 768px) {
-  .my-container {
+  .app-content-container {
     width: 720px;
   }
 }
 
 @media (min-width: 992px) {
-  .my-container {
+  .app-content-container {
     width: 960px;
-    // 250px is for footer
-    min-height: calc(100% - 200px);
+    // subtract footer, header height
+    min-height: calc(100% - 200px - 75px - 20px;);
   }
 }
 
 @media (min-width: 1200px) {
-  .my-container {
+  .app-content-container {
     width: 1140px;
   }
 }
 
 @media (min-width: 1500px) {
-  .my-container {
+  .app-content-container {
     width: 1440px;
   }
 }

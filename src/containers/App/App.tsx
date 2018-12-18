@@ -75,24 +75,24 @@ class App extends React.Component<Props> {
 
   render() {
     return (
-      <div className="app my-container">
+      <div className="app-container">
         <Header/>
-        <div id='content'>
-        <Switch>
-          <Route exact path="/" component={Home}/>
-          <Route exact path="/page/about" component={Home}/>
-          <Route path="/board" render={(props)=>(<BoardContainer {...props} type="postList"/>)}/>
-          <Route path="/posts" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
-          <Route path="/article/view" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
-          <Route path="/project" component={Project}/>
-          <Route path="/register" component={Register}/>
-          <Route path="/login" component={Login}/>
-          <Route path="/info" component={Info}/>
-          <Route exact path="/upload" component={Upload}/>
-          <Route exact path="/upload/success/:filename" component={UploadSuccess}/>
+        <div className="app-content-container">
+          <Switch>
+            <Route exact path="/" component={Home}/>
+            <Route exact path="/page/about" component={Home}/>
+            <Route path="/board" render={(props)=>(<BoardContainer {...props} type="postList"/>)}/>
+            <Route path="/posts" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
+            <Route path="/article/view" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
+            <Route path="/project" component={Project}/>
+            <Route path="/register" component={Register}/>
+            <Route path="/login" component={Login}/>
+            <Route path="/info" component={Info}/>
+            <Route exact path="/upload" component={Upload}/>
+            <Route exact path="/upload/success/:filename" component={UploadSuccess}/>
 
-          <Route path="/admin" component={Admin}/>
-        </Switch>
+            <Route path="/admin" component={Admin}/>
+          </Switch>
         </div>
         <Footer />
       </div>
