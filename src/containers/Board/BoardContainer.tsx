@@ -5,6 +5,9 @@ import { RootState } from '../../reducers';
 import { returntypeof } from 'react-redux-typescript';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from "react-router";
+import history from '../../history/history';
+import * as queryString from 'query-string';
 
 const mapStateToProps = (state: RootState) => ({
   isLogin: state.authentication.status.isLogin,
@@ -14,9 +17,11 @@ const mapStateToProps = (state: RootState) => ({
 const statePropTypes = returntypeof(mapStateToProps);
 
 export namespace BoardContainer {
-  export type Props = typeof statePropTypes & {
+  export type Props = typeof statePropTypes & SubProps & {
     type: string
   }
+
+  interface SubProps extends RouteComponentProps {}
 
   export interface State {
     boards: Array<BoardInfo>,
@@ -45,8 +50,15 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   constructor(props: BoardContainer.Props) {
     super(props);
 
-    if(window.location.pathname === "/board") {
-      window.location.pathname = "/board/notice";
+    if(props.location.pathname === '/board') {
+      history.push('/board/notice');
+    } else if(props.location.pathname.indexOf('/article/view') != -1) {
+      const id = queryString.parse(props.location.search).id;
+      if(typeof id !== 'string') {
+        // TODO: 404 page
+      } else {
+        history.push(`/posts/${id}`);
+      }
     }
 
     this.state = {
