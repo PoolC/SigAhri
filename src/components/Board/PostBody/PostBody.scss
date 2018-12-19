@@ -4,23 +4,17 @@ form fieldset {
   }
 }
 
-.content-left {
-  padding-left: 0!important;
-}
-
-.content-right {
-  border-left: 1px solid rgba(0,0,0,0.7)!important;
-}
-
-.author-info {
-  margin: 10px 0;
-}
-
 .post-title {
   line-height: 1.6;
 }
 
+.post-meta {
+  color: #757575;
+}
+
 .post-content {
+  line-height: 2.0;
+
   img {
     max-width: 90%;
   }

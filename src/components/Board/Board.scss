@@ -15,8 +15,11 @@
 }
 
 .board-content {
-  table th {
-    min-width: 90px;
+  padding: 25px;
+  table {
+    table-layout: auto;
+    a { color: rgb(33, 37, 41); }
+    th { min-width: 90px; }
   }
 }
 

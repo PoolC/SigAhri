@@ -1,16 +1,16 @@
-.comment-body {
-  padding: 0!important;
-  .comment-date {
-    color: #6c757d;
-    font-size: 12px;
-  }
-}
-
 .comments {
-  padding-bottom: 7px;
-}
+  padding-top: 4px;
+  padding-bottom: 4px;
 
-.btn.delete-comment {
-  font-size: 0.9rem!important;
-  padding: 0.2rem 0.4rem;
+  .comment-body {
+    padding: 0 !important;
+    .comment-date {
+      color: #6c757d;
+      font-size: 12px;
+    }
+  }
+
+  .btn.delete-comment {
+    padding: 0.2rem 0.4rem;
+  }
 }

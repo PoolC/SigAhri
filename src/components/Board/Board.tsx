@@ -33,7 +33,7 @@ export const Board: React.SFC<Board.Props> = (props) => {
           })}
         </div>
       </div>
-      <div className="board-content col">
+      <div className="board-content col card">
         <Switch>
           {boards.map((board: BoardContainer.BoardInfo) => {
             return (

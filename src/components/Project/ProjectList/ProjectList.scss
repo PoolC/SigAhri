@@ -20,6 +20,8 @@
   height: 320px;
   display: inline-block;
   margin: 10px;
+
+  p { margin: 0; }
 }
 
 .project-list-item-content {
@@ -28,6 +30,6 @@
   margin-left: 20px;
 }
 
-.project-list-item-title {
-  font-weight: bold;
+.project-list-time-img {
+  object-fit: cover;
 }

@@ -1,7 +1,7 @@
 footer {
   position: relative;
-  color: white;
-  background-color: #666666;
+  background-color: #fafafa;
+  border-top: 1px solid #e0e0e0;
   padding: 10px 20px;
   margin-right: 0;
   margin-left: 0;
@@ -15,10 +15,6 @@ footer {
   height: 100%;
   float: left;
   margin-right: 50px;
-}
-
-.footer-content > img {
-  background-color: #FFF;
 }
 
 .footer-brief {
@@ -47,8 +43,6 @@ footer {
     width: 100%;
     height: 200px;
     position: absolute;
-    color: white;
-    background-color: #666666;
     padding: 20px 40px;
   }
 }

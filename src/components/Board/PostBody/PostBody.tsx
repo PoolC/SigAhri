@@ -25,15 +25,12 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
 
   return (
     <React.Fragment>
-      <h4 className="post-title">{post.title}</h4>
-      <div className="row author-info">
-        <div className="col-auto mr-0 content-left">
-          <span>{post.author.name}</span>
-        </div>
-        <div className="col-auto mr-auto content-right">
-          <span>{getLocalTime(post.createdAt)}</span>
-        </div>
-      </div>
+      <h1 className="post-title">{post.title}</h1>
+      <p className="post-meta">
+        <i className="far fa-user"></i> {post.author.name}&nbsp;&nbsp;|&nbsp;&nbsp;<i className="far fa-clock"></i> {getLocalTime(post.createdAt)}
+      </p>
+      <hr></hr>
+
       <ReactMarkdown className="post-content" source={post.body.replace(/\n/g, "  \n")} />
       {post.vote !== null && votedId.length === 0 && !voteHasFinished && (
         <form>

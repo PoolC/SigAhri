@@ -41,11 +41,7 @@ export class Post extends React.Component<Post.Props> {
     const {info, onCreateComment, onDeleteComment, onVoteSubmit, hasWritePermissions, hasLogin} = this.props;
     return (
       <React.Fragment>
-        <h2 className="board-title">{info.board.name}</h2>
         <PostBodyContainer post={info} onVoteSubmit={onVoteSubmit} />
-        <hr className="post-end"/>
-        <CommentList comments={info.comments} onDeleteComment={onDeleteComment} />
-        {hasLogin && <CommentInput onCreateComment={onCreateComment} /> }
         <div className="post-menu">
           <button onClick={this.handleToBoard} className="btn float-right">목록</button>
           {hasWritePermissions &&
@@ -55,6 +51,11 @@ export class Post extends React.Component<Post.Props> {
           <button onClick={this.handleUpdate} className="btn float-right last">수정</button>
           }
         </div>
+        
+        <hr></hr>
+        
+        <CommentList comments={info.comments} onDeleteComment={onDeleteComment} />
+        {hasLogin && <CommentInput onCreateComment={onCreateComment} /> }
       </React.Fragment>
     )
   }
