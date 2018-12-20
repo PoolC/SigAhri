@@ -14,6 +14,7 @@ export namespace Admin {
   }
 
   export interface State {
+    authentication: boolean
   }
 }
 
@@ -21,13 +22,16 @@ export class Admin extends React.Component<Admin.Props, Admin.State> {
   constructor(props: Admin.Props) {
     super(props);
 
+    this.state = {
+      authentication: false
+    };
+
     if(window.location.pathname === "/admin") {
       window.location.pathname = "/admin/members";
     }
   }
 
   componentDidMount() {
-    // 권한이 없다면 404
     const headers: any = {
       'Content-Type': 'application/graphql'
     };
@@ -50,9 +54,7 @@ export class Admin extends React.Component<Admin.Props, Admin.State> {
       const data = msg.data;
       if('errors' in data) {
         if(data.errors[0].message === 'ERR401' || data.erros[0].message === 'ERR403') {
-          alert("권한이 없습니다.");
-          // TODO: 404 page
-          history.push('/');
+          history.push('/404');
         } else {
           alert("알 수 없는 에러가 발생하였습니다. 담당자에게 문의 부탁드립니다.");
           console.log("me API error");
@@ -60,10 +62,12 @@ export class Admin extends React.Component<Admin.Props, Admin.State> {
         }
         return;
       }
-      if(!data.data.me.isActivated || !data.data.me.isAdmin) {
-        alert("권한이 없습니다.");
-        // TODO: 404 page
-        history.push('/');
+      else if(!data.data.me.isActivated || !data.data.me.isAdmin) {
+        history.push('/404');
+      } else {
+        this.setState({
+          authentication: true
+        });
       }
     }).catch((msg) => {
       console.log("me API error");
@@ -72,6 +76,9 @@ export class Admin extends React.Component<Admin.Props, Admin.State> {
   }
 
   render() {
+    if(!this.state.authentication)
+      return null;
+
     return (
       <div className="row">
         <div className="admin-nav">

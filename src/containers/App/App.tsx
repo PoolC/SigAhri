@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { AuthenticationActions } from '../../actions';
 import './App.scss';
 import axios from 'axios';
+import {NotFound} from "../../components/NotFound/NotFound";
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   tokenApplyRequest: (token: string) => {
@@ -83,15 +84,18 @@ class App extends React.Component<Props> {
             <Route exact path="/page/about" component={Home}/>
             <Route path="/board" render={(props)=>(<BoardContainer {...props} type="postList"/>)}/>
             <Route path="/posts" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
-            <Route path="/article/view" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
+            <Route exact path="/article/view" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
             <Route path="/project" component={Project}/>
-            <Route path="/register" component={Register}/>
-            <Route path="/login" component={Login}/>
-            <Route path="/info" component={Info}/>
+            <Route exact path="/register" component={Register}/>
+            <Route exact path="/login" component={Login}/>
+            <Route exact path="/info" component={Info}/>
             <Route exact path="/upload" component={Upload}/>
             <Route exact path="/upload/success/:filename" component={UploadSuccess}/>
 
             <Route path="/admin" component={Admin}/>
+
+            <Route exact path="/404" component={NotFound}/>
+            <Route component={NotFound}/>
           </Switch>
         </div>
         <Footer />

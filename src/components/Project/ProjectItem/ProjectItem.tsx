@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router';
 import axios from 'axios';
 import ReactMarkdown = require("react-markdown");
 import './ProjectItem.scss';
+import history from '../../../history/history';
 
 export namespace ProjectItem {
   export interface Props extends RouteComponentProps<MatchParams> {
@@ -13,14 +14,14 @@ export namespace ProjectItem {
   }
 
   export interface State {
-    project: Project
+    project: Project,
   }
 
   interface Project {
     name: string,
     genre: string,
     thumbnailURL: string,
-    body: string
+    body: string,
   }
 }
 
@@ -29,12 +30,7 @@ export class ProjectItem extends React.Component<ProjectItem.Props, ProjectItem.
     super(props);
 
     this.state = {
-      project: {
-        name: "",
-        genre: "",
-        thumbnailURL: "",
-        body: ""
-      }
+      project: null
     };
 
   }
@@ -61,7 +57,17 @@ export class ProjectItem extends React.Component<ProjectItem.Props, ProjectItem.
       }`
     }).then((msg) => {
       const data = msg.data;
-      console.log(data);
+
+      if('errors' in data) {
+        if(data.errors[0].message === 'ERR403' || data.errors[0].message === 'ERR400') {
+          history.push('/404');
+          return;
+        }
+      }
+      if(data.data === null) {
+        history.push('/404');
+        return;
+      }
 
       this.setState(data.data);
     }).catch((msg) => {
@@ -70,7 +76,9 @@ export class ProjectItem extends React.Component<ProjectItem.Props, ProjectItem.
   }
 
   render() {
-    console.log(this.state);
+    if(this.state.project === null)
+      return null;
+
     const body = this.state.project.body.replace(/\n/g, "  \n");
     return (
       <div className="project-item-container">

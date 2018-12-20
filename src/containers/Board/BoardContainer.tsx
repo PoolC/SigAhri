@@ -55,14 +55,14 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     } else if(props.location.pathname.indexOf('/article/view') != -1) {
       const id = queryString.parse(props.location.search).id;
       if(typeof id !== 'string') {
-        // TODO: 404 page
+        history.push('/404');
       } else {
         history.push(`/posts/${id}`);
       }
     }
 
     this.state = {
-      boards: [],
+      boards: null,
       boardID: 0,
       userPermissions: "PUBLIC"
     };
@@ -141,6 +141,8 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   }
 
   render() {
+    if(this.state.boards === null)
+      return null;
     return (
       <Board boards={this.state.boards} boardID={this.state.boardID}
              setBoardID={this.setBoardID}

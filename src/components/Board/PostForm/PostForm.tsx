@@ -26,7 +26,8 @@ export namespace PostForm {
     boardName: string,
     postTitle: string,
     postContent: string,
-    vote: Vote
+    vote: Vote,
+    authentication?: boolean
   }
 
   interface Vote {
@@ -45,7 +46,8 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
       boardName: '',
       postTitle: '',
       postContent: '',
-      vote: null
+      vote: null,
+      authentication: false
     };
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -302,18 +304,21 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         const data = msg.data;
 
         if('errors' in data) {
-          if(data.errors[0].message === 'ERR403') {
-            alert("권한이 없습니다.");
-            // TODO: 404 page redirect
-            history.push('/');
+          if(data.errors[0].message === 'ERR403' || data.errors[0].message === 'ERR400') {
+            history.push('/404');
             return;
           }
+        }
+        if(data.data === null) {
+          history.push('/404');
+          return;
         }
 
         const nextState: any = {
           boardName: data.data.post.board.name,
           postTitle: data.data.post.title,
           postContent: data.data.post.body,
+          authentication: true
         };
 
         if(data.data.post.vote !== null) {
@@ -349,9 +354,14 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
       }).then((msg) => {
         // TODO: typing
         const data = msg.data.data;
+        if(data === null) {
+          history.push('/404');
+          return;
+        }
 
         this.setState({
-          boardName: data.board.name
+          boardName: data.board.name,
+          authentication: true
         });
 
       }).catch((msg) => {
@@ -369,6 +379,10 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
 
   render() {
     const isEdit = this.props.type === PostFormType.edit;
+
+    if(!this.state.authentication) {
+      return null;
+    }
 
     let voteForm: JSX.Element = null;
     if(this.state.vote !== null) {

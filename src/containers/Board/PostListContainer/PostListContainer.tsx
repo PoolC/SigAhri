@@ -119,11 +119,6 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
     }).then((msg) => {
       // TODO: typing
       const data = msg.data.data.postPage;
-      if(!('posts' in data)) {
-        // TODO: 읽기 권한이 없을때 404 페이지로 이동
-        history.push('/');
-        return;
-      }
 
       this.setState(data);
     }).catch((msg) => {

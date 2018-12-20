@@ -56,8 +56,6 @@ export class Board extends React.Component<Board.Props, Board.State> {
           const message = data.erros[0].message;
           if(message === 'ERR401' || message === 'ERR403') {
             alert("권한이 없습니다.");
-            // TODO: 404 page
-            history.push('/');
           } else {
             alert("알 수 없는 에러가 발생하였습니다. 담당자에게 문의 부탁드립니다.");
             console.log("me API error");

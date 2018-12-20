@@ -135,12 +135,14 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         }
       }`
     }).then((msg) => {
+      if(msg.data.data === null) {
+        history.push('/404');
+        return;
+      }
       const data = msg.data.data.post;
       const { isAdmin, id } = this.props;
       if(data === null) {
-        // TODO: 읽기 권한이 없을때 404 페이지로 이동
-        // TODO: 해당 글이 없을 때 또한 404 페이지로 이동
-        history.push('/');
+        history.push('/404');
         return;
       }
 

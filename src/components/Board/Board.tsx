@@ -4,6 +4,7 @@ import { PostListContainer, BoardContainer, PostContainer } from '../../containe
 import { PostForm } from '../';
 import { PostFormType } from './PostForm/PostForm';
 import './Board.scss';
+import {NotFound} from "../NotFound/NotFound";
 
 export namespace Board {
   export type Props = {
@@ -55,6 +56,8 @@ export const Board: React.SFC<Board.Props> = (props) => {
           <Route exact path="/posts/:postID/edit"
                  render={(props) => { return <PostForm {...props} type={PostFormType.edit} /> }}
           />
+
+          <Route component={NotFound} />
         </Switch>
       </div>
     </div>
