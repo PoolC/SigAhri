@@ -174,6 +174,11 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         alert('투표 항목을 입력해주세요');
         return;
       }
+
+      if(this.props.type === PostFormType.new && !moment().isBefore(voteInfo.deadline)) {
+        alert('투표 마감기한은 현재시간 이후로 설정해주세요.');
+        return;
+      }
     }
 
     const headers: any = {
