@@ -10,7 +10,7 @@ export namespace PostBody {
     handleVoteSubmit: (event : React.FormEvent<HTMLInputElement>) => void,
     checkVote: (event : React.FormEvent<HTMLInputElement>) => void,
     handleReVote: (event: React.FormEvent<HTMLInputElement>) => void,
-    hasVoted: boolean,
+    votedId: Array<number>,
     hasLogin: boolean,
     voteHasFinished: boolean
   }
@@ -21,7 +21,7 @@ const getLocalTime = (time: string) => {
 };
 
 export const PostBody : React.SFC<PostBody.Props> = (props) => {
-  const { post, hasVoted, checkVote, handleVoteSubmit, handleReVote, hasLogin, voteHasFinished } = props;
+  const { post, votedId, checkVote, handleVoteSubmit, handleReVote, hasLogin, voteHasFinished } = props;
 
   return (
     <React.Fragment>
@@ -35,7 +35,7 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
         </div>
       </div>
       <ReactMarkdown className="post-content" source={post.body.replace(/\n/g, "  \n")} />
-      {post.vote !== null && !hasVoted && !voteHasFinished && (
+      {post.vote !== null && votedId.length === 0 && !voteHasFinished && (
         <form>
           <fieldset>
             {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { loginID: string }[] }) => {
@@ -53,14 +53,17 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
           </fieldset>
         </form>
       )}
-      {post.vote !== null && ((hasVoted) || (voteHasFinished)) && (
+      {post.vote !== null && ((votedId.length !== 0) || (voteHasFinished)) && (
         <div className="container-fluid vote-progress">
           {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { loginID: string }[] }) => {
             const { totalVotersCount } = post.vote;
             const selectRatio = totalVotersCount > 0 ? option.votersCount / totalVotersCount : 0;
             return (
               <div className="row vote-row" key={option.id}>
-                <div className={window.innerWidth < 768 ? `vote-col-text col-6` : `vote-col-text col-3` }>{option.text}</div>
+                <div className={window.innerWidth < 768 ? `vote-col-text col-6` : `vote-col-text col-3` }>
+                  {(votedId.indexOf(option.id) !== -1) ? (<i className="fas fa-check-circle voted" />) : null}
+                  {" " + option.text}
+                </div>
                 <div className={window.innerWidth < 768 ? `vote-col col-6` : `vote-col col-3` }>
                   <div className="progress">
                     <div className="progress-bar" role="progressbar" style={{width: `${selectRatio * 100}%`}} aria-valuenow={selectRatio}

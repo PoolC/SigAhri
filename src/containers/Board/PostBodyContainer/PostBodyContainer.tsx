@@ -23,7 +23,7 @@ export namespace PostBodyContainer {
 
   export interface State {
     selectedOptions: {[optionValue:number]: boolean},
-    hasVoted: boolean,
+    votedId: Array<number>,
     voteHasFinished: boolean
   }
 
@@ -36,7 +36,7 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
 
     this.state = {
       selectedOptions: {},
-      hasVoted: false,
+      votedId: [],
       voteHasFinished: false
     }
   }
@@ -49,18 +49,18 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
   checkHasVoted = () => {
     const { post, id } = this.props;
     if(post.vote !== null) {
-      let hasVoted : boolean = false;
+      let votedId: Array<number> = [];
       post.vote.options.forEach((option) => {
         option.voters.forEach((voter) => {
           if(voter.loginID === id) {
-            hasVoted = true;
+            votedId.push(option.id);
           }
         })
       });
 
       this.setState((prevState, props) => {
-        if(prevState.hasVoted !== hasVoted) {
-          return { hasVoted: hasVoted }
+        if(prevState.votedId !== votedId) {
+          return { votedId: votedId }
         }
       })
     }
@@ -108,12 +108,14 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
     event.preventDefault();
     const { onVoteSubmit } = this.props;
     const { selectedOptions } = this.state;
+    const votedId: Array<number> = [];
 
     let submitOptions : number[] = [];
     for(let _optionID of Object.keys(selectedOptions)) {
       const optionID = parseInt(_optionID);
       if(selectedOptions[optionID]) {
         submitOptions = submitOptions.concat(optionID);
+        votedId.push(optionID);
       }
     }
 
@@ -126,13 +128,13 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
     onVoteSubmit(submitOptions);
     this.setState({
       selectedOptions: {},
-      hasVoted: true
+      votedId: votedId
     })
   };
 
   handleReVote = (event: React.FormEvent<HTMLInputElement>) => {
     this.setState({
-      hasVoted: false
+      votedId: []
     })
   };
 
@@ -140,7 +142,7 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
     return (
       <PostBody post={this.props.post} handleVoteSubmit={this.handleVoteSubmit}
                 checkVote={this.checkVote} handleReVote={this.handleReVote}
-                hasVoted={this.state.hasVoted} hasLogin={this.props.isLogin}
+                votedId={this.state.votedId} hasLogin={this.props.isLogin}
                 voteHasFinished={this.state.voteHasFinished}
       />
     )
