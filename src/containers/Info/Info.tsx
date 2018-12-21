@@ -32,6 +32,13 @@ export class Info extends React.Component<Info.Props, Info.State> {
   }
 
   componentDidMount() {
+    const token = localStorage.getItem('accessToken');
+
+    if(token === null) {
+      history.push('/404');
+      return;
+    }
+
     axios({
       url: apiUrl,
       method: 'post',
@@ -139,6 +146,9 @@ export class Info extends React.Component<Info.Props, Info.State> {
   }
 
   render(): JSX.Element {
+    if(this.state.id === '')
+      return null;
+
     return (
       <Authentication mode={3} handleInfoModify={this.handleInfoModify} loginInfo={this.state}/>
     );
