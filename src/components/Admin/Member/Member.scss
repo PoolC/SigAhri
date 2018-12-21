@@ -21,6 +21,10 @@
 
 .admin-member-table {
   text-align: center;
+
+  .delete-icon {
+    color: red;
+  }
 }
 
 @media (max-width: 575px) {
