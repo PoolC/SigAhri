@@ -14,24 +14,27 @@ export namespace UploadSuccess {
 
 export const UploadSuccess: React.SFC<UploadSuccess.Props> = ((props) => {
   const fileName = props.match.params.filename;
-  const text = `사진 파일
-![파일 설명](https://poolc.org/files/${fileName})
-    
-첨부 파일
-<https://poolc.org/files/${fileName}>`;
 
   return (
-    <div className="upload-success-wrapper">
-      <h1>파일 업로드 완료</h1>
+    <div className="upload-success-container">
+      <h1 className="upload-success-title">파일 업로드 완료</h1>
       <div className="upload-success-detail">
-        파일 업로드가 완료되었습니다. <br />
-        게시판에 파일을 첨부하려는 경우, 아래와 같은 문법을 사용할 수 있습니다. <br />
-        <textarea disabled={true} value={text}>
-        </textarea>
+        <p>
+          파일 업로드가 완료되었습니다. <br />
+          게시판에 파일을 첨부하려는 경우, 아래와 같은 문법을 사용할 수 있습니다.
+        </p>
+        <div className="upload-success-description">
+          <p>
+            사진 파일의 경우: <br/>
+            <code>![파일 설명](https://poolc.org/files/{fileName})</code>
+          </p>
+          <p>
+            첨부 파일의 경우: <br/>
+            <code>&lt;https://poolc.org/files/{fileName}&gt;</code>
+          </p>
+        </div>
       </div>
-      <button className="btn btn-primary" onClick={() => {history.push('/upload')}}>다른 파일 업로드</button>
+      <button className="btn btn-primary btn-block" onClick={() => {history.push('/upload')}}>다른 파일 업로드</button>
     </div>
   );
 });
-
-

@@ -13,7 +13,7 @@ const PostListItem: React.SFC<PostListItem.Props> = (props) => {
   const { post } = props;
   return (
     <React.Fragment>
-      <tr>
+      <tr className="post-list-row">
         <td><Link to={`/posts/${post.id}`}>{post.title}</Link></td>
         <td>{post.author.name}</td>
         <td>{moment.utc(post.createdAt).local().format('YYYY-MM-DD')}</td>

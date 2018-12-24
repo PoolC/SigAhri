@@ -1,21 +1,6 @@
-.board-nav {
-  flex: 0 0 16.666667%;
-  max-width: 16.666667%;
-  position: relative;
-  width: 100%;
-  min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
-
-  .board-list {
-    .board-item {
-      color: #212529;
-    }
-  }
-}
-
 .board-content {
   padding: 25px;
+
   table {
     table-layout: auto;
     a { color: rgb(33, 37, 41); }
@@ -24,14 +9,5 @@
 }
 
 @media (max-width: 767px) {
-  .board-nav {
-    flex: 0 0 80%;
-    max-width: 80%;
-    margin: 0 auto 20px;
-  }
-  .board-content {
-    table tr td:nth-child(3) {
-      font-size: 12px;
-    }
-  }
+  .board-list { margin-bottom: 20px; }
 }

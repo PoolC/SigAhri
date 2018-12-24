@@ -1,21 +1,14 @@
-.project-item-container {
-  text-align: center;
-}
-
 .project-item-thumbnail {
-  width: 100%;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-top: -40px;
   max-height: 400px;
   margin-bottom: 50px;
+  object-fit: cover;
 }
 
-.project-item-title {
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #aaa;
-
-  h2 {
-    font-weight: bold;
-  }
+.project-item-container {
+  text-align: center;
 }
 
 .project-item-content {

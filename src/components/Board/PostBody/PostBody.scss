@@ -20,10 +20,16 @@ form fieldset {
   }
 }
 
-.progress {
-  background: #B0B0B0;
-}
+.post-vote {
+  background: #fafafa;
+  padding: 20px;
 
-.voted {
-  color: #28a745;
+  .vote-row {
+    height: 32px;
+  }
+
+  .progress {
+    height: 20px;
+    font-size: 12px;
+  }
 }

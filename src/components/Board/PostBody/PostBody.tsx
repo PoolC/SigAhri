@@ -32,26 +32,42 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
       <hr></hr>
 
       <ReactMarkdown className="post-content" source={post.body.replace(/\n/g, "  \n")} />
+
+      {/* 진행중인 투표의 경우 */}
       {post.vote !== null && votedId.length === 0 && !voteHasFinished && (
-        <form>
-          <fieldset>
-            {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { loginID: string }[] }) => {
-              return (
-                <div className="form-check" key={option.id}>
-                  <input className="form-check-input" name={`vote${post.vote.id}`} type={post.vote.isMultipleSelectable ? "checkbox" : "radio"}
-                         value={option.id} id={`option${option.id}`} onChange={event => checkVote(event)} disabled={!hasLogin} />
-                  <label className="form-check-label" htmlFor={`option${option.id}`}>
-                    {option.text}
-                  </label>
-                </div>
-              )
-            })}
-            {hasLogin && <input className="btn btn-primary mt-2 vote-submit" type="submit" value="투표하기" onClick={(event) => { handleVoteSubmit(event) }} />}
-          </fieldset>
-        </form>
+        <div className="post-vote">
+          <h4>투표</h4>
+          {voteHasFinished ? 
+            <p>투표가 마감되었습니다.</p> :
+            <p>투표 마감 : </p>
+          }
+          <form>
+            <fieldset>
+              {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { loginID: string }[] }) => {
+                return (
+                  <div className="form-check" key={option.id}>
+                    <input className="form-check-input" name={`vote${post.vote.id}`} type={post.vote.isMultipleSelectable ? "checkbox" : "radio"}
+                          value={option.id} id={`option${option.id}`} onChange={event => checkVote(event)} disabled={!hasLogin} />
+                    <label className="form-check-label" htmlFor={`option${option.id}`}>
+                      {option.text}
+                    </label>
+                  </div>
+                )
+              })}
+              {hasLogin && <input className="btn btn-primary mt-2 vote-submit" type="submit" value="투표하기" onClick={(event) => { handleVoteSubmit(event) }} />}
+            </fieldset>
+          </form>
+        </div>
       )}
+
+      {/* 이미 투표를 했거나 종료된 투표의 경우 */}
       {post.vote !== null && ((votedId.length !== 0) || (voteHasFinished)) && (
-        <div className="container-fluid vote-progress">
+        <div className="container-fluid post-vote">
+          <h4>투표</h4>
+          {voteHasFinished ? 
+            <p>투표가 마감되었습니다.</p> :
+            <p>투표 마감 : </p>
+          }
           {post.vote.options.map((option: { id:number, text:string, votersCount:number, voters: { loginID: string }[] }) => {
             const { totalVotersCount } = post.vote;
             const selectRatio = totalVotersCount > 0 ? option.votersCount / totalVotersCount : 0;

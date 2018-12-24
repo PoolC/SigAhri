@@ -43,7 +43,7 @@ export class CommentInput extends React.Component<Comment.Props, Comment.State> 
 
  render() {
     return (
-      <div className="input-group">
+      <div className="input-group comment-input">
         <input type="text" className="form-control" placeholder="댓글을 입력하세요"
                onChange={this.updateComment}
                value={this.state.comment}

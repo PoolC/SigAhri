@@ -80,7 +80,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     this.setState({
       vote: {
         title: "",
-        deadline: moment().format('YYYY-MM-DDTHH:mm'),
+        deadline: moment().format('YYYY-MM-DD HH:mm:ss'),
         isMultipleSelectable: false,
         optionText: []
       }
@@ -330,7 +330,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           const voteOptions = data.data.post.vote.options.map((item: {
             text: string
           }) => (item.text));
-          const deadline = moment(data.data.post.vote.deadline).format('YYYY-MM-DDTHH:mm');
+          const deadline = moment(data.data.post.vote.deadline).format('YYYY-MM-DD HH:mm:ss');
 
           nextState['vote'] = {
             title: data.data.post.vote.title,
