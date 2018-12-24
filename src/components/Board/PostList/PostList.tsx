@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { PostListContainer } from '../../../containers/Board';
 import './PostList.scss';
 import * as moment from 'moment';
 
 namespace PostListItem {
   export interface Props {
-    post: PostList.PostInfo,
+    post: PostListContainer.PostInfo,
   }
 }
 
@@ -14,7 +15,11 @@ const PostListItem: React.SFC<PostListItem.Props> = (props) => {
   return (
     <React.Fragment>
       <tr>
-        <td><Link to={`/posts/${post.id}`}>{post.title}</Link></td>
+        <td>
+          <Link to={`/posts/${post.id}`}>
+            {post.title} {post.comments.length !== 0 ? `[${post.comments.length}]` : ''}
+          </Link>
+        </td>
         <td>{post.author.name}</td>
         <td>{moment.utc(post.createdAt).local().format('YYYY-MM-DD')}</td>
       </tr>
@@ -24,7 +29,7 @@ const PostListItem: React.SFC<PostListItem.Props> = (props) => {
 
 export namespace PostList {
   export interface Props {
-    posts: Array<PostInfo>,
+    posts: Array<PostListContainer.PostInfo>,
     name: string,
     typeId: number,
     writePermission: boolean,
@@ -33,13 +38,6 @@ export namespace PostList {
     afterPageAction: () => void,
     beforePageAction: () => void,
     firstPageAction: () => void
-  }
-
-  export interface PostInfo {
-    id: number,
-    author: {[key:string]:string},
-    createdAt: string,
-    title: string
   }
 
   export interface pageInfo {

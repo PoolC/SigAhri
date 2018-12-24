@@ -27,7 +27,12 @@ export namespace PostListContainer {
     id: number,
     author: {[key:string]:string},
     createdAt: string,
-    title: string
+    title: string,
+    comments: Array<CommentInfo>
+  }
+
+  interface CommentInfo {
+    id: number
   }
 }
 
@@ -75,7 +80,10 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
             id,
             author { name },
             createdAt,
-            title
+            title,
+            comments {
+              id
+            }
           }
         }
       }`;
@@ -90,7 +98,10 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
             id,
             author { name },
             createdAt,
-            title
+            title,
+            comments {
+              id
+            }
           }
         }
       }`;
@@ -105,7 +116,10 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
             id,
             author { name },
             createdAt,
-            title
+            title,
+            comments {
+              id
+            }
           }
         }
       }`;
