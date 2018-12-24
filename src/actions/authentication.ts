@@ -10,7 +10,8 @@ export namespace AuthenticationActions {
     AUTH_LOGIN_FAILURE = "AUTH_LOGIN_FAILURE",
     AUTH_LOGOUT = "AUTH_LOGOUT",
     AUTH_LOGIN_INIT = "AUTH_LOGIN_INIT",
-    AUTH_GET_USERID = "AUTH_GET_USERID"
+    AUTH_GET_USERID = "AUTH_GET_USERID",
+    AUTH_INIT_OK = "AUTH_INIT_OK"
   }
 
   const login = createAction(Type.AUTH_LOGIN);
@@ -19,6 +20,7 @@ export namespace AuthenticationActions {
   const logout = createAction(Type.AUTH_LOGOUT);
   const loginInit = createAction(Type.AUTH_LOGIN_INIT);
   const setUserID = createAction(Type.AUTH_GET_USERID);
+  const authenticationInitializeOK = createAction(Type.AUTH_INIT_OK);
 
   export const loginRequest = (id: string, pw: string) => {
     return (dispatch: Dispatch) => {
@@ -106,7 +108,13 @@ export namespace AuthenticationActions {
         logoutRequest()(dispatch);
       });
     }
-  }
+  };
+
+  export const authenticationInitializeOKRequest = () => {
+    return (dispatch: Dispatch) => {
+      dispatch(authenticationInitializeOK());
+    }
+  };
 }
 
 export type AuthenticationActions = Omit<typeof AuthenticationActions, 'Type'>;

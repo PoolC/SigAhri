@@ -10,7 +10,8 @@ const initialState: RootState.AuthenticationState = {
   },
   status: {
     isLogin: false,
-    isAdmin: false
+    isAdmin: false,
+    init: false
   },
   userInfo: {
     id: "",
@@ -73,6 +74,13 @@ export const authenticationReducer = handleActions<RootState.AuthenticationState
         }
       });
     },
+    [AuthenticationActions.Type.AUTH_INIT_OK]: (state, action) => {
+      return update(state, {
+        status: {
+          init: { $set: true }
+        }
+      });
+    }
   },
   initialState
 );
