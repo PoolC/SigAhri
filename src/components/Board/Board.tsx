@@ -20,8 +20,8 @@ export const Board: React.SFC<Board.Props> = (props) => {
 
   return (
     <div className="row">
-      <div className="board-nav">
-        <div className="board-list list-group">
+      <div className="board-nav col-sm-12 col-md-2">
+        <div className="board-list list-group mobile-invisible">
           {boards.map((board: BoardContainer.BoardInfo) => {
             return (
               <Link to={`/board/${board.urlPath}`}
@@ -34,33 +34,35 @@ export const Board: React.SFC<Board.Props> = (props) => {
           })}
         </div>
       </div>
-      <div className="board-content col">
-        <Switch>
-          {boards.map((board: BoardContainer.BoardInfo, idx: number) => {
+      <div className="col-sm-12 col-md-10">
+        <div className="card board-content">
+          <Switch>
+            {boards.map((board: BoardContainer.BoardInfo, idx: number) => {
             const randomNumberSeq = randomNumber + idx;
-            return (
-              <Route exact path={`/board/${board.urlPath}`}
-                     render={(props) => (
-                       <PostListContainer {...props} type={board.urlPath} typeId={board.id} name={board.name}
-                                          writePermission={board.writePermission} key={randomNumberSeq}
-                       />
-                     )}
-                     key={board.id}
-              />
-            )
-          })}
-          <Route exact path="/posts/:postId"
-                 render={(props) => { return <PostContainer {...props} /> }}
-          />
-          <Route exact path="/posts/new/:boardID"
-                 render={(props) => { return <PostForm {...props} type={PostFormType.new} /> }}
-          />
-          <Route exact path="/posts/:postID/edit"
-                 render={(props) => { return <PostForm {...props} type={PostFormType.edit} /> }}
-          />
+              return (
+                <Route exact path={`/board/${board.urlPath}`}
+                      render={(props) => (
+                        <PostListContainer {...props} type={board.urlPath} typeId={board.id} name={board.name}
+                                            writePermission={board.writePermission} key={randomNumberSeq}
+                        />
+                      )}
+                      key={board.id}
+                />
+              )
+            })}
+            <Route exact path="/posts/:postId"
+                  render={(props) => { return <PostContainer {...props} /> }}
+            />
+            <Route exact path="/posts/new/:boardID"
+                  render={(props) => { return <PostForm {...props} type={PostFormType.new} /> }}
+            />
+            <Route exact path="/posts/:postID/edit"
+                  render={(props) => { return <PostForm {...props} type={PostFormType.edit} /> }}
+            />
 
-          <Route component={NotFound} />
-        </Switch>
+            <Route component={NotFound} />
+          </Switch>
+        </div>
       </div>
     </div>
   );

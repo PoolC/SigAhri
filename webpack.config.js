@@ -82,7 +82,7 @@ module.exports = {
         "PUBLIC": ["PUBLIC"]
       }),
       uploadUrl: JSON.stringify('http://nagase.lynlab.co.kr/files'),
-      logoUrl: JSON.stringify('https://poolc.org/static/spec/poolc.vertical.svg')
+      logoUrl: JSON.stringify('https://lynlab.co.kr/storage/poolc.vertical.dark.svg')
     })
   ]
 };

@@ -14,7 +14,7 @@ const PostListItem: React.SFC<PostListItem.Props> = (props) => {
   const { post } = props;
   return (
     <React.Fragment>
-      <tr>
+      <tr className="post-list-row">
         <td>
           <Link to={`/posts/${post.id}`}>
             {post.title} {post.comments.length !== 0 ? `[${post.comments.length}]` : ''}
@@ -50,7 +50,7 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
   return (
     <div>
       <div className="post-list-head">
-        <h2 className="post-list-name">{props.name}</h2>
+        <h1 className="post-list-name">{props.name}</h1>
         {
           props.writePermission ?
             (<Link to={"/posts/new/"+props.typeId}><button className="btn btn-primary post-list-new">글쓰기</button></Link>) :
@@ -60,9 +60,9 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
       <table className="table">
         <thead>
         <tr>
-          <th scope="col">제목</th>
-          <th scope="col">작성자</th>
-          <th scope="col">작성일</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>작성일</th>
         </tr>
         </thead>
         <tbody>
@@ -73,16 +73,18 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
         }) }
         </tbody>
       </table>
-      <div>
-        <button onClick={() => props.firstPageAction()}><a href="#">첫 페이지</a></button>
-        { props.pageInfo.hasPrevious ?
-          (<button onClick={() => props.afterPageAction()}><a href="#">이전 페이지</a></button>) :
-          null
-        }
-        { props.pageInfo.hasNext ?
-          (<button onClick={() => props.beforePageAction()}><a href="#">다음 페이지</a></button>) :
-          null
-        }
+      <div className="page-container text-center">
+        <div className="btn-group" role="group">
+          { <button className="btn btn-secondary" onClick={() => props.firstPageAction()}>첫 페이지</button> }
+          { props.pageInfo.hasPrevious ?
+            (<button className="btn btn-secondary" onClick={() => props.afterPageAction()}>이전 페이지</button>) :
+            null
+          }
+          { props.pageInfo.hasNext ?
+            (<button className="btn btn-secondary" onClick={() => props.beforePageAction()}>다음 페이지</button>) :
+            null
+          }
+        </div>
       </div>
     </div>
   );

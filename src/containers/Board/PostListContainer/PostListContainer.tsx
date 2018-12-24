@@ -80,8 +80,7 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
       headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
     }
 
-
-    const pageItemNum = 5;
+    const pageItemNum = 15;
     let query = '';
     if(inputQueryType === queryType.nothing) {
       query = `query {

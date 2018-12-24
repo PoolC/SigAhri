@@ -1,16 +1,23 @@
-.comment-body {
-  padding: 0!important;
+.comments {
+  height: 36px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+
+  &:hover {
+    background: #fafafa;
+  }
+
+  .comment-body {
+    margin-right: 8px;
+  }
+
   .comment-date {
     color: #6c757d;
     font-size: 12px;
   }
-}
 
-.comments {
-  padding-bottom: 7px;
-}
-
-.btn.delete-comment {
-  font-size: 0.9rem!important;
-  padding: 0.2rem 0.4rem;
+  .comment-btn-delete {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
 }

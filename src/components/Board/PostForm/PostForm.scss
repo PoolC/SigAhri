@@ -39,49 +39,19 @@
   font-size: 14px;
 }
 
-.post-form-block {
-  margin-bottom: 10px;
-
-  h5 {
-    margin-bottom: 10px;
-  }
-
-  h5.no-margin {
-    margin-bottom: 0px;
-  }
-
-  .post-form-checkbox {
-    width: 23px;
-    height: 23px;
-    margin-left: 10px;
-    vertical-align: bottom;
-  }
-
-  img {
-    max-width: 90%;
-  }
-}
-
 .post-form-button-container {
   float: right;
+  button { margin: 0 2px; }
+}
 
-  button {
-    margin: 10px 10px;
-  }
+.post-form-vote-options-container {
+  margin-top: 15px;
+  ul { margin-top: 10px; }
 }
 
 .post-form-vote-container {
-  margin: 0 auto;
-  padding: 10px;
-  width: 350px;
-  background-color: #FAFAFA;
-
   h3 {
     margin-bottom: 15px;
-  }
-
-  .post-form-option-add-button {
-    margin-left: 10px;
   }
 
   ul > li {
@@ -91,11 +61,4 @@
 
 .inline-block {
   display: inline-block;
-}
-
-@media (min-width: 768px) {
-  /* 모바일의 경우 투표는 가운데 정렬 */
-  .post-form-vote-container {
-    margin: 25px;
-  }
 }
