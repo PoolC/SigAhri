@@ -1,8 +1,10 @@
 import * as React from 'react';
 import axios from "axios";
 import { PostList } from '../../../components';
+import * as queryString from 'query-string';
 import history from '../../../history/history';
-import {number} from "prop-types";
+import { RouteComponentProps } from 'react-router';
+import {string} from "prop-types";
 
 export enum queryType {
   before = "BEFORE",
@@ -11,7 +13,7 @@ export enum queryType {
 }
 
 export namespace PostListContainer {
-  export interface Props {
+  export interface Props extends RouteComponentProps {
     type: string,
     typeId: number,
     name: string,
@@ -55,7 +57,18 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
   }
 
   componentDidMount() {
-    this.handleGetPostList(queryType.nothing, null);
+    const params = queryString.parse(this.props.location.search);
+
+    if(!('before' in params || 'after' in params)) {
+      this.handleGetPostList(queryType.nothing, null);
+    } else if('after' in params) {
+      if(typeof params.after === 'string' && !isNaN(Number(params.after)))
+        this.handleGetPostList(queryType.after, parseInt(params.after));
+    } else {
+      if(typeof params.before === 'string' && !isNaN(Number(params.before))) {
+        this.handleGetPostList(queryType.before, parseInt(params.before));
+      }
+    }
   }
 
   handleGetPostList(inputQueryType: queryType, inputQueryID: number) {
@@ -66,6 +79,7 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
     if(localStorage.getItem('accessToken') !== null) {
       headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
     }
+
 
     const pageItemNum = 5;
     let query = '';
@@ -135,22 +149,23 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
       const data = msg.data.data.postPage;
 
       this.setState(data);
+
     }).catch((msg) => {
-        // TODO : 에러처리
     });
   }
 
   afterPageAction() {
-    if(this.state.posts.length > 0)
-      this.handleGetPostList(queryType.after, this.state.posts[0].id);
+    history.push(this.props.location.pathname + `?after=${this.state.posts[0].id}`);
+    this.handleGetPostList(queryType.after, this.state.posts[0].id);
   }
 
   beforePageAction() {
-    if(this.state.posts.length > 0)
-      this.handleGetPostList(queryType.before, this.state.posts[this.state.posts.length-1].id);
+    history.push(this.props.location.pathname + `?before=${this.state.posts[this.state.posts.length-1].id}`);
+    this.handleGetPostList(queryType.before, this.state.posts[this.state.posts.length-1].id);
   }
 
   firstPageAction() {
+    history.push(this.props.location.pathname);
     this.handleGetPostList(queryType.nothing, null);
   }
 
