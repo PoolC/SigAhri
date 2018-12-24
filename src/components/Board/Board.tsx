@@ -10,12 +10,13 @@ export namespace Board {
   export type Props = {
     boards: Array<BoardContainer.BoardInfo>,
     boardID: number,
-    setBoardID: (id: number, name: string) => void
+    randomNumber: number, // 게시판목록을 통해 이동할 때, 현재 게시판으로 이동해도 re-mount 하기 위해 사용되는 변수
+    setBoardID: (id: number) => void
   }
 }
 
 export const Board: React.SFC<Board.Props> = (props) => {
-  const { boards } = props;
+  const { boards, randomNumber } = props;
 
   return (
     <div className="row">
@@ -25,7 +26,7 @@ export const Board: React.SFC<Board.Props> = (props) => {
             return (
               <Link to={`/board/${board.urlPath}`}
                     className="board-item list-group-item list-group-item-action"
-                    onClick={() => {props.setBoardID(board.id, board.name);}}
+                    onClick={() => {props.setBoardID(board.id);}}
                     key={board.id}>
                 {board.name}
               </Link>
@@ -35,12 +36,13 @@ export const Board: React.SFC<Board.Props> = (props) => {
       </div>
       <div className="board-content col">
         <Switch>
-          {boards.map((board: BoardContainer.BoardInfo) => {
+          {boards.map((board: BoardContainer.BoardInfo, idx: number) => {
+            const randomNumberSeq = randomNumber + idx;
             return (
               <Route exact path={`/board/${board.urlPath}`}
                      render={(props) => (
                        <PostListContainer {...props} type={board.urlPath} typeId={board.id} name={board.name}
-                                          writePermission={board.writePermission}
+                                          writePermission={board.writePermission} key={randomNumberSeq}
                        />
                      )}
                      key={board.id}

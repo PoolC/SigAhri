@@ -26,7 +26,9 @@ export namespace BoardContainer {
   export interface State {
     boards: Array<BoardInfo>,
     boardID: number,
-    userPermissions: string
+    userPermissions: string,
+
+    randomNumber: number // 게시판목록을 통해 이동할 때, 현재 게시판으로 이동해도 re-mount 하기 위해 사용되는 변수
   }
 
   export interface BoardInfo {
@@ -64,7 +66,8 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     this.state = {
       boards: null,
       boardID: 0,
-      userPermissions: "PUBLIC"
+      userPermissions: "PUBLIC",
+      randomNumber: Math.random()
     };
     this.handleGetBoard = this.handleGetBoard.bind(this);
     this.setBoardID = this.setBoardID.bind(this);
@@ -90,9 +93,10 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     })
   };
 
-  setBoardID(id:number, name:string) {
+  setBoardID(id:number) {
     this.setState({
       boardID: id,
+      randomNumber: Math.random()
     });
   }
 
@@ -144,7 +148,7 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     if(this.state.boards === null)
       return null;
     return (
-      <Board boards={this.state.boards} boardID={this.state.boardID}
+      <Board boards={this.state.boards} boardID={this.state.boardID} randomNumber={this.state.randomNumber}
              setBoardID={this.setBoardID}
       />
     );
