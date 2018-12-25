@@ -24,14 +24,14 @@ const getLocalTime = (time: string) => {
 export const PostBody : React.SFC<PostBody.Props> = (props) => {
   const { post, votedId, checkVote, handleVoteSubmit, handleReVote, hasLogin, voteHasFinished, handleSubscribe } = props;
 
-  const notifications_on = <i className="far fa-bell"></i>;
+  const notifications_on = <i className="far fa-bell post"></i>;
   const notifications_off = <i className="far fa-bell-slash"></i>;
   const icon = post.isSubscribed ? notifications_on : notifications_off;
   return (
     <React.Fragment>
       <h1 className="post-title">{post.title}</h1>
       {hasLogin &&
-      <button className="noti-button" onClick={handleSubscribe}>
+      <button className="post-noti-button" onClick={handleSubscribe}>
         {icon}
       </button>
       }

@@ -60,7 +60,7 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
     }
   };
 
-  const notifications_on = <i className="far fa-bell"></i>;
+  const notifications_on = <i className="far fa-bell post-list"></i>;
   const notifications_off = <i className="far fa-bell-slash"></i>;
   const icon = props.isSubscribed ? notifications_on : notifications_off;
   return (
@@ -68,7 +68,7 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
       <div className="post-list-head">
         <h1 className="post-list-name">{props.name}</h1>
         {props.hasLogin &&
-        <button className="noti-button" onClick={handleSubscribe}>
+        <button className="post-list-noti-button" onClick={handleSubscribe}>
           {icon}
         </button>
         }
