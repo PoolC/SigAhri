@@ -302,7 +302,8 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
               options {
                 text
               }
-            }
+            },
+            isSubscribed
           }
         }`
       }).then((msg) => {

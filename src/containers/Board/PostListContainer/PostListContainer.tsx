@@ -17,7 +17,11 @@ export namespace PostListContainer {
     type: string,
     typeId: number,
     name: string,
-    writePermission: boolean
+    writePermission: boolean,
+    isSubscribed: boolean,
+    subscribeBoard: () => void,
+    unsubscribeBoard: () => void,
+    hasLogin: boolean
   }
 
   export interface State {
@@ -30,7 +34,8 @@ export namespace PostListContainer {
     author: {[key:string]:string},
     createdAt: string,
     title: string,
-    comments: Array<CommentInfo>
+    comments: Array<CommentInfo>,
+    isSubscribed: boolean
   }
 
   interface CommentInfo {
@@ -81,46 +86,17 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
     }
 
     const pageItemNum = 15;
-    let query = '';
+    let params = '';
     if(inputQueryType === queryType.nothing) {
-      query = `query {
-        postPage(boardID: ${this.props.typeId}, count: ${pageItemNum}) {
-          pageInfo {
-            hasNext,
-            hasPrevious
-          },
-          posts {
-            id,
-            author { name },
-            createdAt,
-            title,
-            comments {
-              id
-            }
-          }
-        }
-      }`;
+      params = `boardID: ${this.props.typeId}, count: ${pageItemNum}`;
     } else if(inputQueryType === queryType.after) {
-      query = `query {
-        postPage(boardID: ${this.props.typeId}, after: ${inputQueryID}, count: ${pageItemNum}) {
-          pageInfo {
-            hasNext,
-            hasPrevious
-          },
-          posts {
-            id,
-            author { name },
-            createdAt,
-            title,
-            comments {
-              id
-            }
-          }
-        }
-      }`;
+      params = `boardID: ${this.props.typeId}, after: ${inputQueryID}, count: ${pageItemNum}`;
     } else {
-      query = `query {
-        postPage(boardID: ${this.props.typeId}, before: ${inputQueryID}, count: ${pageItemNum}) {
+      params = `boardID: ${this.props.typeId}, before: ${inputQueryID}, count: ${pageItemNum}`;
+    }
+
+    const query = `query {
+        postPage(${params}) {
           pageInfo {
             hasNext,
             hasPrevious
@@ -133,10 +109,10 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
             comments {
               id
             }
+            isSubscribed
           }
         }
       }`;
-    }
 
     axios({
       url: apiUrl,
@@ -173,7 +149,9 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
       <PostList posts={this.state.posts} name={this.props.name}
                 typeId={this.props.typeId} writePermission={this.props.writePermission} pageInfo={this.state.pageInfo}
                 afterPageAction={this.afterPageAction} beforePageAction={this.beforePageAction}
-                firstPageAction={this.firstPageAction}
+                firstPageAction={this.firstPageAction} onSubscribeBoard={this.props.subscribeBoard}
+                onUnsubscribeBoard={this.props.unsubscribeBoard} isSubscribed={this.props.isSubscribed}
+                hasLogin={this.props.hasLogin}
       />
     );
   }

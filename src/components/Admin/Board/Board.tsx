@@ -16,7 +16,8 @@ export namespace Board {
     name: string,
     urlPath: string,
     readPermission: string,
-    writePermission: string
+    writePermission: string,
+    isSubscribed: boolean
   }
 }
 
@@ -96,7 +97,8 @@ export class Board extends React.Component<Board.Props, Board.State> {
           name,
           urlPath,
           readPermission,
-          writePermission
+          writePermission,
+          isSubscribed
         }
       }`
     }).then((msg) => {

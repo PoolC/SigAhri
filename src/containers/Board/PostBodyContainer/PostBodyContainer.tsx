@@ -18,7 +18,8 @@ const statePropTypes = returntypeof(mapStateToProps);
 export namespace PostBodyContainer {
   export interface SubProps {
     post: PostContainer.Info,
-    onVoteSubmit: (selectedOptions : number[]) => void
+    onVoteSubmit: (selectedOptions : number[]) => void,
+    handleSubscribe: (event:React.MouseEvent<HTMLButtonElement>) => void
   }
 
   export interface State {
@@ -143,7 +144,7 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
       <PostBody post={this.props.post} handleVoteSubmit={this.handleVoteSubmit}
                 checkVote={this.checkVote} handleReVote={this.handleReVote}
                 votedId={this.state.votedId} hasLogin={this.props.isLogin}
-                voteHasFinished={this.state.voteHasFinished}
+                voteHasFinished={this.state.voteHasFinished} handleSubscribe={this.props.handleSubscribe}
       />
     )
   }

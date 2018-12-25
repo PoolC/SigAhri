@@ -23,7 +23,7 @@ export namespace Authentication {
   export interface State {
     id: string,
     pw: string,
-    pwConfirm: string,
+    pwConfirm?: string,
     name?: string
     email?: string,
     phone?: string,

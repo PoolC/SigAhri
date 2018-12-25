@@ -14,7 +14,10 @@ export namespace Post {
     onDeleteComment?: (id: number) => void,
     onVoteSubmit?: (selectedOptions : number[]) => void,
     hasWritePermissions: boolean,
-    hasLogin: boolean
+    hasLogin: boolean,
+    isSubscribed: boolean,
+    onSubscribePost: () => void,
+    onUnsubcribePost: () => void
   }
 }
 
@@ -37,11 +40,20 @@ export class Post extends React.Component<Post.Props> {
     history.push(`/board/${urlPath}`);
   };
 
+  handleSubscribe = (event:React.MouseEvent<HTMLButtonElement>) => {
+    if(this.props.isSubscribed) {
+      this.props.onUnsubcribePost();
+    } else {
+      this.props.onSubscribePost();
+    }
+  };
+
   render() {
-    const {info, onCreateComment, onDeleteComment, onVoteSubmit, hasWritePermissions, hasLogin} = this.props;
+    const {info, onCreateComment, onDeleteComment, onVoteSubmit, hasWritePermissions, hasLogin } = this.props;
+
     return (
       <React.Fragment>
-        <PostBodyContainer post={info} onVoteSubmit={onVoteSubmit} />
+        <PostBodyContainer post={info} onVoteSubmit={onVoteSubmit} handleSubscribe={this.handleSubscribe} />
         <div className="post-menu">
           <button onClick={this.handleToBoard} className="btn float-right">목록</button>
           {hasWritePermissions &&
