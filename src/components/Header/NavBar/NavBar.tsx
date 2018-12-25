@@ -1,5 +1,6 @@
 import * as React from "react";
 import {Link} from "react-router-dom";
+import './NavBar.scss';
 
 namespace NavBar {
   export interface Props {
@@ -26,7 +27,7 @@ export class NavBar extends React.Component<NavBar.Props> {
     let authenticationButton = (
       <li className="nav-item">
         <Link to="/login" className="nav-link">
-          <button className="btn btn-outline-secondary">
+          <button className="btn btn-outline-light btn-sm">
             로그인
           </button>
         </Link>
@@ -45,7 +46,7 @@ export class NavBar extends React.Component<NavBar.Props> {
       authenticationButton = (
         <li className="nav-item">
           <a className="nav-link">
-            <button className="btn btn-outline-secondary" onClick={this.handleLogout}>
+            <button className="btn btn-outline-light btn-sm" onClick={this.handleLogout}>
               로그아웃
             </button>
           </a>
@@ -74,7 +75,7 @@ export class NavBar extends React.Component<NavBar.Props> {
 
     return (
       <div>
-        <nav className="navbar navbar-expand-lg navbar-light header">
+        <nav className="navbar navbar-expand-lg navbar-dark header">
           <Link className="navbar-brand logo" to="/">PoolC</Link>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
                   aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

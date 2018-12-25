@@ -10,22 +10,26 @@ export namespace Board {
   export type Props = {
     boards: Array<BoardContainer.BoardInfo>,
     boardID: number,
-    setBoardID: (id: number, name: string) => void
+    randomNumber: number, // 게시판목록을 통해 이동할 때, 현재 게시판으로 이동해도 re-mount 하기 위해 사용되는 변수
+    setBoardID: (id: number) => void
+    subscribeBoard: () => void,
+    unsubscribeBoard: () => void,
+    hasLogin: boolean
   }
 }
 
 export const Board: React.SFC<Board.Props> = (props) => {
-  const { boards } = props;
+  const { boards, randomNumber } = props;
 
   return (
     <div className="row">
-      <div className="board-nav">
-        <div className="board-list list-group">
+      <div className="board-nav col-sm-12 col-md-2">
+        <div className="board-list list-group mobile-invisible">
           {boards.map((board: BoardContainer.BoardInfo) => {
             return (
               <Link to={`/board/${board.urlPath}`}
                     className="board-item list-group-item list-group-item-action"
-                    onClick={() => {props.setBoardID(board.id, board.name);}}
+                    onClick={() => {props.setBoardID(board.id);}}
                     key={board.id}>
                 {board.name}
               </Link>
@@ -33,16 +37,21 @@ export const Board: React.SFC<Board.Props> = (props) => {
           })}
         </div>
       </div>
-      <div className="board-content col">
-        <Switch>
-          {boards.map((board: BoardContainer.BoardInfo) => {
-            return (
-              <Route exact path={`/board/${board.urlPath}`}
-                     render={(props) => (
-                       <PostListContainer {...props} type={board.urlPath} typeId={board.id} name={board.name}
-                                          writePermission={board.writePermission}
-                       />
-                     )}
+      <div className="col-sm-12 col-md-10">
+        <div className="card board-content">
+          <Switch>
+            {boards.map((board: BoardContainer.BoardInfo, idx: number) => {
+            const randomNumberSeq = randomNumber + idx;
+              return (
+                <Route exact path={`/board/${board.urlPath}`}
+                     render={(_props) => (<PostListContainer {..._props} type={board.urlPath} typeId={board.id} name={board.name}
+                                                  writePermission={board.writePermission}
+                                                  isSubscribed={board.isSubscribed}
+                                                  subscribeBoard={props.subscribeBoard}
+                                                  unsubscribeBoard={props.unsubscribeBoard}
+                                                  hasLogin={props.hasLogin}
+                        />
+                      )}
                      key={board.id}
               />
             )
@@ -57,8 +66,9 @@ export const Board: React.SFC<Board.Props> = (props) => {
                  render={(props) => { return <PostForm {...props} type={PostFormType.edit} /> }}
           />
 
-          <Route component={NotFound} />
-        </Switch>
+            <Route component={NotFound} />
+          </Switch>
+        </div>
       </div>
     </div>
   );

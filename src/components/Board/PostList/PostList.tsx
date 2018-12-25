@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { PostListContainer } from '../../../containers/Board';
 import './PostList.scss';
 import * as moment from 'moment';
 
 namespace PostListItem {
   export interface Props {
-    post: PostList.PostInfo,
+    post: PostListContainer.PostInfo,
   }
 }
 
@@ -13,8 +14,12 @@ const PostListItem: React.SFC<PostListItem.Props> = (props) => {
   const { post } = props;
   return (
     <React.Fragment>
-      <tr>
-        <td><Link to={`/posts/${post.id}`}>{post.title}</Link></td>
+      <tr className="post-list-row">
+        <td>
+          <Link to={`/posts/${post.id}`}>
+            {post.title} {post.comments.length !== 0 ? `[${post.comments.length}]` : ''}
+          </Link>
+        </td>
         <td>{post.author.name}</td>
         <td>{moment.utc(post.createdAt).local().format('YYYY-MM-DD')}</td>
       </tr>
@@ -24,22 +29,20 @@ const PostListItem: React.SFC<PostListItem.Props> = (props) => {
 
 export namespace PostList {
   export interface Props {
-    posts: Array<PostInfo>,
+    posts: Array<PostListContainer.PostInfo>,
     name: string,
     typeId: number,
     writePermission: boolean,
     pageInfo: pageInfo,
+    isSubscribed: boolean,
+    hasLogin: boolean
 
     afterPageAction: () => void,
     beforePageAction: () => void,
-    firstPageAction: () => void
-  }
+    firstPageAction: () => void,
 
-  export interface PostInfo {
-    id: number,
-    author: {[key:string]:string},
-    createdAt: string,
-    title: string
+    onSubscribeBoard: () => void,
+    onUnsubscribeBoard: () => void
   }
 
   export interface pageInfo {
@@ -49,10 +52,26 @@ export namespace PostList {
 }
 
 export const PostList: React.SFC<PostList.Props> = (props) => {
+  const handleSubscribe = (event:React.MouseEvent<HTMLButtonElement>) => {
+    if(props.isSubscribed) {
+      props.onUnsubscribeBoard();
+    } else {
+      props.onSubscribeBoard();
+    }
+  };
+
+  const notifications_on = <i className="far fa-bell"></i>;
+  const notifications_off = <i className="far fa-bell-slash"></i>;
+  const icon = props.isSubscribed ? notifications_on : notifications_off;
   return (
     <div>
       <div className="post-list-head">
-        <h2 className="post-list-name">{props.name}</h2>
+        <h1 className="post-list-name">{props.name}</h1>
+        {props.hasLogin &&
+        <button className="noti-button" onClick={handleSubscribe}>
+          {icon}
+        </button>
+        }
         {
           props.writePermission ?
             (<Link to={"/posts/new/"+props.typeId}><button className="btn btn-primary post-list-new">글쓰기</button></Link>) :
@@ -62,9 +81,9 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
       <table className="table">
         <thead>
         <tr>
-          <th scope="col">제목</th>
-          <th scope="col">작성자</th>
-          <th scope="col">작성일</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>작성일</th>
         </tr>
         </thead>
         <tbody>
@@ -75,16 +94,18 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
         }) }
         </tbody>
       </table>
-      <div>
-        <button onClick={() => props.firstPageAction()}><a href="#">첫 페이지</a></button>
-        { props.pageInfo.hasPrevious ?
-          (<button onClick={() => props.afterPageAction()}><a href="#">이전 페이지</a></button>) :
-          null
-        }
-        { props.pageInfo.hasNext ?
-          (<button onClick={() => props.beforePageAction()}><a href="#">다음 페이지</a></button>) :
-          null
-        }
+      <div className="page-container text-center">
+        <div className="btn-group" role="group">
+          { <button className="btn btn-secondary" onClick={() => props.firstPageAction()}>첫 페이지</button> }
+          { props.pageInfo.hasPrevious ?
+            (<button className="btn btn-secondary" onClick={() => props.afterPageAction()}>이전 페이지</button>) :
+            null
+          }
+          { props.pageInfo.hasNext ?
+            (<button className="btn btn-secondary" onClick={() => props.beforePageAction()}>다음 페이지</button>) :
+            null
+          }
+        </div>
       </div>
     </div>
   );

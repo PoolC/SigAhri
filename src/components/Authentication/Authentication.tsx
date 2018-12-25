@@ -23,7 +23,7 @@ export namespace Authentication {
   export interface State {
     id: string,
     pw: string,
-    pwConfirm: string,
+    pwConfirm?: string,
     name?: string
     email?: string,
     phone?: string,
@@ -134,12 +134,12 @@ export class Authentication extends React.Component<Authentication.Props, Partia
     function getInputBox(label: string, inputName: string, inputType: string, classPointer: Authentication,
                          value: string, placeHolder: string = "", disabled: boolean = false): JSX.Element {
       return (
-        <div>
-          <label className="authentication-input-title">{label}</label>
+        <div className="form-group">
+          <label>{label}</label>
           <input
             name={inputName}
             type={inputType}
-            className="authentication-input"
+            className="form-control"
             placeholder={placeHolder}
             value={value}
             onChange={classPointer.handleChange}
@@ -156,7 +156,7 @@ export class Authentication extends React.Component<Authentication.Props, Partia
           <h1 className="authentication-title">로그인</h1>
           {getInputBox("아이디", "id", "text", this, this.state.id)}
           {getInputBox("비밀번호", "pw", "password", this, this.state.pw)}
-          <button onClick={() => this.handleLogin()} className="authentication-button btn btn-primary btn-lg">로그인
+          <button onClick={() => this.handleLogin()} className="btn btn-primary btn-block btn-lg">로그인
           </button>
           <div>
             <br/>
@@ -176,7 +176,7 @@ export class Authentication extends React.Component<Authentication.Props, Partia
           {getInputBox("전화번호", "phone", "input", this, this.state.phone, "예) 010-1234-1234")}
           {getInputBox("소속학과", "department", "input", this, this.state.department, "예) 컴퓨터과학과")}
           {getInputBox("학번", "studentNumber", "input", this, this.state.studentNumber, "예) 2018000000")}
-          <button onClick={() => this.handleRegister()} className="authentication-button btn btn-primary btn-lg">회원가입
+          <button onClick={() => this.handleRegister()} className="btn btn-primary btn-block btn-lg">회원가입
           </button>
         </div>
       );
@@ -191,7 +191,7 @@ export class Authentication extends React.Component<Authentication.Props, Partia
           {getInputBox("전화번호", "phone", "input", this, this.state.phone, "예) 010-1234-1234")}
           {getInputBox("소속학과", "department", "input", this, this.props.loginInfo.department, "예) 컴퓨터과학과", true)}
           {getInputBox("학번", "studentNumber", "input", this, this.props.loginInfo.studentNumber, "예) 2018000000", true)}
-          <button onClick={()=>this.handleInfoModify()} className="authentication-button btn btn-primary btn-lg">정보 수정</button>
+          <button onClick={()=>this.handleInfoModify()} className="btn btn-primary btn-block btn-lg">정보 수정</button>
         </div>
       );
     }

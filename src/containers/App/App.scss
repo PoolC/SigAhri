@@ -1,7 +1,13 @@
+@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
+@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css);
+
+* { font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif'; }
+
 html, body, div#root {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-weight: 300;
 }
 
 .app-container {
@@ -11,12 +17,10 @@ html, body, div#root {
 
 .app-content-container {
   width: 100%;
-  // subtract footer, header height, footer/header margin
-  min-height: calc(100% - 200px - 75px - 40px);
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
+  // subtract footer, header height
+  min-height: calc(100vh - 200px - 63px);
+  padding: 20px 15px;
+  margin: 0 auto;
 }
 
 @media (min-width: 576px) {
@@ -35,7 +39,7 @@ html, body, div#root {
   .app-content-container {
     width: 960px;
     // subtract footer, header height
-    min-height: calc(100% - 200px - 75px - 40px);
+    min-height: calc(100vh - 200px - 63px);
   }
 }
 

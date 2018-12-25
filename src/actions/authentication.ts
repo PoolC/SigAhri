@@ -2,6 +2,7 @@ import { createAction } from 'redux-actions';
 import { Dispatch } from 'redux';
 import axios from 'axios';
 import history from '../history/history'
+import FCM from './firebase';
 
 export namespace AuthenticationActions {
   export enum Type {
@@ -10,7 +11,8 @@ export namespace AuthenticationActions {
     AUTH_LOGIN_FAILURE = "AUTH_LOGIN_FAILURE",
     AUTH_LOGOUT = "AUTH_LOGOUT",
     AUTH_LOGIN_INIT = "AUTH_LOGIN_INIT",
-    AUTH_GET_USERID = "AUTH_GET_USERID"
+    AUTH_GET_USERID = "AUTH_GET_USERID",
+    AUTH_INIT_OK = "AUTH_INIT_OK"
   }
 
   const login = createAction(Type.AUTH_LOGIN);
@@ -19,6 +21,7 @@ export namespace AuthenticationActions {
   const logout = createAction(Type.AUTH_LOGOUT);
   const loginInit = createAction(Type.AUTH_LOGIN_INIT);
   const setUserID = createAction(Type.AUTH_GET_USERID);
+  const authenticationInitializeOK = createAction(Type.AUTH_INIT_OK);
 
   export const loginRequest = (id: string, pw: string) => {
     return (dispatch: Dispatch) => {
@@ -68,6 +71,8 @@ export namespace AuthenticationActions {
     return (dispatch: Dispatch) => {
       localStorage.removeItem('accessToken');
       dispatch(logout());
+      FCM.unregisterToken();
+
       history.push('/');
     }
   };
@@ -96,6 +101,7 @@ export namespace AuthenticationActions {
         if('errors' in data) {
           dispatch(loginInit());
         } else {
+          FCM.initializeFCM();
           dispatch(loginSuccess(me.isAdmin));
           dispatch(setUserID(me.loginID));
         }
@@ -106,7 +112,13 @@ export namespace AuthenticationActions {
         logoutRequest()(dispatch);
       });
     }
-  }
+  };
+
+  export const authenticationInitializeOKRequest = () => {
+    return (dispatch: Dispatch) => {
+      dispatch(authenticationInitializeOK());
+    }
+  };
 }
 
 export type AuthenticationActions = Omit<typeof AuthenticationActions, 'Type'>;

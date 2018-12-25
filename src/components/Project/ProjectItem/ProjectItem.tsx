@@ -81,14 +81,17 @@ export class ProjectItem extends React.Component<ProjectItem.Props, ProjectItem.
 
     const body = this.state.project.body.replace(/\n/g, "  \n");
     return (
-      <div className="project-item-container">
+      <div>
         <img src={this.state.project.thumbnailURL} className="project-item-thumbnail"/>
-        <div className="project-item-content">
-          <div className="project-item-title">
-            <h2>{this.state.project.name}</h2>
+        <div className="project-item-container">
+          <div className="project-item-content">
+            <h1>{this.state.project.name}</h1>
             {this.state.project.genre}
+
+            <hr/>
+
+            <ReactMarkdown source={body} />
           </div>
-          <ReactMarkdown source={body} />
         </div>
       </div>
     );

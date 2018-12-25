@@ -63,34 +63,29 @@ export class Upload extends React.Component<Upload.Props> {
 
   handleChangeFile() {
     const filename = (document.getElementById('file') as HTMLInputElement).value.split('/').pop().split('\\').pop();
-    (document.getElementById('upload-name') as HTMLInputElement).value = filename;
     (document.getElementById('upload-file-name') as HTMLInputElement).value = filename;
   }
 
   render() {
     return (
-      <div className="upload-wrapper">
-        <h1>파일 업로드</h1>
-        <div className="upload-file-box">
-          업로드 할 파일
-          <br />
-          <div className="upload-input-container">
-            <input className="upload-name" id="upload-name" value="파일 선택" disabled={true} />
+      <div className="upload-container">
+        <h1 className="upload-title">파일 업로드</h1>
 
-            <label htmlFor="file">파일 선택</label>
-            <input type="file" name="file" id="file" onChange={() => this.handleChangeFile()}/>
+        <div className="form-group">
+          <label>업로드 할 파일</label>
+          <div className="custom-file">
+            <input className="custom-file-input" type="file" name="file" id="file" onChange={() => this.handleChangeFile()}/>
+            <label className="custom-file-label" htmlFor="file">파일 선택</label>
           </div>
         </div>
-        <div className="upload-file-box">
-          파일명
-          <br />
-          <div className="upload-input-container">
-            <input type="text" id="upload-file-name" className="upload-input" placeholder="서버에 업로드 될 파일 이름을 설정해주세요."/>
-          </div>
+
+        <div className="form-group">
+          <label>파일명</label>
+          <input type="text" id="upload-file-name" className="form-control" placeholder="서버에 업로드 될 파일 이름"/>
+          <small className="form-text text-muted">이곳에 입력된 파일명으로 URL이 생성됩니다.</small>
         </div>
-        <div className="upload-file-box">
-          <button className="btn btn-primary btn-lg" onClick={() => this.handleUpload()}>업로드</button>
-        </div>
+
+        <button className="btn btn-primary btn-block btn-lg" onClick={() => this.handleUpload()}>업로드</button>
       </div>
     );
   }

@@ -1,7 +1,3 @@
-.post-end {
-  border-top: 2.4px solid rgba(0,0,0,0.3)!important;
-}
-
 .post-menu {
   margin-top: 7px;
   button {
@@ -14,6 +10,26 @@
 
 @media (min-width: 768px) {
   .board-title {
-    margin-bottom: 1rem;
+    margin-bottom: 15px;
   }
+}
+
+.icon-noti {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.noti-button {
+  margin: 8px;
+  border: none;
+  background: transparent; /* Change it to transparent */
+  cursor: pointer;
+}
+
+.noti-button:focus {
+  outline: none;
+}
+
+.far.fa-bell {
+  width: 20px;
 }

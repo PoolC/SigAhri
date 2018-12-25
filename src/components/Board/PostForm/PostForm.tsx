@@ -80,7 +80,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     this.setState({
       vote: {
         title: "",
-        deadline: moment().format('YYYY-MM-DDTHH:mm'),
+        deadline: moment().format('YYYY-MM-DD HH:mm:ss'),
         isMultipleSelectable: false,
         optionText: []
       }
@@ -302,7 +302,8 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
               options {
                 text
               }
-            }
+            },
+            isSubscribed
           }
         }`
       }).then((msg) => {
@@ -330,7 +331,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           const voteOptions = data.data.post.vote.options.map((item: {
             text: string
           }) => (item.text));
-          const deadline = moment(data.data.post.vote.deadline).format('YYYY-MM-DDTHH:mm');
+          const deadline = moment(data.data.post.vote.deadline).format('YYYY-MM-DD HH:mm:ss');
 
           nextState['vote'] = {
             title: data.data.post.vote.title,
@@ -393,50 +394,49 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     if(this.state.vote !== null) {
       voteForm = (
         <div className="post-form-vote-container">
-          <h3>투표 {isEdit ? "(수정 X)" : null}</h3>
-          <div>
-            <div className="post-form-block">
-              <h5>제목</h5>
-              <input className="post-form-input" onChange={this.handleVoteTitleChange} value={this.state.vote.title}
-                     disabled={isEdit}
-              />
-            </div>
+          <h3>투표 첨부 {isEdit ? "(수정 X)" : null}</h3>
+          <div className="form-group">
+            <label>제목</label>
+            <input className="post-form-input" onChange={this.handleVoteTitleChange} value={this.state.vote.title}
+                    disabled={isEdit}
+            />
+          </div>
 
-            <div className="post-form-block">
-              <h5>투표 마감</h5>
-              <input className="post-form-input" type="datetime-local" onChange={this.handleVoteDeadlineChange}
-                     value={this.state.vote.deadline} disabled={isEdit}
-              />
-            </div>
+          <div className="form-group">
+            <label>투표 마감</label>
+            <input className="post-form-input" type="datetime-local" onChange={this.handleVoteDeadlineChange}
+                    value={this.state.vote.deadline} disabled={isEdit}
+            />
+          </div>
 
-            <div className="post-form-block">
-              <h5 className="inline-block no-margin">다중선택가능</h5>
-              <input className="post-form-checkbox" type="checkbox" value="isMultipleSelectable"
-                     onChange={this.handleVoteIsMultipleSelectableChange} checked={this.state.vote.isMultipleSelectable}
-                     disabled={isEdit}
-              />
-            </div>
+          <div className="form-check">
+            <input className="post-form-checkbox form-check-input" type="checkbox" value="isMultipleSelectable" id="input-is-mulitple-selectable"
+                    onChange={this.handleVoteIsMultipleSelectableChange} checked={this.state.vote.isMultipleSelectable}
+                    disabled={isEdit}
+            />
+            <label className="inline-block no-margin" htmlFor="input-is-mulitple-selectable">다중선택 가능</label>
+          </div>
 
-            <br />
-            <div className="post-form-block">
-              <h5>투표 항목 {isEdit?'':'추가'}</h5>
-              {
-                isEdit ? null :
-                  (<div>
-                    <input id="post-vote-option" className="post-form-input-not-full" onKeyDown={this.voteAddKeyPress}/>
-                    <button className="btn btn-secondary post-form-option-add-button" onClick={this.handleVoteOptionAdd}>추가</button>
-                  </div>)
-              }
-              <ul>
-                {this.state.vote.optionText.map((text) => (
-                  <li key={text}>
-                    {text}
-                    {isEdit ? null :
-                      (<span> (<a href="#" onClick={()=>this.handleVoteOptionDelete(text)}>삭제</a>)</span>)}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div className="post-form-vote-options-container">
+            <h5>투표 선택지 {isEdit ? '' : '추가'}</h5>
+            {
+              isEdit ? null :
+                (<div className="input-group">
+                  <input id="post-vote-option" className="post-form-input-not-full" onKeyDown={this.voteAddKeyPress}/>
+                  <div className="input-group-append">
+                    <button type="button" className="btn btn-secondary" onClick={this.handleVoteOptionAdd}>추가</button>
+                  </div>
+                </div>)
+            }
+            <ul>
+              {this.state.vote.optionText.map((text) => (
+                <li key={text}>
+                  {text}
+                  {isEdit ? null :
+                    (<span> (<a href="#" onClick={()=>this.handleVoteOptionDelete(text)}>삭제</a>)</span>)}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       );
@@ -444,24 +444,25 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
 
     return (
       <div>
-        <h2 className="post-form-title">{this.state.boardName}</h2>
-        <div>
-          <div className="post-form-block">
-            <h5>제목</h5>
+        <h1 className="post-form-title">{this.state.boardName}</h1>
+        <form>
+          <div className="form-group">
+            <label>제목</label>
             <input
               className="post-form-input post-form-input-title"
               value={this.state.postTitle}
               onChange={this.handleTitleChange}
             />
           </div>
-          <div className="post-form-block">
-            <h5>본문</h5>
+          <div className="form-group">
+          <label>본문</label>
             <SimpleMDE
               value={this.state.postContent}
               onChange={this.handleContentChange}
               id={"post-form-content-"+this.props.match.params.boardID}
               options={{
-                  placeholder: "마크다운 문법을 이용해 입력해주세요."
+                  placeholder: "마크다운 문법을 이용해 입력해주세요.",
+                  spellChecker: false,
                 }
               }
             />
@@ -471,13 +472,13 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
             {
               isEdit ? null :
                 (this.state.vote === null ?
-                (<button className="btn btn-lg btn-secondary" onClick={this.handleAddVote}>투표 첨부</button>) :
-                (<button className="btn btn-lg btn-danger" onClick={this.handleDeleteVote}>투표 삭제</button>))
+                (<button type="button" className="btn btn-secondary" onClick={this.handleAddVote}>투표 첨부</button>) :
+                (<button type="button" className="btn btn-danger" onClick={this.handleDeleteVote}>투표 삭제</button>))
             }
-            <Link to="/upload" target="_blank"><button className="btn btn-lg btn-secondary">파일 첨부</button></Link>
-            <button className="btn btn-lg btn-primary" onClick={() => this.handleSubmit()}>작성</button>
+            <Link to="/upload" target="_blank"><button type="button" className="btn btn-secondary">파일 첨부</button></Link>
+            <button type="button" className="btn btn-primary" onClick={() => this.handleSubmit()}>작성</button>
           </div>
-        </div>
+        </form>
       </div>
     );
   }

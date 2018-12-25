@@ -135,7 +135,8 @@ export class BoardForm extends React.Component<BoardForm.Props, BoardForm.State>
           name,
           urlPath,
           readPermission,
-          writePermission
+          writePermission,
+          isSubscribed
         }
       }`
     }).then((msg) => {

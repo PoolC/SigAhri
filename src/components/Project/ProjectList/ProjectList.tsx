@@ -67,12 +67,12 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
         {
           this.state.projects.map((project) =>
             (<Link to={`/project/${project.id}`} key={project.id}>
-              <div className="project-list-item">
-                <img src={project.thumbnailURL} width="250px" height="200px"/>
-                <div className="project-list-item-content">
-                  <div className="project-list-item-title">{project.name}</div>
-                  <div>{project.genre}</div>
-                  <div>{project.body.length >= 20 ? project.body.slice(0, 17)+"..." : project.body}</div>
+              <div className="card project-list-item">
+                <img className="card-img-top project-list-time-img" src={project.thumbnailURL} width="180" height="120"/>
+                <div className="card-body">
+                  <p className="project-list-item-title"><strong>{project.name}</strong></p>
+                  <p>{project.genre}</p>
+                  <p className="card-text">{project.body.length >= 50 ? project.body.slice(0, 47) + "..." : project.body}</p>
                 </div>
               </div>
             </Link>))
