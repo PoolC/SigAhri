@@ -2,6 +2,7 @@ import { createAction } from 'redux-actions';
 import { Dispatch } from 'redux';
 import axios from 'axios';
 import history from '../history/history'
+import FCM from './firebase';
 
 export namespace AuthenticationActions {
   export enum Type {
@@ -70,6 +71,8 @@ export namespace AuthenticationActions {
     return (dispatch: Dispatch) => {
       localStorage.removeItem('accessToken');
       dispatch(logout());
+      FCM.unregisterToken();
+
       history.push('/');
     }
   };
@@ -98,6 +101,7 @@ export namespace AuthenticationActions {
         if('errors' in data) {
           dispatch(loginInit());
         } else {
+          FCM.initializeFCM();
           dispatch(loginSuccess(me.isAdmin));
           dispatch(setUserID(me.loginID));
         }

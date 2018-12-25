@@ -12,7 +12,8 @@ export namespace PostBody {
     handleReVote: (event: React.FormEvent<HTMLInputElement>) => void,
     votedId: Array<number>,
     hasLogin: boolean,
-    voteHasFinished: boolean
+    voteHasFinished: boolean,
+    handleSubscribe: (event:React.MouseEvent<HTMLButtonElement>) => void
   }
 }
 
@@ -21,11 +22,19 @@ const getLocalTime = (time: string) => {
 };
 
 export const PostBody : React.SFC<PostBody.Props> = (props) => {
-  const { post, votedId, checkVote, handleVoteSubmit, handleReVote, hasLogin, voteHasFinished } = props;
+  const { post, votedId, checkVote, handleVoteSubmit, handleReVote, hasLogin, voteHasFinished, handleSubscribe } = props;
 
+  const notifications_on = <i className="far fa-bell post"></i>;
+  const notifications_off = <i className="far fa-bell-slash"></i>;
+  const icon = post.isSubscribed ? notifications_on : notifications_off;
   return (
     <React.Fragment>
       <h1 className="post-title">{post.title}</h1>
+      {hasLogin &&
+      <button className="post-noti-button" onClick={handleSubscribe}>
+        {icon}
+      </button>
+      }
       <p className="post-meta">
         <i className="far fa-user"></i> {post.author.name}&nbsp;&nbsp;|&nbsp;&nbsp;<i className="far fa-clock"></i> {getLocalTime(post.createdAt)}
       </p>

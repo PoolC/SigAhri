@@ -33,3 +33,23 @@ form fieldset {
     font-size: 12px;
   }
 }
+
+.post-title {
+  display: inline-block;
+}
+
+.post-noti-button {
+  margin: 8px;
+  border: none;
+  background: transparent; /* Change it to transparent */
+  cursor: pointer;
+  max-width: fit-content;
+}
+
+.post-noti-button:focus {
+  outline: none;
+}
+
+.far.fa-bell.post {
+  width: 20px;
+}

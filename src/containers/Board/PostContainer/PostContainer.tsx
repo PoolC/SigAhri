@@ -41,7 +41,8 @@ export namespace PostContainer {
     comments: Array<Comment>,
     createdAt: string,
     updatedAt: string,
-    vote: Vote
+    vote: Vote,
+    isSubscribed: boolean
   }
 
   export interface Comment {
@@ -77,7 +78,8 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         comments: [],
         createdAt: "",
         updatedAt: "",
-        vote: null
+        vote: null,
+        isSubscribed: false
       },
       hasWritePermissions: false
     };
@@ -131,7 +133,8 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
             deadline,
             isMultipleSelectable,
             totalVotersCount
-          }
+          },
+          isSubscribed
         }
       }`
     }).then((msg) => {
@@ -291,6 +294,70 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     })
   };
 
+  onSubscribePost = () => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+
+    const query = `mutation {
+          subscribePost(postID: ${this.state.info.id}) {
+            memberUUID
+          }
+        }`;
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: query
+    }).then((msg) => {
+      // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
+      this.setState({
+        info: {
+          ...this.state.info,
+          isSubscribed: true
+        }
+      });
+    }).catch((msg) => {
+      // TODO : 에러처리
+    });
+  };
+
+  onUnsubscribePost = () => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+
+    const query = `mutation {
+          unsubscribePost(postID: ${this.state.info.id}) {
+            memberUUID
+          }
+        }`;
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: query
+    }).then((msg) => {
+      // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
+      this.setState({
+        info: {
+          ...this.state.info,
+          isSubscribed: false
+        }
+      });
+    }).catch((msg) => {
+      // TODO : 에러처리
+    });
+  };
+
   render() {
     if((typeof this.state.info === 'undefined') || this.state.info.id === -1)
       return null;
@@ -304,6 +371,9 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         onVoteSubmit={this.handleVoteSubmit}
         hasWritePermissions={this.state.hasWritePermissions}
         hasLogin={this.props.isLogin}
+        isSubscribed={this.state.info.isSubscribed}
+        onSubscribePost={this.onSubscribePost}
+        onUnsubcribePost={this.onUnsubscribePost}
       />
     )
   }

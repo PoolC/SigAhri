@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Board } from '../../components'
+import {Board} from '../../components'
 import axios from 'axios';
-import { RootState } from '../../reducers';
-import { returntypeof } from 'react-redux-typescript';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import {RootState} from '../../reducers';
+import {returntypeof} from 'react-redux-typescript';
+import {compose} from 'redux';
+import {connect} from 'react-redux';
 import { RouteComponentProps } from "react-router";
 import history from '../../history/history';
 import * as queryString from 'query-string';
@@ -27,7 +27,6 @@ export namespace BoardContainer {
     boards: Array<BoardInfo>,
     boardID: number,
     userPermissions: string,
-
     randomNumber: number // 게시판목록을 통해 이동할 때, 현재 게시판으로 이동해도 re-mount 하기 위해 사용되는 변수
   }
 
@@ -36,7 +35,8 @@ export namespace BoardContainer {
     name: string,
     urlPath: string,
     readPermission: string,
-    writePermission: boolean
+    writePermission: boolean,
+    isSubscribed: boolean
   }
 
   export interface BoardResponseInfo {
@@ -44,7 +44,8 @@ export namespace BoardContainer {
     name: string,
     urlPath: string,
     readPermission: string,
-    writePermission: string
+    writePermission: string,
+    isSubscribed: boolean
   }
 }
 
@@ -78,7 +79,7 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     this.handleGetBoard();
   }
 
-  componentDidUpdate(prevProps: BoardContainer.Props) {
+  componentDidUpdate(prevProps: BoardContainer.Props, prevState:BoardContainer.State) {
     // redux를 통해 props가 업데이트 되는경우 새로 Mount하지 않고 update만 하게 되는데, 이때는 componentDidMount가 불리지 않으므로
     // 직접 props가 변경되었는지 확인하여 새로 게시판 목록을 불러온다.
     if(this.props.isLogin !== prevProps.isLogin || this.props.isAdmin !== prevProps.isAdmin) {
@@ -119,7 +120,8 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
           name,
           urlPath,
           readPermission,
-          writePermission
+          writePermission,
+          isSubscribed
         }
       }`
     }).then((msg) => {
@@ -136,7 +138,8 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
       }));
 
       this.setState({
-        boards: boards
+        boards: boards,
+        boardID: 1
       });
     }).catch((msg) => {
       console.log("boards API error");
@@ -144,12 +147,91 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
     });
   }
 
+  subscribeBoard = () => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+
+    const query = `mutation {
+          subscribeBoard(boardID: ${this.state.boardID}) {
+            memberUUID
+          }
+        }`;
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: query
+    }).then((msg) => {
+      // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
+      const { boards } = this.state;
+      const newBoards: Array<BoardContainer.BoardInfo> = boards.map((board: BoardContainer.BoardInfo,idx:number, array:Array<BoardContainer.BoardInfo>) => {
+        if(board.id === this.state.boardID) {
+          return {
+            ...board,
+            isSubscribed: true
+          };
+        }
+        return board;
+      });
+      this.setState({
+        boards: newBoards
+      });
+    }).catch((msg) => {
+      // TODO : 에러처리
+    });
+  };
+
+  unsubscribeBoard = () => {
+    const headers: any = {
+      'Content-Type': 'application/graphql'
+    };
+
+    if(localStorage.getItem('accessToken') !== null) {
+      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    }
+    const query = `mutation {
+          unsubscribeBoard(boardID: ${this.state.boardID}) {
+            memberUUID
+          }
+        }`;
+    axios({
+      url: apiUrl,
+      method: 'post',
+      headers: headers,
+      data: query
+    }).then((msg) => {
+      // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
+      const { boards } = this.state;
+      const newBoards: Array<BoardContainer.BoardInfo> = boards.map((board: BoardContainer.BoardInfo,idx:number, array:Array<BoardContainer.BoardInfo>) => {
+        if(board.id === this.state.boardID) {
+          return {
+            ...board,
+            isSubscribed: false
+          };
+        }
+        return board;
+      });
+      this.setState({
+        boards: newBoards
+      });
+    }).catch((msg) => {
+      // TODO : 에러처리
+    });
+  };
+
   render() {
     if(this.state.boards === null)
       return null;
     return (
-      <Board boards={this.state.boards} boardID={this.state.boardID} randomNumber={this.state.randomNumber}
-             setBoardID={this.setBoardID}
+      <Board boards={this.state.boards} boardID={this.state.boardID}
+             setBoardID={this.setBoardID} subscribeBoard={this.subscribeBoard}
+             unsubscribeBoard={this.unsubscribeBoard} hasLogin={this.props.isLogin}
+             randomNumber={this.state.randomNumber}
       />
     );
   }

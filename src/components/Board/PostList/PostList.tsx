@@ -34,10 +34,15 @@ export namespace PostList {
     typeId: number,
     writePermission: boolean,
     pageInfo: pageInfo,
+    isSubscribed: boolean,
+    hasLogin: boolean
 
     afterPageAction: () => void,
     beforePageAction: () => void,
-    firstPageAction: () => void
+    firstPageAction: () => void,
+
+    onSubscribeBoard: () => void,
+    onUnsubscribeBoard: () => void
   }
 
   export interface pageInfo {
@@ -47,10 +52,26 @@ export namespace PostList {
 }
 
 export const PostList: React.SFC<PostList.Props> = (props) => {
+  const handleSubscribe = (event:React.MouseEvent<HTMLButtonElement>) => {
+    if(props.isSubscribed) {
+      props.onUnsubscribeBoard();
+    } else {
+      props.onSubscribeBoard();
+    }
+  };
+
+  const notifications_on = <i className="far fa-bell post-list"></i>;
+  const notifications_off = <i className="far fa-bell-slash"></i>;
+  const icon = props.isSubscribed ? notifications_on : notifications_off;
   return (
     <div>
       <div className="post-list-head">
         <h1 className="post-list-name">{props.name}</h1>
+        {props.hasLogin &&
+        <button className="post-list-noti-button" onClick={handleSubscribe}>
+          {icon}
+        </button>
+        }
         {
           props.writePermission ?
             (<Link to={"/posts/new/"+props.typeId}><button className="btn btn-primary post-list-new">글쓰기</button></Link>) :
