@@ -1,0 +1,19 @@
+language: node.js
+node_js:
+    - "node"
+
+sudo: required
+
+services:
+    - docker
+
+install:
+    - npm install
+
+script:
+    - npm run build
+
+after_success:
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    - docker build -t poolc/sigahri .
+    - docker push poolc/sigahri
