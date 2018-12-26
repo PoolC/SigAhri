@@ -95,7 +95,7 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
     }).then((msg) => {
       const data = msg.data;
       if('errors' in data) {
-        const message = data.erros[0].message;
+        const message = data.errors[0].message;
         if(message === 'ERR401' || message === 'ERR403') {
           alert("권한이 없습니다.");
         } else {

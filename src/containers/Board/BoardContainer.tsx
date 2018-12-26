@@ -168,19 +168,28 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
       data: query
     }).then((msg) => {
       // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
-      const { boards } = this.state;
-      const newBoards: Array<BoardContainer.BoardInfo> = boards.map((board: BoardContainer.BoardInfo,idx:number, array:Array<BoardContainer.BoardInfo>) => {
-        if(board.id === this.state.boardID) {
-          return {
-            ...board,
-            isSubscribed: true
-          };
+      const data = msg.data;
+      if('errors' in data) {
+        const message = data.errors[0].message;
+        if(message === 'ERR401' || message === 'ERR403') {
+          alert("권한이 없습니다");
         }
-        return board;
-      });
-      this.setState({
-        boards: newBoards
-      });
+        return;
+      } else {
+        const {boards} = this.state;
+        const newBoards: Array<BoardContainer.BoardInfo> = boards.map((board: BoardContainer.BoardInfo, idx: number, array: Array<BoardContainer.BoardInfo>) => {
+          if (board.id === this.state.boardID) {
+            return {
+              ...board,
+              isSubscribed: true
+            };
+          }
+          return board;
+        });
+        this.setState({
+          boards: newBoards
+        });
+      }
     }).catch((msg) => {
       // TODO : 에러처리
     });
@@ -206,19 +215,28 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
       data: query
     }).then((msg) => {
       // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
-      const { boards } = this.state;
-      const newBoards: Array<BoardContainer.BoardInfo> = boards.map((board: BoardContainer.BoardInfo,idx:number, array:Array<BoardContainer.BoardInfo>) => {
-        if(board.id === this.state.boardID) {
-          return {
-            ...board,
-            isSubscribed: false
-          };
+      const data = msg.data;
+      if('errors' in data) {
+        const message = data.errors[0].message;
+        if(message === 'ERR401' || message === 'ERR403') {
+          alert("권한이 없습니다");
         }
-        return board;
-      });
-      this.setState({
-        boards: newBoards
-      });
+        return;
+      } else {
+        const {boards} = this.state;
+        const newBoards: Array<BoardContainer.BoardInfo> = boards.map((board: BoardContainer.BoardInfo, idx: number, array: Array<BoardContainer.BoardInfo>) => {
+          if (board.id === this.state.boardID) {
+            return {
+              ...board,
+              isSubscribed: false
+            };
+          }
+          return board;
+        });
+        this.setState({
+          boards: newBoards
+        });
+      }
     }).catch((msg) => {
       // TODO : 에러처리
     });

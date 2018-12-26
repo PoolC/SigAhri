@@ -315,12 +315,21 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       data: query
     }).then((msg) => {
       // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
-      this.setState({
-        info: {
-          ...this.state.info,
-          isSubscribed: true
+      const data = msg.data;
+      if('errors' in data) {
+        const message = data.errors[0].message;
+        if(message === 'ERR401' || message === 'ERR403') {
+          alert("권한이 없습니다");
         }
-      });
+        return;
+      } else {
+        this.setState({
+          info: {
+            ...this.state.info,
+            isSubscribed: true
+          }
+        });
+      }
     }).catch((msg) => {
       // TODO : 에러처리
     });
@@ -347,12 +356,21 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
       data: query
     }).then((msg) => {
       // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
-      this.setState({
-        info: {
-          ...this.state.info,
-          isSubscribed: false
+      const data = msg.data;
+      if('errors' in data) {
+        const message = data.errors[0].message;
+        if(message === 'ERR401' || message === 'ERR403') {
+          alert("권한이 없습니다");
         }
-      });
+        return;
+      } else {
+        this.setState({
+          info: {
+            ...this.state.info,
+            isSubscribed: false
+          }
+        });
+      }
     }).catch((msg) => {
       // TODO : 에러처리
     });

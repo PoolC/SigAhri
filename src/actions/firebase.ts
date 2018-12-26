@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import axios from "axios";
-import config from "../../configs";
 
+const FIREBASE_WEB_CONFIG = process.env.FIREBASE_WEB_CONFIG;
 let messaging : firebase.messaging.Messaging;
 
 const registerToken = () => {
@@ -71,7 +71,7 @@ const unregisterToken = () => {
 
 const initializeFCM = () => {
   if (!firebase.apps.length) {
-    firebase.initializeApp(config);
+    firebase.initializeApp(FIREBASE_WEB_CONFIG);
     messaging = firebase.messaging();
   }
   if ('serviceWorker' in navigator) {
