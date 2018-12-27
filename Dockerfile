@@ -1,11 +1,8 @@
-FROM node:8-slim
+FROM nginx:1.14.2-alpine
 
-# 앱 디렉터리 생성
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+COPY ./dist /var/www/poolc.org
+COPY ./nginx.conf /etc/nginx/conf.d/poolc.org.conf
 
-COPY ./dist .
+EXPOSE 80
 
-RUN npm install -g serve
-
-CMD ["serve", "-l", "3939"]
+CMD ["nginx", "-g", "daemon off;"]
