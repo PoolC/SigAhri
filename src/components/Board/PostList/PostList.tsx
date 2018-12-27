@@ -94,18 +94,16 @@ export const PostList: React.SFC<PostList.Props> = (props) => {
         }) }
         </tbody>
       </table>
-      <div className="page-container text-center">
-        <div className="btn-group" role="group">
-          { <button className="btn btn-secondary" onClick={() => props.firstPageAction()}>첫 페이지</button> }
-          { props.pageInfo.hasPrevious ?
-            (<button className="btn btn-secondary" onClick={() => props.afterPageAction()}>이전 페이지</button>) :
-            null
-          }
-          { props.pageInfo.hasNext ?
-            (<button className="btn btn-secondary" onClick={() => props.beforePageAction()}>다음 페이지</button>) :
-            null
-          }
-        </div>
+      <div className="post-pager text-center">
+        { <button className="btn btn-secondary" onClick={() => props.firstPageAction()}>첫 페이지</button> }
+        { props.pageInfo.hasPrevious ?
+          (<button className="btn btn-secondary" onClick={() => props.afterPageAction()}>이전 페이지</button>) :
+          null
+        }
+        { props.pageInfo.hasNext ?
+          (<button className="btn btn-secondary" onClick={() => props.beforePageAction()}>다음 페이지</button>) :
+          null
+        }
       </div>
     </div>
   );

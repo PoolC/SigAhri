@@ -29,12 +29,14 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
   const icon = post.isSubscribed ? notifications_on : notifications_off;
   return (
     <React.Fragment>
-      <h1 className="post-title">{post.title}</h1>
-      {hasLogin &&
-      <button className="post-noti-button" onClick={handleSubscribe}>
-        {icon}
-      </button>
-      }
+      <div className="post-title-area">
+        <h1 className="post-title">{post.title}</h1>
+        {hasLogin &&
+          <button type="button" className="post-noti-button" onClick={handleSubscribe}>
+            {icon}
+          </button>
+        }
+      </div>
       <p className="post-meta">
         <i className="far fa-user"></i> {post.author.name}&nbsp;&nbsp;|&nbsp;&nbsp;<i className="far fa-clock"></i> {getLocalTime(post.createdAt)}
       </p>
