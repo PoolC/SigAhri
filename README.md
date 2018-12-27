@@ -31,5 +31,5 @@ npm run build
 docker build -t poolc/sigahri .
 
 # Run docker container
-docker run -p 8080:3939 poolc/sigahri
+docker run -p 8080:8080 poolc/sigahri
 ```
