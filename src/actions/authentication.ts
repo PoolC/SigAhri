@@ -2,6 +2,7 @@ import { createAction } from 'redux-actions';
 import { Dispatch } from 'redux';
 import axios from 'axios';
 import history from '../history/history'
+import FCM from './firebase';
 
 export namespace AuthenticationActions {
   export enum Type {
@@ -9,8 +10,9 @@ export namespace AuthenticationActions {
     AUTH_LOGIN_SUCCESS = "AUTH_LOGIN_SUCCESS",
     AUTH_LOGIN_FAILURE = "AUTH_LOGIN_FAILURE",
     AUTH_LOGOUT = "AUTH_LOGOUT",
-    AUTH_LOGIN_INIT = "AUTN_LOGIN_INIT",
-    AUTH_ADMIN_LOGIN = "AUTH_ADMIN_LOGIN"
+    AUTH_LOGIN_INIT = "AUTH_LOGIN_INIT",
+    AUTH_GET_USERID = "AUTH_GET_USERID",
+    AUTH_INIT_OK = "AUTH_INIT_OK"
   }
 
   const login = createAction(Type.AUTH_LOGIN);
@@ -18,7 +20,8 @@ export namespace AuthenticationActions {
   const loginFailure = createAction(Type.AUTH_LOGIN_FAILURE);
   const logout = createAction(Type.AUTH_LOGOUT);
   const loginInit = createAction(Type.AUTH_LOGIN_INIT);
-  const adminLogin = createAction(Type.AUTH_ADMIN_LOGIN);
+  const setUserID = createAction(Type.AUTH_GET_USERID);
+  const authenticationInitializeOK = createAction(Type.AUTH_INIT_OK);
 
   export const loginRequest = (id: string, pw: string) => {
     return (dispatch: Dispatch) => {
@@ -31,7 +34,7 @@ export namespace AuthenticationActions {
           'Content-Type': 'application/graphql'
         },
         data: `mutation {
-          createAccessToken(Login:{
+          createAccessToken(LoginInput:{
             loginID: "${id}"
             password: "${pw}"
           }) {
@@ -41,7 +44,12 @@ export namespace AuthenticationActions {
       }).then((msg) => {
         const data = msg.data;
         if('errors' in data) {
-          alert('아이디 혹은 비밀번호가 틀렸습니다.');
+          if(data.errors[0].message === "TKN000") {
+            alert('아이디 혹은 비밀번호가 틀렸습니다.');
+          } else {
+            console.log("login API error -----");
+            console.log(data);
+          }
           dispatch(loginFailure());
         } else {
           const token = data.data.createAccessToken.key;
@@ -63,6 +71,9 @@ export namespace AuthenticationActions {
     return (dispatch: Dispatch) => {
       localStorage.removeItem('accessToken');
       dispatch(logout());
+      FCM.unregisterToken();
+
+      history.push('/');
     }
   };
 
@@ -80,25 +91,34 @@ export namespace AuthenticationActions {
         },
         data: `query {
           me {
-            isAdmin
+            isAdmin,
+            loginID
           }
         }`
       }).then((msg) => {
         const data = msg.data;
+        const me = data.data.me;
         if('errors' in data) {
           dispatch(loginInit());
         } else {
-          dispatch(loginSuccess());
-          if(data.data.me.isAdmin) {
-            dispatch(adminLogin());
-          }
+          FCM.initializeFCM();
+          dispatch(loginSuccess(me.isAdmin));
+          dispatch(setUserID(me.loginID));
         }
       }).catch((msg) => {
         console.log("token apply error -----");
         console.log(msg);
+        // token expired
+        logoutRequest()(dispatch);
       });
     }
-  }
+  };
+
+  export const authenticationInitializeOKRequest = () => {
+    return (dispatch: Dispatch) => {
+      dispatch(authenticationInitializeOK());
+    }
+  };
 }
 
 export type AuthenticationActions = Omit<typeof AuthenticationActions, 'Type'>;

@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const dotenv = require('dotenv');
 
 // variables
 const isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production';
@@ -8,6 +9,13 @@ const outPath = path.join(__dirname, './dist');
 
 // plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+// env
+const env = dotenv.config().parsed;
+const envKeys = Object.keys(env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+  return prev;
+}, {});
 
 module.exports = {
   entry: [
@@ -38,7 +46,10 @@ module.exports = {
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       {
         enforce: "pre", test: /\.js$/,
-        loader: "source-map-loader"
+        loader: "source-map-loader",
+        exclude: [
+          /node_modules/,
+        ]
       },
       {
         test: /\.scss$/,
@@ -56,11 +67,19 @@ module.exports = {
             minimize: true,
           },
         },
+      },
+      {
+        test: /\.(svg|jpg|jpeg|png|gif)$/,
+        use: {
+          loader: 'file-loader'
+        },
       }
     ]
   },
   devServer: {
-    historyApiFallback: true,
+    historyApiFallback: {
+      disableDotRule: true
+    },
   },
 
   plugins: [
@@ -70,7 +89,15 @@ module.exports = {
       hash: true,
     }),
     new webpack.DefinePlugin({
-      apiUrl: JSON.stringify('http://nagase.lynlab.co.kr/graphql')
+      ...envKeys,
+      apiUrl: JSON.stringify('http://nagase.lynlab.co.kr/graphql'),
+      permissions: JSON.stringify({
+        "ADMIN": ["ADMIN", "MEMBER", "PUBLIC"],
+        "MEMBER": ["MEMBER", "PUBLIC"],
+        "PUBLIC": ["PUBLIC"]
+      }),
+      uploadUrl: JSON.stringify('http://nagase.lynlab.co.kr/files'),
+      logoUrl: JSON.stringify('https://lynlab.co.kr/storage/poolc.vertical.dark.svg')
     })
   ]
 };

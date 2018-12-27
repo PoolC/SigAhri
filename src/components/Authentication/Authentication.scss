@@ -1,29 +1,11 @@
 .authentication-container {
-  width: 370px;
-  margin: 50px auto 0;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .authentication-title {
-  font-weight: bold;
   margin-bottom: 20px;
-}
-
-.authentication-input-title {
-  font-size: 18px;
-}
-
-.authentication-input {
-  border: 0;
-  outline: 0;
-  background: transparent;
-  border-bottom: 2px solid lightgrey;
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.authentication-button {
-  margin-top: 20px;
-  width: 100%;
 }
 
 ::-webkit-input-placeholder {

@@ -1,0 +1,18 @@
+.project-item-thumbnail {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-top: -40px;
+  max-height: 400px;
+  margin-bottom: 50px;
+  object-fit: cover;
+}
+
+.project-item-container {
+  text-align: center;
+}
+
+.project-item-content {
+  width: 80%;
+  margin: 0 auto;
+  text-align: left;
+}

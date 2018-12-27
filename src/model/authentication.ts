@@ -4,11 +4,11 @@ export interface AuthenticationModel {
   },
   status: {
     isLogin: boolean,
-    isAdmin: boolean
+    isAdmin: boolean,
+    init: boolean
+  },
+  userInfo: {
+    id: string,
+    pw: string
   }
-}
-
-export interface AuthenticationActionModel {
-  id: string,
-  pw: string
 }

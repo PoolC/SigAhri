@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { Route, Switch } from 'react-router';
+import { ProjectList, ProjectItem } from '../../components';
+import {NotFound} from "../../components/NotFound/NotFound";
 
 export namespace Project {
   export interface Props {
@@ -7,11 +10,13 @@ export namespace Project {
 }
 
 export class Project extends React.Component<Project.Props> {
-  public render() {
+  render() {
     return (
-      <div>
-        여기는 프로젝트페이지
-      </div>
+      <Switch>
+        <Route exact path="/project" component={ProjectList} />
+        <Route exact path="/project/:projectID" component={ProjectItem} />
+        <Route component={NotFound} />
+      </Switch>
     );
   }
-};
+}
