@@ -90,13 +90,13 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       ...envKeys,
-      apiUrl: JSON.stringify('http://nagase.lynlab.co.kr/graphql'),
+      apiUrl: JSON.stringify('http://poolc.org/graphql'),
       permissions: JSON.stringify({
         "ADMIN": ["ADMIN", "MEMBER", "PUBLIC"],
         "MEMBER": ["MEMBER", "PUBLIC"],
         "PUBLIC": ["PUBLIC"]
       }),
-      uploadUrl: JSON.stringify('http://nagase.lynlab.co.kr/files'),
+      uploadUrl: JSON.stringify('http://poolc.org/files'),
       logoUrl: JSON.stringify('https://lynlab.co.kr/storage/poolc.vertical.dark.svg')
     })
   ]
