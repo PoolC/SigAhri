@@ -7,6 +7,14 @@ sudo: required
 services:
     - docker
 
+before_install:
+    - echo "apiKey=$API_KEY" > .env
+    - echo "authDomain=$AUTH_DOMAIN" >> .env
+    - echo "databaseURL=$DATABASE_URL" >> .env
+    - echo "messagingSenderId=$MESSAGING_SENDER_ID" >> .env
+    - echo "projectId=$PROJECT_ID" >> .env
+    - echo "storageBucket=$STORAGE_BUCKET" >> .env
+
 install:
     - npm install
 
