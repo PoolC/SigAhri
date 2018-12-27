@@ -53,7 +53,6 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
       }`
     }).then((msg) => {
       const data = msg.data;
-      console.log(data);
 
       this.setState(data.data);
     }).catch((msg) => {

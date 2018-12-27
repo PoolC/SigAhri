@@ -148,7 +148,6 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <div className="admin-project-list-head">

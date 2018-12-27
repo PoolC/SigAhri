@@ -113,7 +113,6 @@ export class Board extends React.Component<Board.Props, Board.State> {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="admin-board-container">
         <div className="admin-board-list-head">

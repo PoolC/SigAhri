@@ -59,7 +59,6 @@ export class Info extends React.Component<Info.Props, Info.State> {
     }).then((msg) => {
       // TODO: typing
       const data = msg.data;
-      console.log(data);
       if('errors' in data) {
         if(data.errors[0].message === "ERR401") {
           history.push('/');
