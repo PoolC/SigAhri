@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const dotenv = require('dotenv');
 
 // variables
 const isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production';
@@ -8,6 +9,13 @@ const outPath = path.join(__dirname, './dist');
 
 // plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+// env
+const env = dotenv.config().parsed;
+const envKeys = Object.keys(env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+  return prev;
+}, {});
 
 module.exports = {
   entry: [
@@ -81,6 +89,7 @@ module.exports = {
       hash: true,
     }),
     new webpack.DefinePlugin({
+      ...envKeys,
       apiUrl: JSON.stringify('http://nagase.lynlab.co.kr/graphql'),
       permissions: JSON.stringify({
         "ADMIN": ["ADMIN", "MEMBER", "PUBLIC"],

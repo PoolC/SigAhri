@@ -21,6 +21,7 @@
     "@types/react-router-redux": "^5.0.16",
     "@types/redux-actions": "^2.3.1",
     "@types/redux-logger": "^3.0.6",
+    "awesome-typescript-loader": "^5.2.1",
     "axios": "^0.18.0",
     "babel": "^6.23.0",
     "babel-core": "^6.26.3",
@@ -29,6 +30,8 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^1.0.0",
+    "dotenv": "^6.2.0",
+    "file-loader": "^2.0.0",
     "firebase": "^5.7.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
@@ -49,13 +52,11 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "sass-loader": "^7.1.0",
+    "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
+    "typescript": "^3.1.3",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.9",
-    "awesome-typescript-loader": "^5.2.1",
-    "file-loader": "^2.0.0",
-    "source-map-loader": "^0.2.4",
-    "typescript": "^3.1.3"
+    "webpack-dev-server": "^3.1.9"
   }
 }

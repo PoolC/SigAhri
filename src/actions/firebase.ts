@@ -1,7 +1,6 @@
 import * as firebase from 'firebase';
 import axios from "axios";
 
-const FIREBASE_WEB_CONFIG = process.env.FIREBASE_WEB_CONFIG;
 let messaging : firebase.messaging.Messaging;
 
 const registerToken = () => {
@@ -71,7 +70,14 @@ const unregisterToken = () => {
 
 const initializeFCM = () => {
   if (!firebase.apps.length) {
-    firebase.initializeApp(FIREBASE_WEB_CONFIG);
+    firebase.initializeApp({
+      apiKey: process.env.apiKey,
+      authDomain: process.env.authDomain,
+      databaseURL: process.env.databaseURL,
+      projectId: process.env.projectId,
+      storageBucket: process.env.storageBucket,
+      messagingSenderId: process.env.messagingSenderId
+    });
     messaging = firebase.messaging();
   }
   if ('serviceWorker' in navigator) {
