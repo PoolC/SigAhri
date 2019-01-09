@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { AuthenticationActions } from '../../actions';
 import './App.scss';
 import axios from 'axios';
-import {NotFound} from "../../components/NotFound/NotFound";
+import { NotFound } from '../../components/NotFound/NotFound';
 import { RootState } from '../../reducers';
 
 const mapStateToProps = (state: RootState) => ({
@@ -95,7 +95,7 @@ class App extends React.Component<Props> {
         <Route path="/posts" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
         <Route exact path="/article/view" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
         <Route path="/project" component={Project}/>
-        <Route exact path="/register" component={Register}/>
+        <Route path="/register" component={Register}/>
         <Route exact path="/login" component={Login}/>
         <Route exact path="/info" component={Info}/>
         <Route exact path="/upload" component={Upload}/>

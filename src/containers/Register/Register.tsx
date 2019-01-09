@@ -4,6 +4,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 import history from '../../history/history'
 import { RegisterSuccess } from '../../components';
 import axios from 'axios';
+import { NotFound } from '../../components/NotFound/NotFound';
 
 export namespace Register {
   export interface Props {
@@ -107,7 +108,8 @@ export class Register extends React.Component<Register.Props> {
       <Router history={history}>
         <Switch>
           <Route exact path="/register" render={()=>(<Authentication mode={2} handleRegister={this.handleRegister}/>)}/>
-          <Route path="/register/success" component={RegisterSuccess} />
+          <Route exact path="/register/success" component={RegisterSuccess} />
+          <Route component={NotFound}/>
         </Switch>
       </Router>
     );
