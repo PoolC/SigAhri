@@ -1,4 +1,5 @@
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/messaging';
 import axios from "axios";
 
 let messaging : firebase.messaging.Messaging;
@@ -69,68 +70,69 @@ const unregisterToken = () => {
 };
 
 const initializeFCM = () => {
-  if (!firebase.apps.length) {
-    firebase.initializeApp({
-      apiKey: process.env.apiKey,
-      authDomain: process.env.authDomain,
-      databaseURL: process.env.databaseURL,
-      projectId: process.env.projectId,
-      storageBucket: process.env.storageBucket,
-      messagingSenderId: process.env.messagingSenderId
-    });
-    messaging = firebase.messaging();
-  }
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(registrations => {
-      let isRegistrated: boolean = false;
-      let registration : ServiceWorkerRegistration;
-      registrations.forEach((reg, idx) => {
-        if(reg.active.scriptURL.search("firebase-messaging-sw.js") >= 0 && reg.active.state === "activated"
-        && reg.scope.search("firebase-cloud-messaging-push-scope") < 0) {
-          isRegistrated = true;
-          registration = reg;
-        }
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp({
+        apiKey: process.env.apiKey,
+        authDomain: process.env.authDomain,
+        databaseURL: process.env.databaseURL,
+        projectId: process.env.projectId,
+        storageBucket: process.env.storageBucket,
+        messagingSenderId: process.env.messagingSenderId
       });
-
-      if(!isRegistrated) {
-        navigator.serviceWorker.register('/firebase-messaging-sw.js')
-          .then(function (reg) {
-            messaging.useServiceWorker(reg);
+      messaging = firebase.messaging();
+    }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        let isRegistrated: boolean = false;
+        let registration: ServiceWorkerRegistration;
+        registrations.forEach((reg, idx) => {
+          if (reg.active.scriptURL.search("firebase-messaging-sw.js") >= 0 && reg.active.state === "activated"
+            && reg.scope.search("firebase-cloud-messaging-push-scope") < 0) {
+            isRegistrated = true;
             registration = reg;
-          })
-      }
+          }
+        });
 
-      return registration;
-    }).then((registration: ServiceWorkerRegistration) => {
-      messaging.requestPermission()
-        .then(() => {
-          return messaging.getToken();
-        })
-        .then((token) => {
-          registerToken();
+        if (!isRegistrated) {
+          navigator.serviceWorker.register('/firebase-messaging-sw.js')
+            .then(function (reg) {
+              messaging.useServiceWorker(reg);
+              registration = reg;
+            })
+        }
 
-          messaging.onTokenRefresh(function () {
+        return registration;
+      }).then((registration: ServiceWorkerRegistration) => {
+        messaging.requestPermission()
+          .then(() => {
             registerToken();
-          });
 
-          messaging.onMessage(function (payload) {
-            var notificationTitle = payload.notification.title;
-            var notificationOptions = {
-              body: payload.notification.body,
-              //TODO: poolc logo 추가
-              //icon: poolc_logo
-            };
+            messaging.onTokenRefresh(function () {
+              registerToken();
+            });
 
-            registration.showNotification(notificationTitle, notificationOptions);
-          });
-        })
-        .catch((e) => {
-          console.log("알림 설정을 거절하였습니다");
-          console.log(e);
-        })
-    }).catch(function (err) {
-      console.log('Service worker registration failed, error:', err);
-    });
+            messaging.onMessage(function (payload) {
+              var notificationTitle = payload.notification.title;
+              var notificationOptions = {
+                body: payload.notification.body,
+                //TODO: poolc logo 추가
+                //icon: poolc_logo
+              };
+
+              registration.showNotification(notificationTitle, notificationOptions);
+            });
+          })
+          .catch((e) => {
+            console.log("알림 설정을 거절하였습니다");
+            console.log(e);
+          })
+      }).catch(function (err) {
+        console.log('Service worker registration failed, error:', err);
+      });
+    }
+  } catch(e) {
+    console.error("Error while initializing Firebase\n" + e);
   }
 };
 
