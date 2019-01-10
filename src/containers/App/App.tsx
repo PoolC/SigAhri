@@ -21,6 +21,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   authenticationInitializeOKRequest: () => {
     return dispatch(AuthenticationActions.authenticationInitializeOKRequest() as any);
+  },
+  logoutRequest: () => {
+    return dispatch(AuthenticationActions.logoutRequest() as any);
   }
 });
 
@@ -71,6 +74,8 @@ class App extends React.Component<Props> {
       }).catch((msg) => {
         console.log("refresh API Error -----");
         console.log(msg);
+        this.props.logoutRequest();
+        this.props.authenticationInitializeOKRequest();
       });
     } else if(sendTokenApplyRequest) {
       this.props.authenticationInitializeOKRequest();
