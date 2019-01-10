@@ -16,6 +16,12 @@ export class Home extends React.Component<Home.Props> {
     if(props.location.pathname.indexOf('/page/about') != -1) {
       history.push('/');
     }
+
+    this.pageMove = this.pageMove.bind(this);
+  }
+
+  pageMove(url: string) {
+    history.push(url);
   }
 
   render() {
@@ -31,8 +37,12 @@ export class Home extends React.Component<Home.Props> {
               연세대학교 공과대학 프로그래밍 동아리<br />
               PoolC 홈페이지에 오신 것을 환영합니다!
             </p>
-            <button type="button" className="btn btn-light btn-lg">프로젝트 갤러리</button>
-            <button type="button" className="btn btn-light btn-lg">구인/홍보 문의</button>
+            <button type="button" className="btn btn-light btn-lg" onClick={()=>{this.pageMove('/project')}}>
+              프로젝트 갤러리
+            </button>
+            <a href="mailto:poolc.official@gmail.com">
+              <button type="button" className="btn btn-light btn-lg">구인/홍보 문의</button>
+            </a>
           </div>
         </div>
 
