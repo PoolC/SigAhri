@@ -90,6 +90,8 @@ export class Register extends React.Component<Register.Props> {
           alert("아이디가 중복됩니다.");
         } else if(data.errors[0].message === "MEM001") {
           alert("이메일이 중복됩니다.");
+        } else if(data.errors[0].message === "MEM002") {
+          alert("학번이 중복됩니다.");
         } else {
           console.log("create member API error -----");
           console.log(data);
