@@ -4,6 +4,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 import history from '../../history/history'
 import { RegisterSuccess } from '../../components';
 import axios from 'axios';
+import { NotFound } from '../../components/NotFound/NotFound';
 
 export namespace Register {
   export interface Props {
@@ -89,6 +90,8 @@ export class Register extends React.Component<Register.Props> {
           alert("아이디가 중복됩니다.");
         } else if(data.errors[0].message === "MEM001") {
           alert("이메일이 중복됩니다.");
+        } else if(data.errors[0].message === "MEM002") {
+          alert("학번이 중복됩니다.");
         } else {
           console.log("create member API error -----");
           console.log(data);
@@ -107,7 +110,8 @@ export class Register extends React.Component<Register.Props> {
       <Router history={history}>
         <Switch>
           <Route exact path="/register" render={()=>(<Authentication mode={2} handleRegister={this.handleRegister}/>)}/>
-          <Route path="/register/success" component={RegisterSuccess} />
+          <Route exact path="/register/success" component={RegisterSuccess} />
+          <Route component={NotFound}/>
         </Switch>
       </Router>
     );

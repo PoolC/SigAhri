@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { AuthenticationActions } from '../../actions';
 import './App.scss';
 import axios from 'axios';
-import {NotFound} from "../../components/NotFound/NotFound";
+import { NotFound } from '../../components/NotFound/NotFound';
 import { RootState } from '../../reducers';
 
 const mapStateToProps = (state: RootState) => ({
@@ -21,6 +21,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   authenticationInitializeOKRequest: () => {
     return dispatch(AuthenticationActions.authenticationInitializeOKRequest() as any);
+  },
+  logoutRequest: () => {
+    return dispatch(AuthenticationActions.logoutRequest() as any);
   }
 });
 
@@ -71,6 +74,8 @@ class App extends React.Component<Props> {
       }).catch((msg) => {
         console.log("refresh API Error -----");
         console.log(msg);
+        this.props.logoutRequest();
+        this.props.authenticationInitializeOKRequest();
       });
     } else if(sendTokenApplyRequest) {
       this.props.authenticationInitializeOKRequest();
@@ -95,7 +100,7 @@ class App extends React.Component<Props> {
         <Route path="/posts" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
         <Route exact path="/article/view" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
         <Route path="/project" component={Project}/>
-        <Route exact path="/register" component={Register}/>
+        <Route path="/register" component={Register}/>
         <Route exact path="/login" component={Login}/>
         <Route exact path="/info" component={Info}/>
         <Route exact path="/upload" component={Upload}/>

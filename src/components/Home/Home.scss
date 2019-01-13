@@ -21,9 +21,11 @@
       &.text-layer { 
         padding-top: 120px;
         p { margin-top: 20px; }
-        button { 
+        button {
           margin-top: 20px; 
-          &:not(:first-of-type) { margin-left: 10px; }
+        }
+        a {
+          margin-left: 10px;
         }
       }
     }
