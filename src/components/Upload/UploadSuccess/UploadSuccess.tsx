@@ -26,11 +26,11 @@ export const UploadSuccess: React.SFC<UploadSuccess.Props> = ((props) => {
         <div className="upload-success-description">
           <p>
             사진 파일의 경우: <br/>
-            <code>![파일 설명](https://poolc.org/files/{fileName})</code>
+            <code>![파일 설명]({uploadUrl}/{fileName})</code>
           </p>
           <p>
             첨부 파일의 경우: <br/>
-            <code>&lt;https://poolc.org/files/{fileName}&gt;</code>
+            <code>&lt;{uploadUrl}/{fileName}&gt;</code>
           </p>
         </div>
       </div>
