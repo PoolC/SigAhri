@@ -9,6 +9,7 @@ const outPath = path.join(__dirname, './dist');
 
 // plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // env
 const env = dotenv.config().parsed;
@@ -88,6 +89,9 @@ module.exports = {
       filename: './index.html',
       hash: true,
     }),
+    new CopyWebpackPlugin([
+        { from: './resources/firebase-messaging-sw.js', to: './' }
+    ]),
     new webpack.DefinePlugin({
       ...envKeys,
       apiUrl: JSON.stringify('https://api.poolc.org/graphql'),
