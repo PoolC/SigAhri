@@ -101,7 +101,7 @@ module.exports = {
         "PUBLIC": ["PUBLIC"]
       }),
       uploadUrl: JSON.stringify('https://api.poolc.org/files'),
-      logoUrl: JSON.stringify('https://lynlab.co.kr/storage/poolc.vertical.dark.svg')
+      logoUrl: JSON.stringify('https://api.poolc.org/files/poolc-logo.png')
     })
   ]
 };

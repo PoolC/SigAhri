@@ -3,7 +3,6 @@ import './Footer.scss';
 
 export const Footer: React.SFC = (props) => {
   const year = (new Date()).getFullYear();
-  console.log(year);
 
   return (
     <div className="footer-container">
