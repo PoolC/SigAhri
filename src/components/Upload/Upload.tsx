@@ -38,6 +38,11 @@ export class Upload extends React.Component<Upload.Props> {
       alert("파일을 선택해주세요.");
       return;
     }
+    const extension = file.name.slice(file.name.length-3, file.name.length);
+    if(extension !== 'png' && extension !== 'jpg' && extension !== 'pdf') {
+      alert("png, jpg, pdf파일만 업로드 해주세요.");
+      return;
+    }
     data.append('upload', file);
 
     const fileName = (document.getElementById('upload-file-name') as HTMLInputElement).value;
@@ -76,6 +81,7 @@ export class Upload extends React.Component<Upload.Props> {
           <div className="custom-file">
             <input className="custom-file-input" type="file" name="file" id="file" onChange={() => this.handleChangeFile()}/>
             <label className="custom-file-label" htmlFor="file">파일 선택</label>
+            <small className="form-text text-muted">현재 png, jpg, pdf 파일만 업로드 가능합니다.</small>
           </div>
         </div>
 
