@@ -2,6 +2,9 @@ import * as React from 'react';
 import './Footer.scss';
 
 export const Footer: React.SFC = (props) => {
+  const year = (new Date()).getFullYear();
+  console.log(year);
+
   return (
     <div className="footer-container">
       <footer className="justify-content-center row">
@@ -19,7 +22,7 @@ export const Footer: React.SFC = (props) => {
           프로그래밍에 관심이 있는 모든 학우분들의 연락을 환영합니다. <br />
           <br />
           구인/홍보 문의는 이메일로 연락주시기 바랍니다. <br />
-          ⓒ 2018 All Rights Reserved. PoolC
+          ⓒ {year} All Rights Reserved. PoolC
           <br />
           <br />
           <a href="http://poolc.github.io/Regulation/" target="_blank">동아리 회칙</a>&nbsp;|&nbsp;
