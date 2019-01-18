@@ -8,6 +8,10 @@
   margin-bottom: 20px;
 }
 
+.authentication-link {
+  line-height: 2.0;
+}
+
 ::-webkit-input-placeholder {
   color: #C0C0C0;
   opacity: 1 !important; /* for older chrome versions. may no longer apply. */
