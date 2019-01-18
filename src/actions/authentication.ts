@@ -46,6 +46,8 @@ export namespace AuthenticationActions {
         if('errors' in data) {
           if(data.errors[0].message === "TKN000") {
             alert('아이디 혹은 비밀번호가 틀렸습니다.');
+          } else if(data.errors[0].message === "TKN002") {
+            alert('비활성화된 계정입니다.');
           } else {
             console.log("login API error -----");
             console.log(data);
