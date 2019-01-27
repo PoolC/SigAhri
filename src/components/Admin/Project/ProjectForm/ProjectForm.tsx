@@ -4,6 +4,7 @@ import axios from 'axios';
 import './ProjectForm.scss';
 import history from '../../../../history/history';
 import SimpleMDE from 'react-simplemde-editor';
+import * as moment from 'moment';
 
 export enum ProjectFormType {
   new = 'NEW',
@@ -23,7 +24,9 @@ namespace ProjectForm {
     name: string,
     genre: string,
     thumbnailURL: string,
-    body: string
+    body: string,
+    duration: string,
+    participants: string
   }
 }
 
@@ -35,7 +38,9 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
       name: "",
       genre: "",
       thumbnailURL: "",
-      body: ""
+      body: "",
+      duration: "",
+      participants: ""
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -71,7 +76,9 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           name: "${this.state.name}",
           genre: "${this.state.genre}",
           thumbnailURL: "${this.state.thumbnailURL}",
-          body: """${this.state.body}"""
+          body: """${this.state.body}""",
+          duration: "${this.state.duration}",
+          participants: "${this.state.participants}"
         }) {
           id
         }
@@ -81,7 +88,9 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           name: "${this.state.name}",
           genre: "${this.state.genre}",
           thumbnailURL: "${this.state.thumbnailURL}",
-          body: """${this.state.body}"""
+          body: """${this.state.body}""",
+          duration: "${this.state.duration}",
+          participants: "${this.state.participants}"
         }) {
           id
         }
@@ -115,8 +124,13 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
   }
 
   componentDidMount() {
-    if(this.props.type === ProjectFormType.new)
+    if(this.props.type === ProjectFormType.new) {
+      this.setState({
+        duration: `${moment().format('YYYY-MM-DD')} ~ ${moment().format('YYYY-MM-DD')}`
+      });
+
       return;
+    }
 
     const headers: any = {
       'Content-Type': 'application/graphql'
@@ -135,11 +149,14 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           name,
           genre,
           thumbnailURL,
-          body
+          body,
+          duration,
+          participants
         }
       }`
     }).then((msg) => {
       const data = msg.data;
+      console.log(data)
       this.setState(data.data.project);
     }).catch((msg) => {
       console.log("me API error");
@@ -171,6 +188,26 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
             value={this.state.genre}
             onChange={this.handleInputChange}
             placeholder="예) 모바일 게임"
+          />
+        </div>
+        <div className="admin-project-form-block">
+          <h5>참여자</h5>
+          <input
+            className="admin-project-form-input"
+            name="participants"
+            value={this.state.participants}
+            onChange={this.handleInputChange}
+            placeholder="예) 송재우, 양세종"
+          />
+        </div>
+        <div className="admin-project-form-block">
+          <h5>활동기간</h5>
+          <input
+            className="admin-project-form-input"
+            name="duration"
+            value={this.state.duration}
+            onChange={this.handleInputChange}
+            placeholder="예) 2018-09-01 ~ 2019-01-30"
           />
         </div>
         <div className="admin-project-form-block">

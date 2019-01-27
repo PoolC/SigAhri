@@ -22,6 +22,8 @@ export namespace ProjectItem {
     genre: string,
     thumbnailURL: string,
     body: string,
+    participants: string,
+    duration: string
   }
 }
 
@@ -49,9 +51,12 @@ export class ProjectItem extends React.Component<ProjectItem.Props, ProjectItem.
       headers: headers,
       data: `query {
         project(projectID: ${this.props.match.params.projectID}) {
+          body,
+          duration,
           name,
           genre,
           thumbnailURL,
+          participants,
           body
         }
       }`
@@ -85,8 +90,10 @@ export class ProjectItem extends React.Component<ProjectItem.Props, ProjectItem.
         <img src={this.state.project.thumbnailURL} className="project-item-thumbnail"/>
         <div className="project-item-container">
           <div className="project-item-content">
-            <h1>{this.state.project.name}</h1>
-            {this.state.project.genre}
+            <h1 className="project-item-title">{this.state.project.name}</h1>
+            <span className="project-item-genre">{`[${this.state.project.genre}]`}</span>
+            <h2 className="project-item-participants">{this.state.project.participants}</h2>
+            <h2 className="project-item-duration">{this.state.project.duration}</h2>
 
             <hr/>
 

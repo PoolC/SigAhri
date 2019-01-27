@@ -16,12 +16,24 @@
 }
 
 .project-list-item {
-  width: 300px;
-  height: 320px;
+  height: 290px;
   display: inline-block;
   margin: 10px;
-
   p { margin: 0; }
+
+  @media(max-width: 369px) {
+    width: 270px;
+  }
+
+  @media(min-width: 370px) {
+    width: 320px;
+  }
+}
+
+.project-list-item-title {
+  margin: 0 0 10px 0;
+  display: block;
+  strong { font-size: 18px; }
 }
 
 .project-list-item-content {
@@ -32,4 +44,9 @@
 
 .project-list-time-img {
   object-fit: cover;
+  height: 120px;
+}
+
+.card-body {
+  height: 180px;
 }
