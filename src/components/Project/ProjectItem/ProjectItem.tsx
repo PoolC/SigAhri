@@ -23,7 +23,8 @@ export namespace ProjectItem {
     thumbnailURL: string,
     body: string,
     participants: string,
-    duration: string
+    duration: string,
+    description: string
   }
 }
 
@@ -57,7 +58,8 @@ export class ProjectItem extends React.Component<ProjectItem.Props, ProjectItem.
           genre,
           thumbnailURL,
           participants,
-          body
+          body,
+          description
         }
       }`
     }).then((msg) => {

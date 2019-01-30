@@ -26,7 +26,8 @@ namespace ProjectForm {
     thumbnailURL: string,
     body: string,
     duration: string,
-    participants: string
+    participants: string,
+    description: string
   }
 }
 
@@ -40,7 +41,8 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
       thumbnailURL: "",
       body: "",
       duration: "",
-      participants: ""
+      participants: "",
+      description: ""
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -78,7 +80,8 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           thumbnailURL: "${this.state.thumbnailURL}",
           body: """${this.state.body}""",
           duration: "${this.state.duration}",
-          participants: "${this.state.participants}"
+          participants: "${this.state.participants}",
+          description: "${this.state.description}"
         }) {
           id
         }
@@ -90,7 +93,8 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           thumbnailURL: "${this.state.thumbnailURL}",
           body: """${this.state.body}""",
           duration: "${this.state.duration}",
-          participants: "${this.state.participants}"
+          participants: "${this.state.participants}",
+          description: "${this.state.description}"
         }) {
           id
         }
@@ -151,7 +155,8 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           thumbnailURL,
           body,
           duration,
-          participants
+          participants,
+          description
         }
       }`
     }).then((msg) => {
@@ -218,6 +223,17 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
             value={this.state.thumbnailURL}
             onChange={this.handleInputChange}>
           </input>
+        </div>
+        <div className="admin-project-form-block">
+          <h5>요약</h5>
+          <input
+            className="admin-project-form-input"
+            name="description"
+            value={this.state.description}
+            onChange={this.handleInputChange}
+            placeholder="공백 포함 30자 내로 입력해주세요"
+            maxLength={30}
+          />
         </div>
         <div className="admin-project-form-block">
           <h5>내용</h5>

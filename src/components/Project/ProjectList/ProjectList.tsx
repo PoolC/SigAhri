@@ -18,7 +18,8 @@ export namespace ProjectList {
     thumbnailURL: string,
     body: string,
     duration: string,
-    participants: string
+    participants: string,
+    description: string
   }
 }
 
@@ -52,7 +53,8 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
           name,
           genre,
           thumbnailURL,
-          participants
+          participants,
+          description
         } 
       }`
     }).then((msg) => {
@@ -77,7 +79,7 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
                     <p>[{project.genre}]</p>
                   </span>
                   <p className="card-text">{project.duration}</p>
-                  <p className="card-text">요약: {project.body.substring(0, 20)}{project.body.length ? '...' : ''}</p>
+                  <p className="card-text">{project.description}</p>
                 </div>
               </div>
             </Link>))
