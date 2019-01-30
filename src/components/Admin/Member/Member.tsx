@@ -32,7 +32,6 @@ export class Member extends React.Component<Member.Props, Member.State> {
     this.handleLoadMembers = this.handleLoadMembers.bind(this);
     this.handleToggleActivated = this.handleToggleActivated.bind(this);
     this.handleToggleAdmin = this.handleToggleAdmin.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -135,37 +134,6 @@ export class Member extends React.Component<Member.Props, Member.State> {
     return false;
   }
 
-  handleDelete(uuid: string, name: string) {
-    if(!confirm(`한번 삭제한 정보는 다시 돌릴 수 없습니다.\n${name}님을 삭제하시겠습니까?`))
-      return false;
-
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `mutation {
-        deleteMember(memberUUID: "${uuid}") {
-          uuid
-        }
-      }`
-    }).then((msg) => {
-      this.handleLoadMembers();
-    }).catch((msg) => {
-      console.log("me API error");
-      console.log(msg);
-    });
-
-    return false;
-  }
-
   render() {
     return (
       <div className="admin-member-container">
@@ -184,7 +152,6 @@ export class Member extends React.Component<Member.Props, Member.State> {
             <th scope="col">동작</th>
             <th scope="col">관리자</th>
             <th scope="col">동작</th>
-            <th scope="col">삭제</th>
           </tr>
           </thead>
           <tbody>
@@ -218,12 +185,6 @@ export class Member extends React.Component<Member.Props, Member.State> {
                     event.preventDefault();
                     this.handleToggleAdmin(member.uuid, member.name, !member.isAdmin);
                   }}>임명</a>)}
-              </td>
-              <td>
-                <a className="delete-icon" href="#" onClick={(event)=>{
-                  event.preventDefault();
-                  this.handleDelete(member.uuid, member.name);
-                }}><i className="fas fa-times" /></a>
               </td>
             </tr>
           ))}

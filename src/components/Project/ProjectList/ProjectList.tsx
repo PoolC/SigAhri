@@ -16,7 +16,10 @@ export namespace ProjectList {
     name: string,
     genre: string,
     thumbnailURL: string,
-    body: string
+    body: string,
+    duration: string,
+    participants: string,
+    description: string
   }
 }
 
@@ -45,11 +48,14 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
       data: `query {
         projects {
           id,
+          body,
+          duration,
           name,
           genre,
           thumbnailURL,
-          body
-        }
+          participants,
+          description
+        } 
       }`
     }).then((msg) => {
       const data = msg.data;
@@ -69,9 +75,11 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
               <div className="card project-list-item">
                 <img className="card-img-top project-list-time-img" src={project.thumbnailURL} width="180" height="120"/>
                 <div className="card-body">
-                  <p className="project-list-item-title"><strong>{project.name}</strong></p>
-                  <p>{project.genre}</p>
-                  <p className="card-text">{project.body.length >= 50 ? project.body.slice(0, 47) + "..." : project.body}</p>
+                  <span className="project-list-item-title"><strong>{project.name}</strong>
+                    <p>[{project.genre}]</p>
+                  </span>
+                  <p className="card-text">{project.duration}</p>
+                  <p className="card-text">{project.description}</p>
                 </div>
               </div>
             </Link>))

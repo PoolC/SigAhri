@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Login, Register, BoardContainer, Project, Header, Info } from '../';
+import { Login, Register, BoardContainer, Project, Header, Info, PasswordReset } from '../';
 import { Home, Upload, UploadSuccess, Admin, Footer } from '../../components';
 import { Route, Switch } from 'react-router-dom';
 import { Dispatch, compose } from 'redux';
@@ -101,6 +101,7 @@ class App extends React.Component<Props> {
         <Route exact path="/article/view" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
         <Route path="/project" component={Project}/>
         <Route path="/register" component={Register}/>
+        <Route path="/accounts/password-reset" component={PasswordReset}/>
         <Route exact path="/login" component={Login}/>
         <Route exact path="/info" component={Info}/>
         <Route exact path="/upload" component={Upload}/>

@@ -4,6 +4,7 @@ import axios from 'axios';
 import './ProjectForm.scss';
 import history from '../../../../history/history';
 import SimpleMDE from 'react-simplemde-editor';
+import * as moment from 'moment';
 
 export enum ProjectFormType {
   new = 'NEW',
@@ -23,7 +24,10 @@ namespace ProjectForm {
     name: string,
     genre: string,
     thumbnailURL: string,
-    body: string
+    body: string,
+    duration: string,
+    participants: string,
+    description: string
   }
 }
 
@@ -35,7 +39,10 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
       name: "",
       genre: "",
       thumbnailURL: "",
-      body: ""
+      body: "",
+      duration: "",
+      participants: "",
+      description: ""
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -71,7 +78,10 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           name: "${this.state.name}",
           genre: "${this.state.genre}",
           thumbnailURL: "${this.state.thumbnailURL}",
-          body: """${this.state.body}"""
+          body: """${this.state.body}""",
+          duration: "${this.state.duration}",
+          participants: "${this.state.participants}",
+          description: "${this.state.description}"
         }) {
           id
         }
@@ -81,7 +91,10 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           name: "${this.state.name}",
           genre: "${this.state.genre}",
           thumbnailURL: "${this.state.thumbnailURL}",
-          body: """${this.state.body}"""
+          body: """${this.state.body}""",
+          duration: "${this.state.duration}",
+          participants: "${this.state.participants}",
+          description: "${this.state.description}"
         }) {
           id
         }
@@ -115,8 +128,13 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
   }
 
   componentDidMount() {
-    if(this.props.type === ProjectFormType.new)
+    if(this.props.type === ProjectFormType.new) {
+      this.setState({
+        duration: `${moment().format('YYYY-MM-DD')} ~ ${moment().format('YYYY-MM-DD')}`
+      });
+
       return;
+    }
 
     const headers: any = {
       'Content-Type': 'application/graphql'
@@ -135,11 +153,15 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           name,
           genre,
           thumbnailURL,
-          body
+          body,
+          duration,
+          participants,
+          description
         }
       }`
     }).then((msg) => {
       const data = msg.data;
+      console.log(data)
       this.setState(data.data.project);
     }).catch((msg) => {
       console.log("me API error");
@@ -174,6 +196,26 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
           />
         </div>
         <div className="admin-project-form-block">
+          <h5>참여자</h5>
+          <input
+            className="admin-project-form-input"
+            name="participants"
+            value={this.state.participants}
+            onChange={this.handleInputChange}
+            placeholder="예) 송재우, 양세종"
+          />
+        </div>
+        <div className="admin-project-form-block">
+          <h5>활동기간</h5>
+          <input
+            className="admin-project-form-input"
+            name="duration"
+            value={this.state.duration}
+            onChange={this.handleInputChange}
+            placeholder="예) 2018-09-01 ~ 2019-01-30"
+          />
+        </div>
+        <div className="admin-project-form-block">
           <h5>썸네일 URL</h5>
           <input
             className="admin-project-form-input"
@@ -181,6 +223,17 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
             value={this.state.thumbnailURL}
             onChange={this.handleInputChange}>
           </input>
+        </div>
+        <div className="admin-project-form-block">
+          <h5>요약</h5>
+          <input
+            className="admin-project-form-input"
+            name="description"
+            value={this.state.description}
+            onChange={this.handleInputChange}
+            placeholder="공백 포함 30자 내로 입력해주세요"
+            maxLength={30}
+          />
         </div>
         <div className="admin-project-form-block">
           <h5>내용</h5>

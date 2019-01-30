@@ -5,11 +5,13 @@ import history from '../../history/history';
 
 export namespace Authentication {
   export interface Props {
-    mode: number, // 1: login, 2: register, 3: info-modify
-    handleLogin?: (id: string, pw: string) => void;
+    mode: number, // 1: login, 2: register, 3: info-modify, 4: password-reset(mail), 5: password-reset
+    handleLogin?: (id: string, pw: string) => void,
     handleRegister?: (id: string, pw: string, pwConfirm: string, name: string, email: string, phone: string,
-                     department: string, studentNumber: string) => void;
-    handleInfoModify?: (pw: string, email: string, phone: string) => void;
+                     department: string, studentNumber: string) => void,
+    handleInfoModify?: (pw: string, email: string, phone: string) => void,
+    sendPasswordResetMail?: (email: string) => void,
+    passwordReset?: (password: string, passwordConfirm: string) => void,
     loginInfo?: {
       id: string,
       name: string,
@@ -24,7 +26,7 @@ export namespace Authentication {
     id: string,
     pw: string,
     pwConfirm?: string,
-    name?: string
+    name?: string,
     email?: string,
     phone?: string,
     department?: string,
@@ -62,7 +64,7 @@ export class Authentication extends React.Component<Authentication.Props, Partia
         studentNumber: "",
       };
       this.handleRegister = this.handleRegister.bind(this);
-    } else {
+    } else if(this.props.mode === 3) {
       this.state = {
         id: props.loginInfo.id,
         pw: "",
@@ -73,6 +75,15 @@ export class Authentication extends React.Component<Authentication.Props, Partia
         department: props.loginInfo.department,
         studentNumber: props.loginInfo.studentNumber,
         prevProps: props
+      }
+    } else if(this.props.mode === 4) {
+      this.state = {
+        email: ""
+      }
+    } else {
+      this.state = {
+        pw: "",
+        pwConfirm: ""
       }
     }
     this.handleChange = this.handleChange.bind(this);
@@ -124,6 +135,19 @@ export class Authentication extends React.Component<Authentication.Props, Partia
     this.props.handleInfoModify(pw, email, phone);
   }
 
+  sendPasswordResetMail() {
+    const email = this.state.email;
+
+    this.props.sendPasswordResetMail(email);
+  }
+
+  passwordReset() {
+    const pw = this.state.pw;
+    const pwConfirm = this.state.pwConfirm;
+
+    this.props.passwordReset(pw, pwConfirm);
+  }
+
   loginKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
     if(e.keyCode === 13) {
       this.handleLogin();
@@ -158,9 +182,10 @@ export class Authentication extends React.Component<Authentication.Props, Partia
           {getInputBox("비밀번호", "pw", "password", this, this.state.pw)}
           <button onClick={() => this.handleLogin()} className="btn btn-primary btn-block btn-lg">로그인
           </button>
-          <div>
+          <div className="authentication-link">
             <br/>
-            계정이 없으신 분은 우선 <Link to="/register">가입신청</Link>을 해주세요.
+            계정이 없으신 분은 우선 <Link to="/register">가입신청</Link>을 해주세요. <br />
+            비밀번호를 잊으셨나요? <Link to="accounts/password-reset">비밀번호 찾기</Link>
           </div>
         </div>
       );
@@ -180,7 +205,7 @@ export class Authentication extends React.Component<Authentication.Props, Partia
           </button>
         </div>
       );
-    } else {
+    } else if (this.props.mode === 3) {
       return (
         <div className="authentication-container">
           <h1 className="authentication-title">내 정보</h1>
@@ -194,6 +219,26 @@ export class Authentication extends React.Component<Authentication.Props, Partia
           <button onClick={()=>this.handleInfoModify()} className="btn btn-primary btn-block btn-lg">정보 수정</button>
         </div>
       );
+    } else if(this.props.mode === 4) {
+      return (
+        <div className="authentication-container">
+          <h1 className="authentication-title">비밀번호 찾기</h1>
+          <div>
+            가입할 때 입력한 이메일을 입력해주세요.
+          </div>
+          {getInputBox("", "email", "input", this, this.state.email, "예) temp@gmail.com")}
+          <button onClick={()=>this.sendPasswordResetMail()} className="btn btn-primary btn-block btn-lg">비밀번호 초기화</button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="authentication-container">
+          <h1 className="authentication-title">새 비밀번호 설정</h1>
+          {getInputBox("비밀번호", "pw", "password", this, this.state.pw, "8자리 이상")}
+          {getInputBox("비밀번호 (확인)", "pwConfirm", "password", this, this.state.pwConfirm, "8자리 이상")}
+          <button onClick={()=>this.passwordReset()} className="btn btn-primary btn-block btn-lg">비밀번호 초기화</button>
+        </div>
+      )
     }
   }
 }

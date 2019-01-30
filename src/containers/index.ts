@@ -5,5 +5,6 @@ import { BoardContainer, PostListContainer, PostContainer } from './Board';
 import { Project } from './Project/Project';
 import Header from './Header/Header';
 import { Info } from './Info/Info'
+import { PasswordReset } from './PasswordReset/PasswordReset';
 
-export { App, Login, Register, BoardContainer, Project, Header, PostListContainer, PostContainer, Info };
+export { App, Login, Register, BoardContainer, Project, Header, PostListContainer, PostContainer, Info, PasswordReset };
