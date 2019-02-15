@@ -138,14 +138,20 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         }
       }`
     }).then((msg) => {
-      if(msg.data.data === null) {
+      if(msg.data.data === null) { // 잘못 내려옴
         history.push('/404');
         return;
       }
       const data = msg.data.data.post;
       const { isAdmin, id } = this.props;
-      if(data === null) {
-        history.push('/404');
+      if(data === null) { // 권한 없음
+        alert('권한이 없습니다. 로그인 해주세요');
+        history.push({
+          pathname: '/login',
+          state: {
+            redirLink: this.props.location.pathname
+          }
+        });
         return;
       }
 

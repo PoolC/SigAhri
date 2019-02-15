@@ -23,7 +23,7 @@ export namespace AuthenticationActions {
   const setUserID = createAction(Type.AUTH_GET_USERID);
   const authenticationInitializeOK = createAction(Type.AUTH_INIT_OK);
 
-  export const loginRequest = (id: string, pw: string) => {
+  export const loginRequest = (id: string, pw: string, redirLink: string) => {
     return (dispatch: Dispatch) => {
       dispatch(login());
 
@@ -60,7 +60,8 @@ export namespace AuthenticationActions {
 
           // TODO: 맨처음 방문한 곳이 로그인 페이지면 '/'로 이동
           // TODO: 그렇지 않은 경우에는 뒤로가기
-          history.push('/');
+          let url = redirLink ? redirLink : '/';
+          history.push(url);
         }
       }).catch((msg) => {
         console.log("login API Error -----");
