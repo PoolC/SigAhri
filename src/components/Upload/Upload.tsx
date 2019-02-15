@@ -81,7 +81,7 @@ export class Upload extends React.Component<Upload.Props> {
           <div className="custom-file">
             <input className="custom-file-input" type="file" name="file" id="file" onChange={() => this.handleChangeFile()}/>
             <label className="custom-file-label" htmlFor="file">파일 선택</label>
-            <small className="form-text text-muted">현재 png, jpg, pdf 파일만 업로드 가능합니다.</small>
+            <small className="form-text text-muted">최대 5MB까지 업로드 가능합니다.</small>
           </div>
         </div>
 
