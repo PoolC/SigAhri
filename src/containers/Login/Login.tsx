@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Authentication } from '../../components';
-
+import { RouteComponentProps } from 'react-router';
 import { RootState } from '../../reducers';
 import { connect } from 'react-redux';
 import { AuthenticationActions } from '../../actions';
@@ -12,15 +12,18 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  loginRequest: (id: string, pw: string) => {
-    return dispatch(AuthenticationActions.loginRequest(id, pw) as any); // TODO: 타입 정의
+  loginRequest: (id: string, pw: string, redirLink: string) => {
+    return dispatch(AuthenticationActions.loginRequest(id, pw, redirLink) as any); // TODO: 타입 정의
   }
 });
 
 const statePropTypes = returntypeof(mapStateToProps);
 const actionPropTypes = returntypeof(mapDispatchToProps);
 
-type Props = typeof statePropTypes & typeof actionPropTypes & {};
+
+export interface SubProps extends RouteComponentProps{ }
+
+type Props = typeof statePropTypes & typeof actionPropTypes & SubProps;
 type State = {};
 
 class Login extends React.Component<Props, State> {
@@ -29,13 +32,14 @@ class Login extends React.Component<Props, State> {
     this.handleLogin = this.handleLogin.bind(this);
   }
 
-  handleLogin(id: string, pw: string) {
-    this.props.loginRequest(id, pw);
+  handleLogin(id: string, pw: string, redirLink: string) {
+    this.props.loginRequest(id, pw, redirLink);
   }
 
   render(): JSX.Element {
+    const { location } = this.props;
     return (
-      <Authentication mode={1} handleLogin={this.handleLogin}/>
+      <Authentication mode={1} redirLink={location.state ? location.state.redirLink : undefined} handleLogin={this.handleLogin}/>
     );
   }
 }

@@ -6,7 +6,8 @@ import history from '../../history/history';
 export namespace Authentication {
   export interface Props {
     mode: number, // 1: login, 2: register, 3: info-modify, 4: password-reset(mail), 5: password-reset
-    handleLogin?: (id: string, pw: string) => void,
+    redirLink?: string,
+    handleLogin?: (id: string, pw: string, redirLink: string) => void,
     handleRegister?: (id: string, pw: string, pwConfirm: string, name: string, email: string, phone: string,
                      department: string, studentNumber: string) => void,
     handleInfoModify?: (pw: string, email: string, phone: string) => void,
@@ -25,6 +26,7 @@ export namespace Authentication {
   export interface State {
     id: string,
     pw: string,
+    redirLink: string,
     pwConfirm?: string,
     name?: string,
     email?: string,
@@ -48,7 +50,8 @@ export class Authentication extends React.Component<Authentication.Props, Partia
     if(this.props.mode === 1) {
       this.state = {
         id: "",
-        pw: ""
+        pw: "",
+        redirLink: this.props.redirLink
       };
       this.handleLogin = this.handleLogin.bind(this);
       this.loginKeyPress = this.loginKeyPress.bind(this);
@@ -105,7 +108,7 @@ export class Authentication extends React.Component<Authentication.Props, Partia
 
 
   handleLogin(): void {
-    this.props.handleLogin(this.state.id, this.state.pw);
+    this.props.handleLogin(this.state.id, this.state.pw, this.state.redirLink);
   }
 
   handleChange(event: React.ChangeEvent<HTMLInputElement>) {

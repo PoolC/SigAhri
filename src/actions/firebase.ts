@@ -113,9 +113,12 @@ const initializeFCM = () => {
             });
 
             messaging.onMessage(function (payload) {
-              var notificationTitle = payload.notification.title;
-              var notificationOptions = {
+              let notificationTitle = payload.notification.title;
+              let notificationOptions = {
                 body: payload.notification.body,
+                data: {
+                  postID: payload.notification.data.postID
+                }
                 //TODO: poolc logo 추가
                 //icon: poolc_logo
               };
