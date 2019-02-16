@@ -90,7 +90,7 @@ module.exports = {
       hash: true,
     }),
     new CopyWebpackPlugin([
-        { from: './resources/firebase-messaging-sw.js', to: './' }
+        { from: './resources/sw.js', to: './' }
     ]),
     new webpack.DefinePlugin({
       ...envKeys,

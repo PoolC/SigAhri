@@ -1,5 +1,5 @@
-importScripts('https://www.gstatic.com/firebasejs/5.7.0/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/5.7.0/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/5.8.2/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/5.8.2/firebase-messaging.js');
 
 let messaging;
 const config = {
@@ -12,21 +12,17 @@ if (!firebase.apps.length) {
 }
 
 messaging.setBackgroundMessageHandler(function(payload) {
-  let isBoard = payload.notification.title.indexOf('게시판') >= 0;
   let notificationTitle = payload.notification.title;
   let notificationOptions = {
     body: payload.notification.body,
+    icon: 'https://api.poolc.org/files/poolc-logo.png',
+    click_action: 'https://poolc.org/posts/'+ payload.notification.data.postID,
     data: {
-      boardID: payload.notification.data.boardID,
-      postID: payload.notification.data.postID,
-      isBoardNotification: isBoard
+      postID: payload.notification.data.postID
     }
-    // TODO: icon 추가
-    //icon: images
   };
 
-  return self.registration.showNotification(notificationTitle,
-    notificationOptions);
+  return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 self.addEventListener('notificationclick', function(event) {
@@ -34,7 +30,7 @@ self.addEventListener('notificationclick', function(event) {
 
   event.notification.close();
 
-  let url = `http://localhost:8080/posts/${postID}`;
+  let url = 'https://poolc.org/posts/' + postID;
   event.waitUntil(
     clients.openWindow(url)
   );
