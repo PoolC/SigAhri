@@ -12,13 +12,13 @@ if (!firebase.apps.length) {
 }
 
 messaging.setBackgroundMessageHandler(function(payload) {
-  let notificationTitle = payload.notification.title;
+  let notificationTitle = payload.data.title;
   let notificationOptions = {
-    body: payload.notification.body,
+    body: payload.data.body,
     icon: 'https://api.poolc.org/files/poolc-logo.png',
-    click_action: 'https://poolc.org/posts/'+ payload.notification.data.postID,
+    click_action: 'https://poolc.org/posts/'+ payload.data.postID,
     data: {
-      postID: payload.notification.data.postID
+      postID: payload.data.postID
     }
   };
 

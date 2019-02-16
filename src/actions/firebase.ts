@@ -111,12 +111,12 @@ const initializeFCM = () => {
               registerToken();
             });
             messaging.onMessage(function (payload) {
-              let notificationTitle = payload.notification.title;
+              let notificationTitle = payload.data.title;
               let notificationOptions = {
-                body: payload.notification.body,
+                body: payload.data.body,
                 icon: logoUrl,
                 data: {
-                  postID: payload.notification.data.postID
+                  postID: payload.data.postID
                 },
               };
 
