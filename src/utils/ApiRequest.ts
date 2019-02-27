@@ -22,8 +22,12 @@ const myGraphQLAxios = (data: string, options?: {[key:string]: any}) => {
 
   if(options && options.authorization) {
     const token = localStorage.getItem('accessToken');
-    headers.Authorization = `Bearer ${token}`
+    if(token) {
+      headers.Authorization = `Bearer ${token}`
+    }
   }
+
+  console.log(headers);
 
   return axios({
     url: apiUrl,
