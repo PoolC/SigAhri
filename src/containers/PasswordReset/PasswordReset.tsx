@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Authentication } from '../../components';
-import axios from 'axios';
 import * as queryString from 'query-string';
 import { RouteComponentProps } from 'react-router';
 import history from '../../history/history';
+import myGraphQLAxios from "../../utils/ApiRequest";
 
 interface Props extends RouteComponentProps {}
 
@@ -38,15 +38,12 @@ export class PasswordReset extends React.Component<Props, State> {
       return;
     }
 
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/graphql'
-      },
-      data: `mutation {
-          requestMemberPasswordReset(email: "${email}")
-        }`
+    const data = `mutation {
+      requestMemberPasswordReset(email: "${email}")
+    }`;
+
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       if(msg.data.data.requestMemberPasswordReset) {
         alert("비밀번호 초기화 메일을 보냈습니다.");
@@ -71,20 +68,17 @@ export class PasswordReset extends React.Component<Props, State> {
       return;
     }
 
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/graphql'
-      },
-      data: `mutation {
-          updateMemberPassword(input: {
-            token: "${this.state.token}",
-            password: "${newPassword}"
-          }) {
-            uuid
-          }
-        }`
+    const data = `mutation {
+      updateMemberPassword(input: {
+        token: "${this.state.token}",
+        password: "${newPassword}"
+      }) {
+        uuid
+      }
+    }`;
+
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg: any) => {
       const data = msg.data;
       console.log(data);

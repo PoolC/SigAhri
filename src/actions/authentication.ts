@@ -1,8 +1,8 @@
 import { createAction } from 'redux-actions';
 import { Dispatch } from 'redux';
-import axios from 'axios';
 import history from '../history/history'
-import FCM from './firebase';
+import FCM from '../service/firebase';
+import myGraphQLAxios from "../utils/ApiRequest";
 
 export namespace AuthenticationActions {
   export enum Type {
@@ -27,21 +27,16 @@ export namespace AuthenticationActions {
     return (dispatch: Dispatch) => {
       dispatch(login());
 
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/graphql'
-        },
-        data: `mutation {
-          createAccessToken(LoginInput:{
-            loginID: "${id}"
-            password: "${pw}"
-          }) {
-            key
-          }
-        }`
-      }).then((msg) => {
+      const data = `mutation {
+        createAccessToken(LoginInput:{
+          loginID: "${id}"
+          password: "${pw}"
+        }) {
+          key
+        }
+      }`;
+
+      myGraphQLAxios(data).then((msg) => {
         const data = msg.data;
         if('errors' in data) {
           if(data.errors[0].message === "TKN000") {
@@ -85,19 +80,15 @@ export namespace AuthenticationActions {
       if(token === null) {
         return;
       }
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/graphql',
-          'Authorization': `Bearer ${token}`
-        },
-        data: `query {
-          me {
-            isAdmin,
-            loginID
-          }
-        }`
+      const data = `query {
+        me {
+          isAdmin,
+          loginID
+        }
+      }`;
+
+      myGraphQLAxios(data, {
+        authorization: true
       }).then((msg) => {
         const data = msg.data;
         const me = data.data.me;

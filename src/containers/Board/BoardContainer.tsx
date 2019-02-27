@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {Board} from '../../components'
-import axios from 'axios';
 import {RootState} from '../../reducers';
 import {returntypeof} from 'react-redux-typescript';
 import {compose} from 'redux';
@@ -8,6 +7,7 @@ import {connect} from 'react-redux';
 import { RouteComponentProps } from "react-router";
 import history from '../../history/history';
 import * as queryString from 'query-string';
+import myGraphQLAxios from "../../utils/ApiRequest";
 
 const mapStateToProps = (state: RootState) => ({
   isLogin: state.authentication.status.isLogin,
@@ -102,28 +102,19 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   }
 
   handleGetBoard() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      boards {
+        id,
+        name,
+        urlPath,
+        readPermission,
+        writePermission,
+        isSubscribed
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        boards {
-          id,
-          name,
-          urlPath,
-          readPermission,
-          writePermission,
-          isSubscribed
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // TODO: data가 BoardInfo 의 Array인지 typing
       const { userPermissions } = this.state;
@@ -148,24 +139,14 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   }
 
   subscribeBoard = () => {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `mutation {
+      subscribeBoard(boardID: ${this.state.boardID}) {
+        memberUUID
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    const query = `mutation {
-          subscribeBoard(boardID: ${this.state.boardID}) {
-            memberUUID
-          }
-        }`;
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: query
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
       const data = msg.data;
@@ -196,23 +177,14 @@ class BoardContainerClass extends React.Component<BoardContainer.Props, BoardCon
   };
 
   unsubscribeBoard = () => {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `mutation {
+      unsubscribeBoard(boardID: ${this.state.boardID}) {
+        memberUUID
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-    const query = `mutation {
-          unsubscribeBoard(boardID: ${this.state.boardID}) {
-            memberUUID
-          }
-        }`;
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: query
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
       const data = msg.data;

@@ -1,28 +1,19 @@
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
-import axios from "axios";
+import myGraphQLAxios from "../utils/ApiRequest";
 
 let messaging : firebase.messaging.Messaging;
 
 const registerToken = () => {
-  messaging.getToken().then((token) => {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+  messaging.getToken().then((firebaseToken) => {
+    const data = `mutation {
+      registerPushToken(token:"${firebaseToken}") {
+        memberUUID
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `mutation {
-            registerPushToken(token:"${token}") {
-              memberUUID
-            }
-          }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // const memberUUID = msg.data.registerPushToken.memberUUID;
     }).catch((msg) => {
@@ -36,27 +27,18 @@ const registerToken = () => {
 
 const unregisterToken = () => {
   if(messaging) {
-    messaging.getToken().then((token) => {
-      const headers: any = {
-        'Content-Type': 'application/graphql'
-      };
-
-      if (localStorage.getItem('accessToken') !== null) {
-        headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-      }
-
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: headers,
-        data: `mutation {
-        deregisterPushToken(token:"${token}") {
+    messaging.getToken().then((firebaseToken) => {
+      const data = `mutation {
+        deregisterPushToken(token:"${firebaseToken}") {
           memberUUID
         }
-      }`
+      }`;
+
+      myGraphQLAxios(data, {
+        authorization: true
       }).then((msg) => {
         // const memberUUID = msg.data.deregisterPushToken.memberUUID;
-        messaging.deleteToken(token);
+        messaging.deleteToken(firebaseToken);
       }).catch((msg) => {
         console.error("error while pushing token...");
         console.error(msg);
