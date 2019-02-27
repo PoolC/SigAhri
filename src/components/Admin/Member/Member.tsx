@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './Member.scss';
-import axios from 'axios';
+import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export namespace Member {
   export interface Props {
@@ -39,30 +39,21 @@ export class Member extends React.Component<Member.Props, Member.State> {
   }
 
   handleLoadMembers() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      members {
+        uuid,
+        name,
+        studentID,
+        loginID,
+        email,
+        phoneNumber,
+        isActivated,
+        isAdmin
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        members {
-          uuid,
-          name,
-          studentID,
-          loginID,
-          email,
-          phoneNumber,
-          isActivated,
-          isAdmin
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data.data;
       this.setState(data);
@@ -76,23 +67,14 @@ export class Member extends React.Component<Member.Props, Member.State> {
     if(!confirm(`${name}님을 ${register?'승인':'탈퇴'}시키겠습니까?`))
       return false;
 
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `mutation {
+      toggleMemberIsActivated(memberUUID: "${uuid}") {
+        uuid
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `mutation {
-        toggleMemberIsActivated(memberUUID: "${uuid}") {
-          uuid
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       this.handleLoadMembers();
     }).catch((msg) => {
@@ -107,23 +89,14 @@ export class Member extends React.Component<Member.Props, Member.State> {
     if(!confirm(`${name}님의 관리자권한을 ${register?'임명':'해제'}하시겠습니까?`))
       return false;
 
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `mutation {
+      toggleMemberIsAdmin(memberUUID: "${uuid}") {
+        uuid
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `mutation {
-        toggleMemberIsAdmin(memberUUID: "${uuid}") {
-          uuid
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       this.handleLoadMembers();
     }).catch((msg) => {

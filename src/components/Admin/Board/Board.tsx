@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import './Board.scss';
-import axios from 'axios';
-import history from '../../../history/history';
+import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export namespace Board {
   export interface Props {
@@ -34,23 +33,14 @@ export class Board extends React.Component<Board.Props, Board.State> {
 
   handleBoardDelete(id: number, name: string) {
     if(confirm(`${name}을 삭제하시겠습니까?`)) {
-      const headers: any = {
-        'Content-Type': 'application/graphql'
-      };
+      const data = `mutation {
+        deleteBoard(boardID: ${id}) {
+          id
+        }
+      }`;
 
-      if(localStorage.getItem('accessToken') !== null) {
-        headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-      }
-
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: headers,
-        data: `mutation {
-          deleteBoard(boardID: ${id}) {
-            id
-          }
-        }`
+      myGraphQLAxios(data, {
+        authorization: true
       }).then((msg) => {
         const data = msg.data;
         if('errors' in data) {
@@ -79,28 +69,19 @@ export class Board extends React.Component<Board.Props, Board.State> {
   }
 
   handleLoadBoards() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      boards {
+        id,
+        name,
+        urlPath,
+        readPermission,
+        writePermission,
+        isSubscribed
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        boards {
-          id,
-          name,
-          urlPath,
-          readPermission,
-          writePermission,
-          isSubscribed
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data.data.boards;
       this.setState({

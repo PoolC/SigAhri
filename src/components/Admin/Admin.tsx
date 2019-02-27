@@ -6,8 +6,8 @@ import { Board } from './Board/Board';
 import { BoardForm, BoardFormType } from './Board/BoardForm/BoardForm';
 import { Project } from './Project/Project';
 import { ProjectForm, ProjectFormType } from './Project/ProjectForm/ProjectForm';
-import axios from 'axios';
 import history from '../../history/history';
+import myGraphQLAxios from "../../utils/ApiRequest";
 
 export namespace Admin {
   export interface Props {
@@ -32,24 +32,15 @@ export class Admin extends React.Component<Admin.Props, Admin.State> {
   }
 
   componentDidMount() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      me {
+        isActivated,
+        isAdmin
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        me {
-          isActivated,
-          isAdmin
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data;
       if('errors' in data) {

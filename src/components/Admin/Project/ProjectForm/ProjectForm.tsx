@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import axios from 'axios';
 import './ProjectForm.scss';
 import history from '../../../../history/history';
 import SimpleMDE from 'react-simplemde-editor';
 import * as moment from 'moment';
+import myGraphQLAxios from "../../../../utils/ApiRequest";
 
 export enum ProjectFormType {
   new = 'NEW',
@@ -64,47 +64,29 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
   }
 
   handleSubmit() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    const query = this.props.type === ProjectFormType.new ?
+    const projectInput = `ProjectInput: {
+      name: "${this.state.name}",
+      genre: "${this.state.genre}",
+      thumbnailURL: "${this.state.thumbnailURL}",
+      body: """${this.state.body}""",
+      duration: "${this.state.duration}",
+      participants: "${this.state.participants}",
+      description: "${this.state.description}"
+    }`;
+    const data = this.props.type === ProjectFormType.new ?
       `mutation {
-        createProject(ProjectInput: {
-          name: "${this.state.name}",
-          genre: "${this.state.genre}",
-          thumbnailURL: "${this.state.thumbnailURL}",
-          body: """${this.state.body}""",
-          duration: "${this.state.duration}",
-          participants: "${this.state.participants}",
-          description: "${this.state.description}"
-        }) {
+        createProject(${projectInput}) {
           id
         }
       }`:
       `mutation {
-        updateProject(projectID: ${this.props.match.params.projectID}, ProjectInput: {
-          name: "${this.state.name}",
-          genre: "${this.state.genre}",
-          thumbnailURL: "${this.state.thumbnailURL}",
-          body: """${this.state.body}""",
-          duration: "${this.state.duration}",
-          participants: "${this.state.participants}",
-          description: "${this.state.description}"
-        }) {
+        updateProject(projectID: ${this.props.match.params.projectID}, ${projectInput}) {
           id
         }
       }`;
 
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: query
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data;
       if('errors' in data) {
@@ -136,32 +118,22 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
       return;
     }
 
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      project(projectID: ${this.props.match.params.projectID}) {
+        name,
+        genre,
+        thumbnailURL,
+        body,
+        duration,
+        participants,
+        description
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        project(projectID: ${this.props.match.params.projectID}) {
-          name,
-          genre,
-          thumbnailURL,
-          body,
-          duration,
-          participants,
-          description
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data;
-      console.log(data)
       this.setState(data.data.project);
     }).catch((msg) => {
       console.log("me API error");

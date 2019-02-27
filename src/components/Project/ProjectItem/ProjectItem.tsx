@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import axios from 'axios';
 import ReactMarkdown = require("react-markdown");
 import './ProjectItem.scss';
 import history from '../../../history/history';
+import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export namespace ProjectItem {
   export interface Props extends RouteComponentProps<MatchParams> {
@@ -39,29 +39,21 @@ export class ProjectItem extends React.Component<ProjectItem.Props, ProjectItem.
   }
 
   componentDidMount() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      project(projectID: ${this.props.match.params.projectID}) {
+        body,
+        duration,
+        name,
+        genre,
+        thumbnailURL,
+        participants,
+        body,
+        description
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        project(projectID: ${this.props.match.params.projectID}) {
-          body,
-          duration,
-          name,
-          genre,
-          thumbnailURL,
-          participants,
-          body,
-          description
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data;
 

@@ -7,7 +7,7 @@ import { returntypeof } from 'react-redux-typescript';
 import { connect } from 'react-redux';
 import { AuthenticationActions } from '../../actions';
 import './App.scss';
-import axios from 'axios';
+import myGraphQLAxios from '../../utils/ApiRequest';
 import { NotFound } from '../../components/NotFound/NotFound';
 import { RootState } from '../../reducers';
 
@@ -40,22 +40,15 @@ class App extends React.Component<Props> {
   }
 
   tokenRefreshRequest(sendTokenApplyRequest: boolean) {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: headers,
-        data: `mutation {
-          refreshAccessToken{
-            key
-          }
-        }`
+    const token = localStorage.getItem('accessToken');
+    if(token) {
+      const data = `mutation {
+        refreshAccessToken{
+          key
+        }
+      }`;
+      myGraphQLAxios(data, {
+        authorization: true
       }).then((msg) => {
         const data = msg.data;
         if('errors' in data) {
