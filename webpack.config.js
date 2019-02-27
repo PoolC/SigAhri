@@ -90,7 +90,10 @@ module.exports = {
       hash: true,
     }),
     new CopyWebpackPlugin([
-        { from: './resources/sw.js', to: './' }
+      { from: './resources/sw.js', to: './' }
+    ]),
+    new CopyWebpackPlugin([
+      { from: './resources/favicon.ico', to: './' }
     ]),
     new webpack.DefinePlugin({
       ...envKeys,
