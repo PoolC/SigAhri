@@ -87,17 +87,15 @@ const initializeFCM = () => {
         let isRegistrated: boolean = false;
         let registration: ServiceWorkerRegistration;
         registrations.forEach((reg, idx) => {
-          if (reg.active.scriptURL.search("firebase-messaging-sw.js") >= 0 && reg.active.state === "activated"
-            && reg.scope.search("firebase-cloud-messaging-push-scope") < 0) {
+          if (reg.active.scriptURL.search("sw.js") >= 0 && reg.active.state === "activated") {
             isRegistrated = true;
             registration = reg;
           }
         });
 
         if (!isRegistrated) {
-          navigator.serviceWorker.register('/firebase-messaging-sw.js')
+          navigator.serviceWorker.register('/sw.js')
             .then(function (reg) {
-              messaging.useServiceWorker(reg);
               registration = reg;
             })
         }
@@ -106,21 +104,20 @@ const initializeFCM = () => {
       }).then((registration: ServiceWorkerRegistration) => {
         messaging.requestPermission()
           .then(() => {
+            messaging.useServiceWorker(registration);
             registerToken();
 
             messaging.onTokenRefresh(function () {
               registerToken();
             });
-
             messaging.onMessage(function (payload) {
-              let notificationTitle = payload.notification.title;
+              let notificationTitle = payload.data.title;
               let notificationOptions = {
-                body: payload.notification.body,
+                body: payload.data.body,
+                icon: logoUrl,
                 data: {
-                  postID: payload.notification.data.postID
-                }
-                //TODO: poolc logo 추가
-                //icon: poolc_logo
+                  postID: payload.data.postID
+                },
               };
 
               registration.showNotification(notificationTitle, notificationOptions);
