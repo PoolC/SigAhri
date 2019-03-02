@@ -27,8 +27,6 @@ const myGraphQLAxios = (data: string, options?: {[key:string]: any}) => {
     }
   }
 
-  console.log(headers);
-
   return axios({
     url: apiUrl,
     method: 'post',

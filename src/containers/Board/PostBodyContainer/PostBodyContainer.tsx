@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import {PostContainer} from "..";
 import {PostBody} from "../../../components/Board/PostBody/PostBody";
-import * as moment from "moment";
+import dateUtils from "../../../utils/DateUtils";
 
 const mapStateToProps = (state: RootState) => ({
   isLogin: state.authentication.status.isLogin,
@@ -69,11 +69,9 @@ class PostBodyContainerClass extends React.Component<PostBodyContainer.Props, Po
 
   checkVoteHasFinished = () => {
     const { post } = this.props;
-    if(post.vote !== null) {
-      const deadlineInUTC = moment(moment.utc(post.vote.deadline), 'YYYY-MM-DD HH:mm:ss');
-      const now = moment(moment.utc(), 'YYYY-MM-DD HH:mm:ss');
-
-      if (now.diff(deadlineInUTC, "seconds") > 0) {
+    if(post.vote) {
+      let diff = dateUtils.getTimeDiff(post.vote.deadline, Date.now());
+      if (diff <= 0) {
         this.setState({
           voteHasFinished: true
         })
