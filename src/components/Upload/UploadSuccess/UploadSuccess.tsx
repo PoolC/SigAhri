@@ -12,7 +12,7 @@ export namespace UploadSuccess {
   }
 }
 
-export const UploadSuccess: React.SFC<UploadSuccess.Props> = ((props) => {
+const UploadSuccess: React.SFC<UploadSuccess.Props> = ((props) => {
   const fileName = props.match.params.filename;
 
   return (
@@ -38,3 +38,5 @@ export const UploadSuccess: React.SFC<UploadSuccess.Props> = ((props) => {
     </div>
   );
 });
+
+export default UploadSuccess;
