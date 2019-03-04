@@ -2,9 +2,14 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import './ProjectForm.scss';
 import history from '../../../../history/history';
-import SimpleMDE from 'react-simplemde-editor';
 import myGraphQLAxios from "../../../../utils/ApiRequest";
 import dateUtils from "../../../../utils/DateUtils";
+import Loadable from 'react-loadable';
+
+const SimpleMDE = Loadable({
+  loader: () => import(/* webpackChunkName: "simplemde" */ 'react-simplemde-editor') as Promise<any>,
+  loading: () => null as null
+});
 
 export enum ProjectFormType {
   new = 'NEW',
@@ -209,9 +214,9 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
         </div>
         <div className="admin-project-form-block">
           <h5>내용</h5>
-          <SimpleMDE
+          <SimpleMDE>
             value={this.state.body}
-            onChange={this.handleBodyChange}>
+            onChange={this.handleBodyChange}
           </SimpleMDE>
         </div>
         <div className="admin-project-form-button-container">

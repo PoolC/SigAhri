@@ -17,7 +17,7 @@ export namespace Info {
   }
 }
 
-export class Info extends React.Component<Info.Props, Info.State> {
+export default class Info extends React.Component<Info.Props, Info.State> {
   constructor(props: Info.Props) {
     super(props);
 

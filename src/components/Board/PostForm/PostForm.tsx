@@ -2,10 +2,15 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import './PostForm.scss';
 import history from '../../../history/history';
-import SimpleMDE from 'react-simplemde-editor';
 import {Link} from 'react-router-dom';
 import myGraphQLAxios from "../../../utils/ApiRequest";
 import dateUtils from "../../../utils/DateUtils";
+import Loadable from 'react-loadable';
+
+const SimpleMDE = Loadable({
+  loader: () => import(/* webpackChunkName: "simplemde" */ 'react-simplemde-editor') as Promise<any>,
+  loading: () => null as null
+});
 
 export enum PostFormType {
   new = 'NEW',
@@ -410,7 +415,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           </div>
           <div className="form-group">
           <label>본문</label>
-            <SimpleMDE
+            <SimpleMDE>
               value={this.state.postContent}
               onChange={this.handleContentChange}
               id={"post-form-content-"+this.props.match.params.boardID}
@@ -419,7 +424,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
                   spellChecker: false,
                 }
               }
-            />
+            </SimpleMDE>
           </div>
           {this.state.vote !== null ? voteForm : null}
           <div className="post-form-button-container">

@@ -18,7 +18,7 @@ export namespace Admin {
   }
 }
 
-export class Admin extends React.Component<Admin.Props, Admin.State> {
+export default class Admin extends React.Component<Admin.Props, Admin.State> {
   constructor(props: Admin.Props) {
     super(props);
 

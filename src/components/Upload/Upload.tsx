@@ -9,7 +9,7 @@ export namespace Upload {
   }
 }
 
-export class Upload extends React.Component<Upload.Props> {
+export default class Upload extends React.Component<Upload.Props> {
   constructor(props: Upload.Props) {
     super(props);
 

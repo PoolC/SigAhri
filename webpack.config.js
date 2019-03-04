@@ -19,12 +19,12 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 }, {});
 
 module.exports = {
-  entry: [
-    "babel-polyfill",
-    "./src/index.tsx"
-  ],
+  entry: {
+    index: ["babel-polyfill", "./src/index.tsx"]
+  },
   output: {
-    filename: "main.js",
+    filename: "[name].bundle.js",
+    chunkFilename: "[name].[chunkhash].js",
     path: outPath,
     publicPath: '/'
   },
@@ -88,6 +88,7 @@ module.exports = {
       template: './resources/index.html',
       filename: './index.html',
       hash: true,
+      chunksSortMode: "none"
     }),
     new CopyWebpackPlugin([
       { from: './resources/sw.js', to: './' }

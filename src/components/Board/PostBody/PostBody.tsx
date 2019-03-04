@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {PostContainer} from "../../../containers/Board";
 import './PostBody.scss';
-import ReactMarkdown = require("react-markdown")
+import ReactMarkdown from 'react-markdown';
 import dateUtils from "../../../utils/DateUtils";
 
 export namespace PostBody {

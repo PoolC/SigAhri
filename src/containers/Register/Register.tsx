@@ -12,7 +12,7 @@ export namespace Register {
   }
 }
 
-export class Register extends React.Component<Register.Props> {
+export default class Register extends React.Component<Register.Props> {
   handleRegister(id: string, pw: string, pwConfirm: string, name: string, email: string, phone: string,
                  department: string, studentNumber: string) {
     if(!(/^[A-Za-z0-9+]{4,12}$/).test(id)) {
