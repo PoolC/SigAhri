@@ -7,6 +7,8 @@ import { RootState } from '../../../reducers';
 import { returntypeof } from 'react-redux-typescript';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import FadeLoader from 'react-spinners/FadeLoader';
+import { css } from '@emotion/core';
 
 const mapStateToProps = (state: RootState) => ({
   isLogin: state.authentication.status.isLogin,
@@ -29,7 +31,8 @@ export namespace PostContainer {
 
   export interface State {
     info: Info,
-    hasWritePermissions: boolean
+    hasWritePermissions: boolean,
+    apiLoaded: boolean
   }
 
   export interface Info {
@@ -81,7 +84,8 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
         vote: null,
         isSubscribed: false
       },
-      hasWritePermissions: false
+      hasWritePermissions: false,
+      apiLoaded: false
     };
 
     this.handleGetPost = this.handleGetPost.bind(this);
@@ -103,6 +107,10 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
     if(localStorage.getItem('accessToken') !== null) {
       headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
     }
+
+    this.setState({
+      apiLoaded: false
+    });
 
     axios({
       url: apiUrl,
@@ -158,7 +166,8 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
 
       this.setState({
         info: data,
-        hasWritePermissions: isAdmin || (this.props.id === data.author.loginID)
+        hasWritePermissions: isAdmin || (this.props.id === data.author.loginID),
+        apiLoaded: true
       })
     }).catch((msg) => {
     });
@@ -375,8 +384,21 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
   };
 
   render() {
-    if((typeof this.state.info === 'undefined') || this.state.info.id === -1)
-      return null;
+    if(!this.state.apiLoaded) {
+      const override = css`
+        margin: 200px auto;
+      `;
+      return (
+        <FadeLoader
+          css={override}
+          sizeUnit={"px"}
+          size={15}
+          color={'#aaaaaa'}
+          loading={true}
+          margin={'5px'}
+        />
+      );
+    }
 
     return (
       <Post
