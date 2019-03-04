@@ -2,10 +2,15 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import './PostForm.scss';
 import history from '../../../history/history';
-import SimpleMDE from 'react-simplemde-editor';
 import {Link} from 'react-router-dom';
-import * as moment from 'moment';
 import myGraphQLAxios from "../../../utils/ApiRequest";
+import dateUtils from "../../../utils/DateUtils";
+import Loadable from 'react-loadable';
+
+const SimpleMDE = Loadable({
+  loader: () => import(/* webpackChunkName: "simplemde" */ 'react-simplemde-editor') as Promise<any>,
+  loading: () => null as null
+});
 
 export enum PostFormType {
   new = 'NEW',
@@ -80,7 +85,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     this.setState({
       vote: {
         title: "",
-        deadline: moment().format('YYYY-MM-DD HH:mm:ss'),
+        deadline: dateUtils.ParseDate(Date.now(), 'YYYY-MM-DD HH:mm:SS'),
         isMultipleSelectable: false,
         optionText: []
       }
@@ -175,7 +180,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         return;
       }
 
-      if(this.props.type === PostFormType.new && !moment().isBefore(voteInfo.deadline)) {
+      if(this.props.type === PostFormType.new && dateUtils.getTimeDiff(voteInfo.deadline, Date.now()) <= 0) {
         alert('투표 마감기한은 현재시간 이후로 설정해주세요.');
         return;
       }
@@ -199,7 +204,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           body: """${body}"""
         }, VoteInput: {
           title: "${voteInfo.title}",
-          deadline: "${moment(voteInfo.deadline).format()}",
+          deadline: "${dateUtils.ParseDate(voteInfo.deadline, 'ISO')}",
           isMultipleSelectable: ${voteInfo.isMultipleSelectable ? 'true' : 'false'},
           optionTexts: [${voteInfo.optionText.map((text) => ('"' + text + '"'))}]
         }) {
@@ -301,7 +306,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           const voteOptions = data.data.post.vote.options.map((item: {
             text: string
           }) => (item.text));
-          const deadline = moment(data.data.post.vote.deadline).format('YYYY-MM-DD HH:mm:ss');
+          const deadline = dateUtils.ParseDate(data.data.post.vote.deadline, 'YYYY-MM-DD HH:mm:SS');
 
           nextState['vote'] = {
             title: data.data.post.vote.title,
@@ -410,7 +415,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           </div>
           <div className="form-group">
           <label>본문</label>
-            <SimpleMDE
+            <SimpleMDE>
               value={this.state.postContent}
               onChange={this.handleContentChange}
               id={"post-form-content-"+this.props.match.params.boardID}
@@ -419,7 +424,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
                   spellChecker: false,
                 }
               }
-            />
+            </SimpleMDE>
           </div>
           {this.state.vote !== null ? voteForm : null}
           <div className="post-form-button-container">

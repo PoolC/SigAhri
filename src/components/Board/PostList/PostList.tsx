@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { PostListContainer } from '../../../containers/Board';
 import './PostList.scss';
-import * as moment from 'moment';
+import dateUtils from "../../../utils/DateUtils";
 
 namespace PostListItem {
   export interface Props {
@@ -21,7 +21,7 @@ const PostListItem: React.SFC<PostListItem.Props> = (props) => {
           </Link>
         </td>
         <td>{post.author.name}</td>
-        <td>{moment.utc(post.createdAt).local().format('YYYY-MM-DD')}</td>
+        <td>{dateUtils.ParseDate(post.createdAt, 'YYYY-MM-DD')}</td>
       </tr>
     </React.Fragment>
   )

@@ -3,10 +3,13 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es5",
     "jsx": "react",
-    "keyofStringsOnly": true
+    "lib": ["es2015", "dom"],
+    "keyofStringsOnly": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
   },
   "include": [
     "./src/**/*",

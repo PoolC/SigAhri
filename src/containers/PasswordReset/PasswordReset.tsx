@@ -5,14 +5,18 @@ import { RouteComponentProps } from 'react-router';
 import history from '../../history/history';
 import myGraphQLAxios from "../../utils/ApiRequest";
 
-interface Props extends RouteComponentProps {}
+export namespace PasswordReset {
+  export interface Props extends RouteComponentProps {
 
-interface State {
-  token?: string | string[]
+  }
+
+  export interface State {
+    token?: string | string[]
+  }
 }
 
-export class PasswordReset extends React.Component<Props, State> {
-  constructor(props: Props) {
+export default class PasswordReset extends React.Component<PasswordReset.Props, PasswordReset.State> {
+  constructor(props: PasswordReset.Props) {
     super(props);
 
     this.sendPasswordResetMail = this.sendPasswordResetMail.bind(this);

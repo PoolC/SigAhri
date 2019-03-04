@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import ReactMarkdown = require("react-markdown");
+import ReactMarkdown from 'react-markdown';
 import './ProjectItem.scss';
 import history from '../../../history/history';
 import myGraphQLAxios from "../../../utils/ApiRequest";
