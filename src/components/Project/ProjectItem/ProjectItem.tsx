@@ -3,6 +3,8 @@ import { RouteComponentProps } from 'react-router';
 import ReactMarkdown from 'react-markdown';
 import './ProjectItem.scss';
 import history from '../../../history/history';
+import FadeLoader from 'react-spinners/FadeLoader';
+import { css } from '@emotion/core';
 import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export namespace ProjectItem {
@@ -75,8 +77,21 @@ export class ProjectItem extends React.Component<ProjectItem.Props, ProjectItem.
   }
 
   render() {
-    if(this.state.project === null)
-      return null;
+    if(this.state.project === null) {
+      const override = css`
+        margin: 200px auto;
+      `;
+      return (
+        <FadeLoader
+          css={override}
+          sizeUnit={"px"}
+          size={15}
+          color={'#aaaaaa'}
+          loading={true}
+          margin={'5px'}
+        />
+      );
+    }
 
     const body = this.state.project.body.replace(/\n/g, "  \n");
     return (

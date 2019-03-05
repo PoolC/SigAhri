@@ -3,6 +3,8 @@ import { PostList } from '../../../components';
 import * as queryString from 'query-string';
 import history from '../../../history/history';
 import { RouteComponentProps } from 'react-router';
+import FadeLoader from 'react-spinners/FadeLoader';
+import { css } from '@emotion/core';
 import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export enum queryType {
@@ -25,7 +27,8 @@ export namespace PostListContainer {
 
   export interface State {
     pageInfo: PostList.pageInfo,
-    posts: Array<PostInfo>
+    posts: Array<PostInfo>,
+    apiLoaded: boolean
   }
 
   export interface PostInfo {
@@ -34,7 +37,7 @@ export namespace PostListContainer {
     createdAt: string,
     title: string,
     comments: Array<CommentInfo>,
-    isSubscribed: boolean
+    isSubscribed: boolean,
   }
 
   interface CommentInfo {
@@ -52,6 +55,7 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
         hasPrevious: false
       },
       posts: [],
+      apiLoaded: false
     };
 
     this.handleGetPostList = this.handleGetPostList.bind(this);
@@ -111,7 +115,11 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
       // TODO: typing
       const data = msg.data.data.postPage;
 
-      this.setState(data);
+      this.setState({
+        ...data,
+        apiLoaded: true
+      });
+
     }).catch((msg) => {
 
     });
@@ -133,6 +141,22 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
   }
 
   render() {
+    if(!this.state.apiLoaded) {
+      const override = css`
+        margin: 200px auto;
+      `;
+      return (
+        <FadeLoader
+          css={override}
+          sizeUnit={"px"}
+          size={15}
+          color={'#aaaaaa'}
+          loading={true}
+          margin={'5px'}
+        />
+      );
+    }
+
     return (
       <PostList posts={this.state.posts} name={this.props.name}
                 typeId={this.props.typeId} writePermission={this.props.writePermission} pageInfo={this.state.pageInfo}

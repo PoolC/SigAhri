@@ -1,6 +1,8 @@
 import * as React from 'react';
 import './ProjectList.scss';
 import { Link } from 'react-router-dom';
+import FadeLoader from 'react-spinners/FadeLoader';
+import { css } from '@emotion/core';
 import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export namespace ProjectList {
@@ -8,7 +10,8 @@ export namespace ProjectList {
   }
 
   export interface State {
-    projects: Array<ProjectInfo>
+    projects: Array<ProjectInfo>,
+    apiLoaded: boolean
   }
 
   interface ProjectInfo {
@@ -28,7 +31,8 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
     super(props);
 
     this.state = {
-      projects: []
+      projects: [],
+      apiLoaded: false
     };
   }
 
@@ -51,13 +55,31 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
     }).then((msg) => {
       const data = msg.data;
 
-      this.setState(data.data);
+      this.setState({
+        ...data.data,
+        apiLoaded: true
+      });
     }).catch((msg) => {
 
     });
   }
 
   render() {
+    if(!this.state.apiLoaded) {
+      const override = css`
+        margin: 200px auto;
+      `;
+      return (
+        <FadeLoader
+          css={override}
+          sizeUnit={"px"}
+          size={15}
+          color={'#aaaaaa'}
+          loading={true}
+          margin={'5px'}
+        />
+      );
+    }
     return (
       <div className="project-list-container">
         {
