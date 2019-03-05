@@ -1,5 +1,5 @@
 import * as React from 'react';
-import axios from "axios";
+import myGraphQLAxios from "../../../utils/ApiRequest";
 import { Post } from '../../../components';
 import { RouteComponentProps } from 'react-router';
 import history from '../../../history/history';
@@ -100,60 +100,56 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
   }
 
   handleGetPost() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
     this.setState({
       apiLoaded: false
     });
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        post(postID:${this.props.match.params.postId}) {
+    const data = `query {
+      post(postID:${this.props.match.params.postId}) {
+        id,
+        title,
+        body,
+        board { name, urlPath },
+        createdAt,
+        updatedAt,
+        comments {
+          author {
+            name,
+            loginID
+          },
+          body,
+          createdAt,
+          id
+        },
+        author { name, loginID },
+        vote {
           id,
           title,
-          body,
-          board { name, urlPath },
-          createdAt,
-          updatedAt,
-          comments {
-            author {
-              name,
-              loginID
-            },
-            body,
-            createdAt,
-            id
-          },
-          author { name, loginID },
-          vote {
-            id,
-            title,
-            options { id, text, votersCount, voters { loginID } },
-            deadline,
-            isMultipleSelectable,
-            totalVotersCount
-          },
-          isSubscribed
-        }
-      }`
+          options { id, text, votersCount, voters { loginID } },
+          deadline,
+          isMultipleSelectable,
+          totalVotersCount
+        },
+        isSubscribed
+      }
+    }`;
+
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
-      if(msg.data.data === null) {
+      if(msg.data.data === null) { // 잘못 내려옴
         history.push('/404');
         return;
       }
       const data = msg.data.data.post;
       const { isAdmin, id } = this.props;
-      if(data === null) {
-        history.push('/404');
+      if(data === null) { // 권한 없음
+        alert('권한이 없습니다. 로그인 해주세요');
+        history.push({
+          pathname: '/login',
+          state: {
+            redirLink: this.props.location.pathname
+          }
+        });
         return;
       }
 
@@ -174,21 +170,14 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
   }
 
   handleDeletePost = () => {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `mutation {
-        deletePost(postID: ${this.state.info.id}) {
-          board { urlPath }
-        }
-      }`
+    const data = `mutation {
+      deletePost(postID: ${this.state.info.id}) {
+        board { urlPath }
+      }
+    }`;
+
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const { urlPath } = msg.data.data.deletePost.board;
       window.location.pathname = `/board/${urlPath}`;
@@ -196,27 +185,20 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
   };
 
   handleCreateComment = (comment: string) => {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `mutation {
-        createComment(postID:${this.state.info.id}, body:"${comment}") {
-          author{
-            name,
-            loginID
-          },
-          body,
-          createdAt,
-          id
-        }
-      }`
+    const data = `mutation {
+      createComment(postID:${this.state.info.id}, body:"${comment}") {
+        author{
+          name,
+          loginID
+        },
+        body,
+        createdAt,
+        id
+      }
+    }`;
+
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const { info } = this.state;
       let newComment = msg.data.data.createComment;
@@ -231,24 +213,17 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
   };
 
   handleDeleteComment = (id:number) => {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `mutation {
-        deleteComment(commentID: ${id}) {
-          id,
-          author { name, loginID },
-          body
-          createdAt
-        }
-      }`
+    const data = `mutation {
+      deleteComment(commentID: ${id}) {
+        id,
+        author { name, loginID },
+        body
+        createdAt
+      }
+    }`;
+
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const { info } = this.state;
       const deletedComment = msg.data.data.deleteComment;
@@ -262,33 +237,26 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
   };
 
   handleVoteSubmit = (selectedOptions : number[]) => {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `mutation {
-        selectVoteOption(optionIDs: [${selectedOptions}], voteID: ${this.state.info.vote.id}) {
+    const data = `mutation {
+      selectVoteOption(optionIDs: [${selectedOptions}], voteID: ${this.state.info.vote.id}) {
+        id,
+        title,
+        totalVotersCount,
+        isMultipleSelectable,
+        deadline,
+        options {
           id,
-          title,
-          totalVotersCount,
-          isMultipleSelectable,
-          deadline,
-          options {
-            id,
-            text,
-            votersCount,
-            voters {
-              loginID
-            }
+          text,
+          votersCount,
+          voters {
+            loginID
           }
         }
-      }`
+      }
+    }`;
+
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const { info } = this.state;
       const voteData : PostContainer.Vote = msg.data.data.selectVoteOption;
@@ -302,24 +270,14 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
   };
 
   onSubscribePost = () => {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `mutation {
+      subscribePost(postID: ${this.state.info.id}) {
+        memberUUID
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    const query = `mutation {
-          subscribePost(postID: ${this.state.info.id}) {
-            memberUUID
-          }
-        }`;
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: query
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
       const data = msg.data;
@@ -343,24 +301,14 @@ class PostContainerClass extends React.Component<PostContainer.Props, PostContai
   };
 
   onUnsubscribePost = () => {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `mutation {
+      unsubscribePost(postID: ${this.state.info.id}) {
+        memberUUID
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    const query = `mutation {
-          unsubscribePost(postID: ${this.state.info.id}) {
-            memberUUID
-          }
-        }`;
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: query
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // const memberUUID = msg.data.unsubscribeBoard.memberUUID;
       const data = msg.data;

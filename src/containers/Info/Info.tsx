@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Authentication } from '../../components';
-import axios from 'axios';
 import history from '../../history/history';
+import myGraphQLAxios from "../../utils/ApiRequest";
 
 export namespace Info {
   export interface Props {
@@ -17,7 +17,7 @@ export namespace Info {
   }
 }
 
-export class Info extends React.Component<Info.Props, Info.State> {
+export default class Info extends React.Component<Info.Props, Info.State> {
   constructor(props: Info.Props) {
     super(props);
 
@@ -39,23 +39,19 @@ export class Info extends React.Component<Info.Props, Info.State> {
       return;
     }
 
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/graphql',
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-      },
-      data: `query {
-          me {
-            loginID,
-            name,
-            email,
-            department,
-            studentID,
-            phoneNumber
-          }
-        }`
+    const data = `query {
+      me {
+        loginID,
+        name,
+        email,
+        department,
+        studentID,
+        phoneNumber
+      }
+    }`;
+
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // TODO: typing
       const data = msg.data;
@@ -112,22 +108,18 @@ export class Info extends React.Component<Info.Props, Info.State> {
       return;
     }
 
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/graphql',
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-      },
-      data: `mutation {
-          updateMember(MemberInput: {
-            email: "${email}"
-            phoneNumber: "${phone}"
-            ${pw.length===0 ? '' : ('password: "' + pw + '"')}
-          }) {
-            uuid
-          }
-        }`
+    const data = `mutation {
+      updateMember(MemberInput: {
+        email: "${email}"
+        phoneNumber: "${phone}"
+        ${pw.length===0 ? '' : ('password: "' + pw + '"')}
+      }) {
+        uuid
+      }
+    }`;
+
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // TODO: typing
       const data = msg.data;

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import './Project.scss';
-import axios from 'axios';
-import history from '../../../history/history';
+import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export namespace Project {
   export interface Props {
@@ -35,23 +34,14 @@ export class Project extends React.Component<Project.Props, Project.State> {
 
   handleProjectDelete(id: number, name: string) {
     if(confirm(`${name}을 삭제하시겠습니까?`)) {
-      const headers: any = {
-        'Content-Type': 'application/graphql'
-      };
+      const data = `mutation {
+        deleteProject(projectID: ${id}) {
+          id
+        }
+      }`;
 
-      if(localStorage.getItem('accessToken') !== null) {
-        headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-      }
-
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: headers,
-        data: `mutation {
-          deleteProject(projectID: ${id}) {
-            id
-          }
-        }`
+      myGraphQLAxios(data, {
+        authorization: true
       }).then((msg) => {
         const data = msg.data;
         if('errors' in data) {
@@ -80,27 +70,18 @@ export class Project extends React.Component<Project.Props, Project.State> {
   }
 
   handleLoadProjects() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      projects {
+        id,
+        name,
+        genre,
+        thumbnailURL,
+        body
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        projects {
-          id,
-          name,
-          genre,
-          thumbnailURL,
-          body
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data.data.projects;
       this.setState({

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import axios from 'axios';
 import './BoardForm.scss';
 import history from '../../../../history/history';
+import myGraphQLAxios from "../../../../utils/ApiRequest";
 
 export enum BoardFormType {
   new = 'NEW',
@@ -57,15 +57,7 @@ export class BoardForm extends React.Component<BoardForm.Props, BoardForm.State>
   }
 
   handleSubmit() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    const query = this.props.type === BoardFormType.new ?
+    const data = this.props.type === BoardFormType.new ?
       `mutation {
         createBoard(BoardInput: {
           name: "${this.state.name}",
@@ -87,11 +79,8 @@ export class BoardForm extends React.Component<BoardForm.Props, BoardForm.State>
         }
       }`;
 
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: query
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data;
       if('errors' in data) {
@@ -118,27 +107,18 @@ export class BoardForm extends React.Component<BoardForm.Props, BoardForm.State>
     if(this.props.type === BoardFormType.new)
       return;
 
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      board(boardID: ${this.props.match.params.boardID}) {
+        name,
+        urlPath,
+        readPermission,
+        writePermission,
+        isSubscribed
+      }
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        board(boardID: ${this.props.match.params.boardID}) {
-          name,
-          urlPath,
-          readPermission,
-          writePermission,
-          isSubscribed
-        }
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data;
       this.setState(data.data.board);

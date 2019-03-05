@@ -29,7 +29,7 @@ export class Home extends React.Component<Home.Props> {
       <div className="home">
         <div className="home-images">
           <div className="home-images-layer">
-            <img src="https://i.pinimg.com/originals/c1/b7/96/c1b79602e934b9efc158756029998bb8.jpg"/>
+            <img src="https://api.poolc.org/files/home_img.jpg"/>
           </div>
           <div className="home-images-layer text-layer">
             <h1>PoolC</h1>

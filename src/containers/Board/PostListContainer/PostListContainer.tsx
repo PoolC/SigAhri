@@ -1,11 +1,11 @@
 import * as React from 'react';
-import axios from "axios";
 import { PostList } from '../../../components';
 import * as queryString from 'query-string';
 import history from '../../../history/history';
 import { RouteComponentProps } from 'react-router';
 import FadeLoader from 'react-spinners/FadeLoader';
 import { css } from '@emotion/core';
+import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export enum queryType {
   before = "BEFORE",
@@ -80,14 +80,6 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
   }
 
   handleGetPostList(inputQueryType: queryType, inputQueryID: number) {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
     const pageItemNum = 15;
     let params = '';
     if(inputQueryType === queryType.nothing) {
@@ -98,7 +90,7 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
       params = `boardID: ${this.props.typeId}, before: ${inputQueryID}, count: ${pageItemNum}`;
     }
 
-    const query = `query {
+    const data = `query {
         postPage(${params}) {
           pageInfo {
             hasNext,
@@ -117,11 +109,8 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
         }
       }`;
 
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: query
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // TODO: typing
       const data = msg.data.data.postPage;
@@ -132,6 +121,7 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
       });
 
     }).catch((msg) => {
+
     });
   }
 

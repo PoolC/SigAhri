@@ -1,9 +1,9 @@
 import * as React from 'react';
-import axios from 'axios';
 import './ProjectList.scss';
 import { Link } from 'react-router-dom';
 import FadeLoader from 'react-spinners/FadeLoader';
 import { css } from '@emotion/core';
+import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export namespace ProjectList {
   export interface Props {
@@ -37,30 +37,21 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
   }
 
   componentDidMount() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      projects {
+        id,
+        body,
+        duration,
+        name,
+        genre,
+        thumbnailURL,
+        participants,
+        description
+      } 
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        projects {
-          id,
-          body,
-          duration,
-          name,
-          genre,
-          thumbnailURL,
-          participants,
-          description
-        } 
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data;
 

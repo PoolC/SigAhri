@@ -1,15 +1,47 @@
 import * as React from 'react';
-import { Login, Register, BoardContainer, Project, Header, Info, PasswordReset } from '../';
-import { Home, Upload, UploadSuccess, Admin, Footer } from '../../components';
+import { Login, BoardContainer, Project, Header } from '../';
+import { Home, Footer } from '../../components';
 import { Route, Switch } from 'react-router-dom';
 import { Dispatch, compose } from 'redux';
 import { returntypeof } from 'react-redux-typescript';
 import { connect } from 'react-redux';
 import { AuthenticationActions } from '../../actions';
 import './App.scss';
-import axios from 'axios';
+import myGraphQLAxios from '../../utils/ApiRequest';
 import { NotFound } from '../../components/NotFound/NotFound';
 import { RootState } from '../../reducers';
+import Loadable from 'react-loadable';
+
+const Loading: React.FC<Loadable.LoadingComponentProps> = props => {
+  return (
+    <React.Fragment></React.Fragment>
+  )
+};
+
+const Register = Loadable({
+  loader: () => import(/* webpackChunkName: "Register" */ '../Register/Register') as Promise<any>,
+  loading: () => null as null
+});
+const Info = Loadable({
+  loader: () => import(/* webpackChunkName: "Info" */ '../Info/Info') as Promise<any>,
+  loading: () => null as null
+});
+const PasswordReset = Loadable({
+  loader: () => import(/* webpackChunkName: "PasswordReset" */ '../PasswordReset/PasswordReset') as Promise<any>,
+  loading: () => null as null
+});
+const Upload = Loadable({
+  loader: () => import(/* webpackChunkName: "Upload" */ '../../components/Upload/Upload') as Promise<any>,
+  loading: () => null as null
+});
+const UploadSuccess = Loadable({
+  loader: () => import(/* webpackChunkName: "UploadSucess" */ '../../components/Upload/UploadSuccess/UploadSuccess') as Promise<any>,
+  loading: () => null as null
+});
+const Admin = Loadable({
+  loader: () => import(/* webpackChunkName: "Admin" */ '../../components/Admin/Admin') as Promise<any>,
+  loading: () => null as null
+});
 
 const mapStateToProps = (state: RootState) => ({
   init: state.authentication.status.init
@@ -40,22 +72,15 @@ class App extends React.Component<Props> {
   }
 
   tokenRefreshRequest(sendTokenApplyRequest: boolean) {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: headers,
-        data: `mutation {
-          refreshAccessToken{
-            key
-          }
-        }`
+    const token = localStorage.getItem('accessToken');
+    if(token) {
+      const data = `mutation {
+        refreshAccessToken{
+          key
+        }
+      }`;
+      myGraphQLAxios(data, {
+        authorization: true
       }).then((msg) => {
         const data = msg.data;
         if('errors' in data) {
@@ -88,22 +113,23 @@ class App extends React.Component<Props> {
 
   componentDidMount() {
     this.tokenRefreshRequest(true);
+    import('../Register/Register')
   }
-
 
   render() {
     const content = this.props.init ? (
       <Switch>
         <Route exact path="/" component={Home}/>
         <Route exact path="/page/about" component={Home}/>
+        <Route exact path="/login" component={Login}/>
+        <Route path="/project" component={Project}/>
         <Route path="/board" render={(props)=>(<BoardContainer {...props} type="postList"/>)}/>
         <Route path="/posts" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
         <Route exact path="/article/view" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
-        <Route path="/project" component={Project}/>
+
         <Route path="/register" component={Register}/>
-        <Route path="/accounts/password-reset" component={PasswordReset}/>
-        <Route exact path="/login" component={Login}/>
         <Route exact path="/info" component={Info}/>
+        <Route path="/accounts/password-reset" component={PasswordReset}/>
         <Route exact path="/upload" component={Upload}/>
         <Route exact path="/upload/success/:filename" component={UploadSuccess}/>
 

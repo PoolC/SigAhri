@@ -25,3 +25,7 @@ after_success:
     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
     - docker build -t poolc/sigahri .
     - docker push poolc/sigahri
+    - if [ -n "${TRAVIS_TAG}"  ]; then
+          docker build -t poolc/sigahri:${TRAVIS_TAG} .;
+          docker push poolc/sigahri:${TRAVIS_TAG};
+      fi
