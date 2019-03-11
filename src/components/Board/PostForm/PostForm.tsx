@@ -7,11 +7,6 @@ import myGraphQLAxios from "../../../utils/ApiRequest";
 import dateUtils from "../../../utils/DateUtils";
 import Loadable from 'react-loadable';
 
-const SimpleMDE = Loadable({
-  loader: () => import(/* webpackChunkName: "simplemde" */ 'react-simplemde-editor') as Promise<any>,
-  loading: () => null as null
-});
-
 export enum PostFormType {
   new = 'NEW',
   edit = 'EDIT'
@@ -32,7 +27,8 @@ export namespace PostForm {
     postTitle: string,
     postContent: string,
     vote: Vote,
-    authentication?: boolean
+    authentication?: boolean,
+    SimpleMDE: any
   }
 
   interface Vote {
@@ -52,7 +48,8 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
       postTitle: '',
       postContent: '',
       vote: null,
-      authentication: false
+      authentication: false,
+      SimpleMDE: null
     };
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -248,6 +245,19 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
   }
 
   componentDidMount() {
+    const SimpleMDE = Loadable({
+      loader: () => import(/* webpackChunkName: "simplemde" */ 'react-simplemde-editor') as Promise<any>,
+      loading: () => null as null,
+      render(loaded, props) {
+        let Component = loaded.default;
+        if(Component) {
+          return <Component {...props} />;
+        }
+        return null;
+      }
+    });
+    this.setState({ SimpleMDE });
+
     const isEdit = this.props.type === PostFormType.edit;
     let data = "";
     if(isEdit) {
@@ -343,6 +353,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
   }
 
   render() {
+    const { SimpleMDE } = this.state;
     const isEdit = this.props.type === PostFormType.edit;
 
     if(!this.state.authentication) {
@@ -415,7 +426,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           </div>
           <div className="form-group">
           <label>본문</label>
-            <SimpleMDE>
+            <SimpleMDE
               value={this.state.postContent}
               onChange={this.handleContentChange}
               id={"post-form-content-"+this.props.match.params.boardID}
@@ -424,7 +435,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
                   spellChecker: false,
                 }
               }
-            </SimpleMDE>
+            />
           </div>
           {this.state.vote !== null ? voteForm : null}
           <div className="post-form-button-container">
