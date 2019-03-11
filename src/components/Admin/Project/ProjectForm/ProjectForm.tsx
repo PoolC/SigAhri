@@ -6,11 +6,6 @@ import myGraphQLAxios from "../../../../utils/ApiRequest";
 import dateUtils from "../../../../utils/DateUtils";
 import Loadable from 'react-loadable';
 
-const SimpleMDE = Loadable({
-  loader: () => import(/* webpackChunkName: "simplemde" */ 'react-simplemde-editor') as Promise<any>,
-  loading: () => null as null
-});
-
 export enum ProjectFormType {
   new = 'NEW',
   edit= 'EDIT'
@@ -32,7 +27,8 @@ namespace ProjectForm {
     body: string,
     duration: string,
     participants: string,
-    description: string
+    description: string,
+    SimpleMDE: any
   }
 }
 
@@ -47,7 +43,8 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
       body: "",
       duration: "",
       participants: "",
-      description: ""
+      description: "",
+      SimpleMDE: null
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -115,6 +112,19 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
   }
 
   componentDidMount() {
+    const SimpleMDE = Loadable({
+      loader: () => import(/* webpackChunkName: "simplemde" */ 'react-simplemde-editor') as Promise<any>,
+      loading: () => null as null,
+      render(loaded, props) {
+        let Component = loaded.default;
+        if(Component) {
+          return <Component {...props} />;
+        }
+        return null;
+      }
+    });
+    this.setState({ SimpleMDE });
+
     if(this.props.type === ProjectFormType.new) {
       this.setState({
         duration: `${dateUtils.ParseDate(Date.now(), 'YYYY-MM-DD HH:mm:SS')} ~ ${dateUtils.ParseDate(Date.now(), 'YYYY-MM-DD HH:mm:SS')}`
@@ -147,6 +157,8 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
   }
 
   render() {
+    const { SimpleMDE } = this.state;
+
     return (
       <div>
         <div className="admin-project-list-head">
@@ -214,10 +226,10 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
         </div>
         <div className="admin-project-form-block">
           <h5>내용</h5>
-          <SimpleMDE>
+          <SimpleMDE
             value={this.state.body}
             onChange={this.handleBodyChange}
-          </SimpleMDE>
+          />
         </div>
         <div className="admin-project-form-button-container">
           <button className="btn btn-primary" onClick={() => this.handleSubmit()}>저장</button>
