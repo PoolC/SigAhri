@@ -13,7 +13,7 @@ export namespace UploadSuccess {
 }
 
 const UploadSuccess: React.SFC<UploadSuccess.Props> = ((props) => {
-  const fileName = props.match.params.filename;
+  const fileName = encodeURIComponent(props.match.params.filename);
 
   return (
     <div className="upload-success-container">
