@@ -1,10 +1,11 @@
 import * as React from 'react';
-import axios from "axios";
 import { PostList } from '../../../components';
 import * as queryString from 'query-string';
 import history from '../../../history/history';
 import { RouteComponentProps } from 'react-router';
-import {string} from "prop-types";
+import FadeLoader from 'react-spinners/FadeLoader';
+import { css } from '@emotion/core';
+import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export enum queryType {
   before = "BEFORE",
@@ -26,7 +27,8 @@ export namespace PostListContainer {
 
   export interface State {
     pageInfo: PostList.pageInfo,
-    posts: Array<PostInfo>
+    posts: Array<PostInfo>,
+    apiLoaded: boolean
   }
 
   export interface PostInfo {
@@ -35,7 +37,7 @@ export namespace PostListContainer {
     createdAt: string,
     title: string,
     comments: Array<CommentInfo>,
-    isSubscribed: boolean
+    isSubscribed: boolean,
   }
 
   interface CommentInfo {
@@ -53,6 +55,7 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
         hasPrevious: false
       },
       posts: [],
+      apiLoaded: false
     };
 
     this.handleGetPostList = this.handleGetPostList.bind(this);
@@ -77,14 +80,6 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
   }
 
   handleGetPostList(inputQueryType: queryType, inputQueryID: number) {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
     const pageItemNum = 15;
     let params = '';
     if(inputQueryType === queryType.nothing) {
@@ -95,7 +90,7 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
       params = `boardID: ${this.props.typeId}, before: ${inputQueryID}, count: ${pageItemNum}`;
     }
 
-    const query = `query {
+    const data = `query {
         postPage(${params}) {
           pageInfo {
             hasNext,
@@ -114,18 +109,19 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
         }
       }`;
 
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: query
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       // TODO: typing
       const data = msg.data.data.postPage;
 
-      this.setState(data);
+      this.setState({
+        ...data,
+        apiLoaded: true
+      });
 
     }).catch((msg) => {
+
     });
   }
 
@@ -145,6 +141,22 @@ export class PostListContainer extends React.Component<PostListContainer.Props, 
   }
 
   render() {
+    if(!this.state.apiLoaded) {
+      const override = css`
+        margin: 200px auto;
+      `;
+      return (
+        <FadeLoader
+          css={override}
+          sizeUnit={"px"}
+          size={15}
+          color={'#aaaaaa'}
+          loading={true}
+          margin={'5px'}
+        />
+      );
+    }
+
     return (
       <PostList posts={this.state.posts} name={this.props.name}
                 typeId={this.props.typeId} writePermission={this.props.writePermission} pageInfo={this.state.pageInfo}

@@ -3,8 +3,8 @@ import { Authentication } from '../../components';
 import { Route, Router, Switch } from 'react-router-dom';
 import history from '../../history/history'
 import { RegisterSuccess } from '../../components';
-import axios from 'axios';
 import { NotFound } from '../../components/NotFound/NotFound';
+import myGraphQLAxios from "../../utils/ApiRequest";
 
 export namespace Register {
   export interface Props {
@@ -12,7 +12,7 @@ export namespace Register {
   }
 }
 
-export class Register extends React.Component<Register.Props> {
+export default class Register extends React.Component<Register.Props> {
   handleRegister(id: string, pw: string, pwConfirm: string, name: string, email: string, phone: string,
                  department: string, studentNumber: string) {
     if(!(/^[A-Za-z0-9+]{4,12}$/).test(id)) {
@@ -64,26 +64,21 @@ export class Register extends React.Component<Register.Props> {
       return;
     }
 
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/graphql'
-      },
-      data: `mutation {
-          createMember(MemberInput:{
-            loginID: "${id}"
-            password: "${pw}"
-            email: "${email}"
-            name: "${name}"
-            department: "${department}"
-            studentID: "${studentNumber}"
-            phoneNumber: "${phone}"
-          }) {
-            uuid
-          }
-        }`
-    }).then((msg) => {
+    const data = `mutation {
+      createMember(MemberInput:{
+        loginID: "${id}"
+        password: "${pw}"
+        email: "${email}"
+        name: "${name}"
+        department: "${department}"
+        studentID: "${studentNumber}"
+        phoneNumber: "${phone}"
+      }) {
+        uuid
+      }
+    }`;
+
+    myGraphQLAxios(data).then((msg) => {
       const data = msg.data;
       if('errors' in data) {
         if(data.errors[0].message === "MEM000") {

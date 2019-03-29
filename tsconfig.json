@@ -3,13 +3,18 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es5",
     "jsx": "react",
-    "keyofStringsOnly": true
+    "lib": ["es2015", "dom"],
+    "keyofStringsOnly": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "include": [
     "./src/**/*",
     "types/global.d.ts"
-  ]
+  ],
+  "exclude": ["node_modules"]
 }

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import axios from 'axios';
 import './PostForm.scss';
 import history from '../../../history/history';
-import SimpleMDE from 'react-simplemde-editor';
 import {Link} from 'react-router-dom';
-import * as moment from 'moment';
+import myGraphQLAxios from "../../../utils/ApiRequest";
+import dateUtils from "../../../utils/DateUtils";
+import Loadable from 'react-loadable';
 
 export enum PostFormType {
   new = 'NEW',
@@ -27,7 +27,8 @@ export namespace PostForm {
     postTitle: string,
     postContent: string,
     vote: Vote,
-    authentication?: boolean
+    authentication?: boolean,
+    SimpleMDE: any
   }
 
   interface Vote {
@@ -47,7 +48,8 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
       postTitle: '',
       postContent: '',
       vote: null,
-      authentication: false
+      authentication: false,
+      SimpleMDE: null
     };
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -80,7 +82,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
     this.setState({
       vote: {
         title: "",
-        deadline: moment().format('YYYY-MM-DD HH:mm:ss'),
+        deadline: dateUtils.ParseDate(Date.now(), 'YYYY-MM-DD HH:mm:SS'),
         isMultipleSelectable: false,
         optionText: []
       }
@@ -175,22 +177,16 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         return;
       }
 
-      if(this.props.type === PostFormType.new && !moment().isBefore(voteInfo.deadline)) {
+      if(this.props.type === PostFormType.new && dateUtils.getTimeDiff(voteInfo.deadline, Date.now()) <= 0) {
         alert('투표 마감기한은 현재시간 이후로 설정해주세요.');
         return;
       }
     }
 
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
-
-    if (localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    if(this.props.type === PostFormType.new) {
-      const data = voteInfo === null ?
+    const isNew = this.props.type === PostFormType.new;
+    let data = "";
+    if(isNew) {
+      data = voteInfo === null ?
         `mutation {
         createPost(boardID: ${this.props.match.params.boardID}, PostInput: {
           title: "${title}",
@@ -205,117 +201,106 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           body: """${body}"""
         }, VoteInput: {
           title: "${voteInfo.title}",
-          deadline: "${moment(voteInfo.deadline).format()}",
+          deadline: "${dateUtils.ParseDate(voteInfo.deadline, 'ISO')}",
           isMultipleSelectable: ${voteInfo.isMultipleSelectable ? 'true' : 'false'},
           optionTexts: [${voteInfo.optionText.map((text) => ('"' + text + '"'))}]
         }) {
           id
         }
       }`;
-
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: headers,
-        data: data
-      }).then((msg) => {
-        const data = msg.data;
-
-        if ('errors' in data) {
-          const error = data.errors[0];
-          if (error.message === "ERR401" || error.message === "ERR403") {
-            alert("권한이 없습니다.");
-          } else if (error.message === "ERR500") {
-            alert("알 수 없는 에러가 발생하였습니다. 담당자에게 문의 부탁드립니다.");
-            console.log("post write API error");
-            console.log(msg);
-          }
-          return;
-        }
-
-        history.push(`/posts/${data.data.createPost.id}`);
-      }).catch((msg) => {
-        console.log("post write API error");
-        console.log(msg);
-      });
     } else {
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: headers,
-        data: `mutation {
-          updatePost(postID: ${this.props.match.params.postID}, PostInput: {
-          title: "${title}",
-          body: """${body}"""
-          }) {
-            id
-          }
-        }`
-      }).then((msg) => {
-        const data = msg.data;
-
-        if ('errors' in data) {
-          const error = data.errors[0];
-          if (error.message === "ERR401" || error.message === "ERR403") {
-            alert("권한이 없습니다.");
-          } else if (error.message === "ERR500") {
-            alert("알 수 없는 에러가 발생하였습니다. 담당자에게 문의 부탁드립니다.");
-            console.log("post write API error");
-            console.log(msg);
-          }
-          return;
+      data =`mutation {
+        updatePost(postID: ${this.props.match.params.postID}, PostInput: {
+        title: "${title}",
+        body: """${body}"""
+        }) {
+          id
         }
-
-        history.push(`/posts/${data.data.updatePost.id}`);
-      }).catch((msg) => {
-        console.log("post write API error");
-        console.log(msg);
-      });
+      }`
     }
+
+    myGraphQLAxios(data, {
+      authorization: true
+    }).then((msg) => {
+      const data = msg.data;
+
+      if ('errors' in data) {
+        const error = data.errors[0];
+        if (error.message === "ERR401" || error.message === "ERR403") {
+          alert("권한이 없습니다.");
+        } else if (error.message === "ERR500") {
+          alert("알 수 없는 에러가 발생하였습니다. 담당자에게 문의 부탁드립니다.");
+          console.log("post write API error");
+          console.log(msg);
+        }
+        return;
+      }
+
+      const redirectID = isNew ? data.data.createPost.id : data.data.updatePost.id;
+      history.push(`/posts/${redirectID}`);
+    }).catch((msg) => {
+      console.log("post write API error");
+      console.log(msg);
+    });
   }
 
   componentDidMount() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const SimpleMDE = Loadable({
+      loader: () => import(/* webpackChunkName: "simplemde" */ 'react-simplemde-editor') as Promise<any>,
+      loading: () => null as null,
+      render(loaded, props) {
+        let Component = loaded.default;
+        if(Component) {
+          return <Component {...props} />;
+        }
+        return null;
+      }
+    });
+    this.setState({ SimpleMDE });
 
-    if (localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
+    const isEdit = this.props.type === PostFormType.edit;
+    let data = "";
+    if(isEdit) {
+      data = `query {
+        post(postID: ${this.props.match.params.postID}) {
+          board {
+            name
+          },
+          title,
+          body,
+          vote {
+            title,
+            deadline,
+            isMultipleSelectable,
+            options {
+              text
+            }
+          },
+          isSubscribed
+        }
+      }`;
+    } else {
+      data = `query {
+        board(boardID: ${this.props.match.params.boardID}) {
+          name,
+          writePermission
+        }
+      }`;
     }
 
-    if (this.props.type === PostFormType.edit) {
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: headers,
-        data: `query {
-          post(postID: ${this.props.match.params.postID}) {
-            board {
-              name
-            },
-            title,
-            body,
-            vote {
-              title,
-              deadline,
-              isMultipleSelectable,
-              options {
-                text
-              }
-            },
-            isSubscribed
-          }
-        }`
-      }).then((msg) => {
+    myGraphQLAxios(data, {
+      authorization: true
+    }).then((msg) => {
+      if(isEdit) {
         const data = msg.data;
 
-        if('errors' in data) {
-          if(data.errors[0].message === 'ERR403' || data.errors[0].message === 'ERR400') {
+        if ('errors' in data) {
+          if (data.errors[0].message === 'ERR403' || data.errors[0].message === 'ERR400') {
             history.push('/404');
             return;
           }
         }
-        if(data.data === null) {
+        if (data.data === null) {
           history.push('/404');
           return;
         }
@@ -327,11 +312,11 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           authentication: true
         };
 
-        if(data.data.post.vote !== null) {
+        if (data.data.post.vote !== null) {
           const voteOptions = data.data.post.vote.options.map((item: {
             text: string
           }) => (item.text));
-          const deadline = moment(data.data.post.vote.deadline).format('YYYY-MM-DD HH:mm:ss');
+          const deadline = dateUtils.ParseDate(data.data.post.vote.deadline, 'YYYY-MM-DD HH:mm:SS');
 
           nextState['vote'] = {
             title: data.data.post.vote.title,
@@ -342,22 +327,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         }
 
         this.setState(nextState);
-      }).catch((msg) => {
-        console.log("post API error");
-        console.log(msg);
-      });
-    } else {
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: headers,
-        data: `query {
-          board(boardID: ${this.props.match.params.boardID}) {
-            name,
-            writePermission
-          }
-        }`
-      }).then((msg) => {
+      } else {
         // TODO: typing
         const data = msg.data.data;
         if(data === null) {
@@ -369,12 +339,11 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
           boardName: data.board.name,
           authentication: true
         });
-
-      }).catch((msg) => {
-        console.log("boards API error");
-        console.log(msg);
-      });
-    }
+      }
+    }).catch((msg) => {
+      console.log("post API error");
+      console.log(msg);
+    });
   }
 
   voteAddKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -384,6 +353,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
   }
 
   render() {
+    const { SimpleMDE } = this.state;
     const isEdit = this.props.type === PostFormType.edit;
 
     if(!this.state.authentication) {

@@ -1,14 +1,17 @@
 import * as React from 'react';
-import axios from 'axios';
 import './ProjectList.scss';
 import { Link } from 'react-router-dom';
+import FadeLoader from 'react-spinners/FadeLoader';
+import { css } from '@emotion/core';
+import myGraphQLAxios from "../../../utils/ApiRequest";
 
 export namespace ProjectList {
   export interface Props {
   }
 
   export interface State {
-    projects: Array<ProjectInfo>
+    projects: Array<ProjectInfo>,
+    apiLoaded: boolean
   }
 
   interface ProjectInfo {
@@ -28,45 +31,55 @@ export class ProjectList extends React.Component<ProjectList.Props, ProjectList.
     super(props);
 
     this.state = {
-      projects: []
+      projects: [],
+      apiLoaded: false
     };
   }
 
   componentDidMount() {
-    const headers: any = {
-      'Content-Type': 'application/graphql'
-    };
+    const data = `query {
+      projects {
+        id,
+        body,
+        duration,
+        name,
+        genre,
+        thumbnailURL,
+        participants,
+        description
+      } 
+    }`;
 
-    if(localStorage.getItem('accessToken') !== null) {
-      headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken');
-    }
-
-    axios({
-      url: apiUrl,
-      method: 'post',
-      headers: headers,
-      data: `query {
-        projects {
-          id,
-          body,
-          duration,
-          name,
-          genre,
-          thumbnailURL,
-          participants,
-          description
-        } 
-      }`
+    myGraphQLAxios(data, {
+      authorization: true
     }).then((msg) => {
       const data = msg.data;
 
-      this.setState(data.data);
+      this.setState({
+        ...data.data,
+        apiLoaded: true
+      });
     }).catch((msg) => {
 
     });
   }
 
   render() {
+    if(!this.state.apiLoaded) {
+      const override = css`
+        margin: 200px auto;
+      `;
+      return (
+        <FadeLoader
+          css={override}
+          sizeUnit={"px"}
+          size={15}
+          color={'#aaaaaa'}
+          loading={true}
+          margin={'5px'}
+        />
+      );
+    }
     return (
       <div className="project-list-container">
         {

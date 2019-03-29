@@ -1,8 +1,8 @@
 import { createAction } from 'redux-actions';
 import { Dispatch } from 'redux';
-import axios from 'axios';
 import history from '../history/history'
-import FCM from './firebase';
+import FCM from '../service/firebase';
+import myGraphQLAxios from "../utils/ApiRequest";
 
 export namespace AuthenticationActions {
   export enum Type {
@@ -23,25 +23,20 @@ export namespace AuthenticationActions {
   const setUserID = createAction(Type.AUTH_GET_USERID);
   const authenticationInitializeOK = createAction(Type.AUTH_INIT_OK);
 
-  export const loginRequest = (id: string, pw: string) => {
+  export const loginRequest = (id: string, pw: string, redirLink: string) => {
     return (dispatch: Dispatch) => {
       dispatch(login());
 
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/graphql'
-        },
-        data: `mutation {
-          createAccessToken(LoginInput:{
-            loginID: "${id}"
-            password: "${pw}"
-          }) {
-            key
-          }
-        }`
-      }).then((msg) => {
+      const data = `mutation {
+        createAccessToken(LoginInput:{
+          loginID: "${id}"
+          password: "${pw}"
+        }) {
+          key
+        }
+      }`;
+
+      myGraphQLAxios(data).then((msg) => {
         const data = msg.data;
         if('errors' in data) {
           if(data.errors[0].message === "TKN000") {
@@ -60,7 +55,8 @@ export namespace AuthenticationActions {
 
           // TODO: 맨처음 방문한 곳이 로그인 페이지면 '/'로 이동
           // TODO: 그렇지 않은 경우에는 뒤로가기
-          history.push('/');
+          let url = redirLink ? redirLink : '/';
+          history.push(url);
         }
       }).catch((msg) => {
         console.log("login API Error -----");
@@ -84,19 +80,15 @@ export namespace AuthenticationActions {
       if(token === null) {
         return;
       }
-      axios({
-        url: apiUrl,
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/graphql',
-          'Authorization': `Bearer ${token}`
-        },
-        data: `query {
-          me {
-            isAdmin,
-            loginID
-          }
-        }`
+      const data = `query {
+        me {
+          isAdmin,
+          loginID
+        }
+      }`;
+
+      myGraphQLAxios(data, {
+        authorization: true
       }).then((msg) => {
         const data = msg.data;
         const me = data.data.me;

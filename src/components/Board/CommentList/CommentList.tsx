@@ -1,7 +1,7 @@
 import * as React from "react";
 import {PostContainer} from "../../../containers/Board";
-import * as moment from 'moment';
 import './CommentList.scss';
+import dateUtils from "../../../utils/DateUtils";
 
 export namespace CommentList {
   export interface Props {
@@ -9,10 +9,6 @@ export namespace CommentList {
     onDeleteComment?: (id: number) => void
   }
 }
-
-const getLocalTime = (time: string) => {
-  return moment.utc(time).local().format('YYYY-MM-DD HH:mm:ss');
-};
 
 export const CommentList: React.SFC<CommentList.Props> = (props) => {
   return (
@@ -25,7 +21,7 @@ export const CommentList: React.SFC<CommentList.Props> = (props) => {
             </div>
             <div className="col-sm-12 col-md-11">
               <span className="comment-body">{comment.body}</span>
-              <span className="comment-date">{getLocalTime(comment.createdAt)}</span>
+              <span className="comment-date">{dateUtils.ParseDate(comment.createdAt, 'YYYY-MM-DD HH:mm:SS')}</span>
               {comment.writePermission &&
                 <button onClick={() => {props.onDeleteComment(comment.id);}}
                         className="btn float-right btn-outline-secondary btn-sm comment-btn-delete">

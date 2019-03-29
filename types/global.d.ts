@@ -15,3 +15,6 @@ declare const apiUrl: string;
 declare const permissions: { [key:string]:[string] };
 declare const uploadUrl: string;
 declare const logoUrl: string;
+
+// for react spinner
+declare module 'react-spinners/FadeLoader';

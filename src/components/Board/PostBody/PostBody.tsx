@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {PostContainer} from "../../../containers/Board";
 import './PostBody.scss';
-import * as moment from "moment";
-import ReactMarkdown = require("react-markdown")
+import ReactMarkdown from 'react-markdown';
+import dateUtils from "../../../utils/DateUtils";
 
 export namespace PostBody {
   export interface Props {
@@ -16,10 +16,6 @@ export namespace PostBody {
     handleSubscribe: (event:React.MouseEvent<HTMLButtonElement>) => void
   }
 }
-
-const getLocalTime = (time: string) => {
-  return moment.utc(time).local().format('YYYY-MM-DD HH:mm:ss');
-};
 
 export const PostBody : React.SFC<PostBody.Props> = (props) => {
   const { post, votedId, checkVote, handleVoteSubmit, handleReVote, hasLogin, voteHasFinished, handleSubscribe } = props;
@@ -38,7 +34,7 @@ export const PostBody : React.SFC<PostBody.Props> = (props) => {
         }
       </div>
       <p className="post-meta">
-        <i className="far fa-user"></i> {post.author.name}&nbsp;&nbsp;|&nbsp;&nbsp;<i className="far fa-clock"></i> {getLocalTime(post.createdAt)}
+        <i className="far fa-user"></i> {post.author.name}&nbsp;&nbsp;|&nbsp;&nbsp;<i className="far fa-clock"></i> {dateUtils.ParseDate(post.createdAt, 'YYYY-MM-DD HH:mm:SS')}
       </p>
       <hr></hr>
 
