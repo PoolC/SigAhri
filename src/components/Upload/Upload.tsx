@@ -38,11 +38,6 @@ export default class Upload extends React.Component<Upload.Props> {
       alert("파일을 선택해주세요.");
       return;
     }
-    const extension = file.name.slice(file.name.length-3, file.name.length);
-    if(extension !== 'png' && extension !== 'jpg' && extension !== 'pdf') {
-      alert("png, jpg, pdf파일만 업로드 해주세요.");
-      return;
-    }
     data.append('upload', file);
 
     const fileName = (document.getElementById('upload-file-name') as HTMLInputElement).value;
