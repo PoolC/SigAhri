@@ -155,7 +155,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
   }
 
   handleSubmit() {
-    const title = this.state.postTitle;
+    const title = this.state.postTitle.replace(/"/g, "\"");
     const body = this.state.postContent;
     let voteInfo = this.state.vote;
 
@@ -181,6 +181,9 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
         alert('투표 마감기한은 현재시간 이후로 설정해주세요.');
         return;
       }
+    } else if (title[0] == '\"' || title[title.length-1] == '\"' || body[0] == '\"' || body[body.length-1] == '\"') {
+      alert('제목이나 본문에서 시작과 끝에 따옴표는 빼주세요.');
+      return;
     }
 
     const isNew = this.props.type === PostFormType.new;
@@ -189,7 +192,7 @@ export class PostForm extends React.Component<PostForm.Props, PostForm.State> {
       data = voteInfo === null ?
         `mutation {
         createPost(boardID: ${this.props.match.params.boardID}, PostInput: {
-          title: "${title}",
+          title: """${title}""",
           body: """${body}"""
         }) {
           id
