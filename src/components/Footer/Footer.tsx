@@ -14,7 +14,7 @@ export const Footer: React.SFC = (props) => {
           <h4>CONTACT</h4>
           <i className="fas fa-map-marker-alt" /> 연세대학교 제1공학관 537호 <br />
           <i className="far fa-envelope" /> poolc.official@gmail.com <br />
-          <i className="fas fa-phone" /> 회장 송재우 010-3906-3838 <br />
+          <i className="fas fa-phone" /> 회장 신석주 010-9214-2019 <br />
         </span>
         <span className="footer-content footer-detail col-12 col-md-5">
           회원가입은 매 학기 초마다 지정된 시기에 받고 있습니다. <br />
