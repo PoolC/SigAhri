@@ -111,7 +111,7 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
     });
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const SimpleMDE = Loadable({
       loader: () => import(/* webpackChunkName: "simplemde" */ 'react-simplemde-editor') as Promise<any>,
       loading: () => null as null,
@@ -124,7 +124,9 @@ export class ProjectForm extends React.Component<ProjectForm.Props, ProjectForm.
       }
     });
     this.setState({ SimpleMDE });
+  }
 
+  componentDidMount() {
     if(this.props.type === ProjectFormType.new) {
       this.setState({
         duration: `${dateUtils.ParseDate(Date.now(), 'YYYY-MM-DD HH:mm:SS')} ~ ${dateUtils.ParseDate(Date.now(), 'YYYY-MM-DD HH:mm:SS')}`
