@@ -1,6 +1,4 @@
 language: node.js
-node_js:
-    - "node"
 
 sudo: required
 
@@ -16,6 +14,8 @@ before_install:
     - echo "storageBucket=$STORAGE_BUCKET" >> .env
 
 install:
+    - node --version
+    - npm --version
     - npm install
 
 script:
