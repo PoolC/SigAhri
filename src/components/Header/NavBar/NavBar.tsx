@@ -10,7 +10,7 @@ namespace NavBar {
   }
 }
 
-export class NavBar extends React.Component<NavBar.Props> {
+export class NavBar extends React.Component<NavBar.Props, null> {
 
   static defaultProps = {
     isLogin: false,
@@ -49,7 +49,16 @@ export class NavBar extends React.Component<NavBar.Props> {
       </li>
     );
 
+    let seminarButton = null;
     if(this.props.isLogin) {
+      seminarButton = (
+        <li className="nav-item">
+          <Link to="/seminar" className="nav-link nav-underline" onClick={() => { this.slideUp() }}>
+            세미나
+          </Link>
+        </li>
+      );
+
       authenticationButton = (
         <li className="nav-item">
           <a className="nav-link">
@@ -104,6 +113,7 @@ export class NavBar extends React.Component<NavBar.Props> {
                   프로젝트
                 </Link>
               </li>
+              {seminarButton}
             </ul>
             <ul className="navbar-nav">
               {infoButton}

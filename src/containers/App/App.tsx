@@ -42,6 +42,10 @@ const Admin = Loadable({
   loader: () => import(/* webpackChunkName: "Admin" */ '../../components/Admin/Admin') as Promise<any>,
   loading: () => null as null
 });
+const Seminar = Loadable({
+  loader: () => import(/* webpackChunkName: "Seminar" */ '../Seminar/Seminar') as Promise<any>,
+  loading: () => null as null
+});
 
 const mapStateToProps = (state: RootState) => ({
   init: state.authentication.status.init
@@ -122,6 +126,7 @@ class App extends React.Component<Props> {
         <Route exact path="/" component={Home}/>
         <Route exact path="/page/about" component={Home}/>
         <Route exact path="/login" component={Login}/>
+        <Route path="/seminar" component={Seminar}/>
         <Route path="/project" component={Project}/>
         <Route path="/board" render={(props)=>(<BoardContainer {...props} type="postList"/>)}/>
         <Route path="/posts" render={(props)=>(<BoardContainer {...props} type="post"/>)}/>
