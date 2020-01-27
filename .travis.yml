@@ -1,6 +1,6 @@
 language: node.js
 node_js:
-    - "node"
+    - 10
 
 sudo: required
 
