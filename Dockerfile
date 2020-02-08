@@ -1,8 +1,8 @@
-FROM nginx:1.14.2-alpine
+FROM nginx:1.17.8-alpine
 
-COPY ./dist /var/www/poolc.org
-COPY ./nginx.conf /etc/nginx/conf.d/poolc.org.conf
+COPY ./dist /var/www/jjungs.kr
+COPY ./nginx.conf /etc/nginx/conf.d/jjungs.kr.conf
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD [ "nginx", "-g", "daemon off;" ]

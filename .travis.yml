@@ -1,32 +1,31 @@
-language: node.js
-
-sudo: required
+language: node_js
+node_js:
+  - 12
 
 services:
-    - docker
+  - docker
 
 before_install:
-    - echo "apiKey=$API_KEY" > .env
-    - echo "authDomain=$AUTH_DOMAIN" >> .env
-    - echo "databaseURL=$DATABASE_URL" >> .env
-    - echo "messagingSenderId=$MESSAGING_SENDER_ID" >> .env
-    - echo "projectId=$PROJECT_ID" >> .env
-    - echo "storageBucket=$STORAGE_BUCKET" >> .env
+  - echo "apiKey=$API_KEY" > .env
+  - echo "authDomain=$AUTH_DOMAIN" >> .env
+  - echo "databaseURL=$DATABASE_URL" >> .env
+  - echo "messagingSenderId=$MESSAGING_SENDER_ID" >> .env
+  - echo "projectId=$PROJECT_ID" >> .env
+  - echo "storageBucket=$STORAGE_BUCKET" >> .env
 
 install:
-    - nvm install 10
-    - nvm use 10
-    - nvm alias default 10
-    - npm install
+  - npm i
+
+before_script:
+  - npm run lint
 
 script:
-    - npm run build
+  - npm run build
 
 after_success:
-    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-    - docker build -t poolc/sigahri .
-    - docker push poolc/sigahri
-    - if [ -n "${TRAVIS_TAG}"  ]; then
-          docker build -t poolc/sigahri:${TRAVIS_TAG} .;
-          docker push poolc/sigahri:${TRAVIS_TAG};
-      fi
+  - if [ -n "${TRAVIS_TAG}" ]; then
+      docker login -u "$DOCKER_USER" -p "$DOCKER_PW"
+      docker build -t poolc/sigahri:production -t poolc/sigahri:latest .;
+      docker push poolc/sigahri:latest;
+      docker push poolc/sigahri:production;
+    fi

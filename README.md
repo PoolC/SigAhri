@@ -1,35 +1,24 @@
-# SigAhri
-> Poolc 홈페이지 프론트엔드
+# hello
 
-## Prerequisites
- - npm 6.4.1
- - Docker
-
-## 개발
-### 설정
-필요한 라이브러리를 설치 해 줍니다.
+## Project setup
 ```
 npm install
 ```
-파이어베이스 설정에 필요한 환경 변수를 설정해줍니다.
+
+### Compiles and hot-reloads for development
 ```
-cp .env.example .env
-vi .env
+npm run serve
 ```
 
-### 실행
+### Compiles and minifies for production
 ```
-npm run start
-```
-
-### 배포
-```
-# Build react
 npm run build
-
-# Build docker image
-docker build -t poolc/sigahri .
-
-# Run docker container
-docker run -p 8080:8080 poolc/sigahri
 ```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
