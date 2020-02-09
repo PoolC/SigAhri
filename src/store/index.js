@@ -6,6 +6,15 @@ import FCM from '../services/firebase';
 
 Vue.use(Vuex);
 
+const req = axios.create({
+  baseURL: 'https://api.poolc.org/graphql',
+  method: 'post',
+  headers: {
+    'Content-Type': 'application/graphql',
+  },
+  timeout: 1500,
+});
+
 export default new Vuex.Store({
   state: {
     isAdmin: false,
@@ -25,16 +34,33 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async loginRequest({ commit }, userInput) {
-      const req = axios.create({
-        baseURL: 'https://api.poolc.org/graphql',
-        method: 'post',
+    init({ commit }) {
+      localStorage.removeItem('accessToken');
+      commit('logout');
+      FCM.unregister();
+    },
+    async refresh({ commit }, token) {
+      const me = await req.request({
+        data: `query {
+          me {
+            loginID, isAdmin, uuid, isActivated
+          }
+        }`,
         headers: {
           'Content-Type': 'application/graphql',
+          Authorization: `Bearer ${token}`,
         },
-        timeout: 1500,
       });
 
+      const isLogin = me.data.data.me.uuid && me.data.data.me.isActivated;
+      commit('login', {
+        isLogin,
+        isAdmin: isLogin && me.data.data.me.isAdmin,
+        loginID: me.data.data.me.loginID,
+      });
+      FCM.register();
+    },
+    async loginRequest({ commit }, userInput) {
       // eslint-disable-next-line no-underscore-dangle
       const res = await req.request({
         data: `mutation {
@@ -86,7 +112,7 @@ export default new Vuex.Store({
       router.push(userInput.redir ? userInput.redir : '/');
     },
     logoutRequest({ commit }) {
-      localStorage.remoteItem('accessToken');
+      localStorage.removeItem('accessToken');
       commit('logout');
       FCM.unregister();
       router.push('/');

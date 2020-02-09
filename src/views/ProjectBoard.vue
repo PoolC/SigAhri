@@ -1,6 +1,10 @@
 <template>
   <div>
-    {{ project.name }}
+    <div v-for="project of projects" :key="project.ID">
+      <router-link :to="`/project/${project.id}`">
+        {{ project.name }}
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -8,23 +12,19 @@
 export default {
   data() {
     return {
-      project: {},
+      projects: [],
     };
   },
   created() {
     this.$api.request({
       data: `query {
-        project(projectID: ${this.$route.params.id}) {
-          body, description, duration, genre,
+        projects {
+          body, description, duration, genre
           id, name, participants, thumbnailURL
         }
       }`,
     }).then((res) => {
-      if ('errors' in res.data) {
-        this.$router.push('/404');
-        return;
-      }
-      this.project = res.data.data.project;
+      this.projects = res.data.data.projects;
     });
   },
 };

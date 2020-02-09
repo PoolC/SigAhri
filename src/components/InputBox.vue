@@ -6,6 +6,7 @@
            :placeholder="placeholder"
            :disabled="disabled"
            @change="$emit('change', $event.target.value)"
+           @keyup="$emit('keyup', $event)"
     />
   </label>
 </template>

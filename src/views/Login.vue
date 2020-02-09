@@ -1,8 +1,10 @@
 <template>
   <div>
     <h1>로그인</h1>
-    <input-box label="아이디" @change="userInput.id = $event" />
-    <input-box type="password" label="비밀번호" @change="userInput.pw = $event" />
+    <input-box label="아이디"
+               @change="userInput.id = $event" @keyup="checkEnter($event)"/>
+    <input-box label="비밀번호" type="password"
+               @change="userInput.pw = $event" @keyup="checkEnter($event)"/>
     <my-button @click="login">로그인</my-button>
     <div>
       <p>계정이 없으신 분은 우선
@@ -40,6 +42,11 @@ export default {
         id: this.userInput.id,
         pw: this.userInput.pw,
       });
+    },
+    checkEnter(event) {
+      if (event.keyCode === 13) {
+        this.login();
+      }
     },
   },
 };
