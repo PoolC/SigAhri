@@ -1,6 +1,11 @@
 <template>
   <div>
-    {{ boards[0].name }}
+    <router-link to="/posts/new">
+      글쓰기
+    </router-link>
+    <router-link v-for="post of board.posts" :to="`/posts/${post.id}`" :key="post.id">
+      {{ post.title }}
+    </router-link>
   </div>
 </template>
 
@@ -38,18 +43,20 @@ export default {
 
     this.$api.request({
       data: `query {
-        postPage({
+        postPage(
           boardID: 1,
           count: 15
-        }) {
+        ) {
           pageInfo { hasNext, hasPrevious },
           posts {
-            author, title, createdAt
+            id, author { name }, title, createdAt
           }
         }
       }`,
     }).then((res) => {
-      this.board.posts = res.data.data.postPage.posts;
+      if (!('errors' in res.data)) {
+        this.board.posts = res.data.data.postPage.posts;
+      }
     });
   },
 };

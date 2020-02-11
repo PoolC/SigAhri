@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header/>
-    <router-view/>
+    <router-view v-if="stateReady"/>
     <Footer/>
   </div>
 </template>
@@ -12,6 +12,11 @@ import Footer from '@/components/Footer.vue';
 
 export default {
   name: 'App',
+  data() {
+    return {
+      stateReady: false,
+    };
+  },
   components: {
     Header,
     Footer,
@@ -26,10 +31,15 @@ export default {
     }).then((res) => {
       if (!('errors' in res.data)) {
         const token = res.data.data.refreshAccessToken.key;
-        this.$store.dispatch('refresh', token);
+        this.$store.dispatch('refresh', token).then(() => {
+          this.stateReady = true;
+        });
       } else {
-        this.$store.dispatch('init');
+        this.$store.dispatch('init').then(() => {
+          this.stateReady = true;
+        });
       }
+      console.log('hi');
     });
   },
 };

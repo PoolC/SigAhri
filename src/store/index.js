@@ -15,31 +15,43 @@ const req = axios.create({
   timeout: 1500,
 });
 
+const STATES = {
+  INIT: 0,
+  LOADING: 1,
+  ERROR: 2,
+  LOADED: 3,
+};
+
 export default new Vuex.Store({
   state: {
+    curState: STATES.INIT,
     isAdmin: false,
     isLogin: false,
     loginID: '',
   },
   mutations: {
     login(state, result) {
+      state.curState = STATES.LOADED;
       if (result.isLogin) state.isLogin = result.isLogin;
       if (result.isAdmin) state.isAdmin = result.isAdmin;
       if (result.loginID) state.loginID = result.loginID;
     },
     logout(state) {
+      state.curState = STATES.LOADED;
       state.isLogin = false;
       state.isAdmin = false;
       state.loginID = '';
     },
   },
   actions: {
-    init({ commit }) {
+    init({ state, commit }) {
+      state.curState = STATES.LOADING;
       localStorage.removeItem('accessToken');
       commit('logout');
       FCM.unregister();
     },
-    async refresh({ commit }, token) {
+    async refresh({ state, commit }, token) {
+      state.curState = STATES.LOADING;
       const me = await req.request({
         data: `query {
           me {
@@ -60,7 +72,9 @@ export default new Vuex.Store({
       });
       FCM.register();
     },
-    async loginRequest({ commit }, userInput) {
+    async loginRequest({ state, commit }, userInput) {
+      state.curState = STATES.LOADING;
+
       // eslint-disable-next-line no-underscore-dangle
       const res = await req.request({
         data: `mutation {
@@ -80,6 +94,7 @@ export default new Vuex.Store({
           alert('비활성화 된 계정입니다');
         } else {
           alert(`알 수 없는 오류가 발생하였습니다. 메시지: ${res.data.errors[0].message}`);
+          state.curState = STATES.ERROR;
         }
         return;
       }
@@ -111,7 +126,8 @@ export default new Vuex.Store({
       FCM.register();
       router.push(userInput.redir ? userInput.redir : '/');
     },
-    logoutRequest({ commit }) {
+    logoutRequest({ state, commit }) {
+      state.curState = STATES.LOADING;
       localStorage.removeItem('accessToken');
       commit('logout');
       FCM.unregister();
