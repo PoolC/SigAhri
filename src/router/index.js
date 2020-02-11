@@ -11,8 +11,8 @@ const routes = [
   { path: '/login', component: () => import(/* webpackChunkName: "login" */'@/views/account/Login.vue') },
   { path: '/project', component: () => import(/* webpackChunkName: "projectBoard" */'@/views/project/ProjectBoard.vue') },
   { path: '/project/:id', component: () => import(/* webpackChunkName: "project" */'@/views/project/Project.vue') },
-  { path: '/board', component: () => import(/* webpackChunkName: "board" */'@/views/board/Board.vue') },
-  { path: '/board/:path', component: () => import(/* webpackChunkName: "board" */'@/views/board/Board.vue') },
+  { path: '/board', component: () => import(/* webpackChunkName: "board" */'@/views/board/PostBoard.vue') },
+  { path: '/board/:path', component: () => import(/* webpackChunkName: "board" */'@/views/board/PostBoard.vue') },
   {
     path: '/posts/new',
     name: 'newPost',

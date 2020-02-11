@@ -1,15 +1,17 @@
 importScripts('https://www.gstatic.com/firebasejs/7.8.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/7.8.1/firebase-messaging.js');
-
-let messaging;
-const config = {
-  messagingSenderId: '51177059681',
+var firebaseConfig = {
+  apiKey: "AIzaSyBK1t6E78of6CMo9KVLi5ZukrPAwAgmd_c",
+  authDomain: "poolc-b18fa.firebaseapp.com",
+  databaseURL: "https://poolc-b18fa.firebaseio.com",
+  projectId: "poolc-b18fa",
+  storageBucket: "poolc-b18fa.appspot.com",
+  messagingSenderId: "51177059681",
+  appId: "1:51177059681:web:7afccf9834fb544c1c8120"
 };
+firebase.initializeApp(firebaseConfig);
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(config);
-  messaging = firebase.messaging();
-}
+const messaging = firebase.messaging();
 
 messaging.setBackgroundMessageHandler(function(payload) {
   let notificationTitle = payload.data.title;

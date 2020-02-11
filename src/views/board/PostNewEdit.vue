@@ -68,7 +68,6 @@ export default {
     }).then((res) => {
       const { boards } = res.data.data;
       this.boards = boards.filter((board) => this.$store.state.isAdmin || board.writePermission === 'MEMBER');
-      console.log(this.boards);
     });
 
     window.addEventListener('resize', this.handleResize);

@@ -13,12 +13,13 @@ const api = axios.create({
 const initialize = () => {
   if (!firebase.apps.length) {
     firebase.initializeApp({
-      apiKey: process.env.apiKey,
-      authDomain: process.env.authDomain,
-      databaseURL: process.env.databaseURL,
-      projectId: process.env.projectId,
-      storageBucket: process.env.storageBucket,
-      messagingSenderId: process.env.messagingSenderId,
+      apiKey: 'AIzaSyBK1t6E78of6CMo9KVLi5ZukrPAwAgmd_c',
+      authDomain: 'poolc-b18fa.firebaseapp.com',
+      databaseURL: 'https://poolc-b18fa.firebaseio.com',
+      projectId: 'poolc-b18fa',
+      storageBucket: 'poolc-b18fa.appspot.com',
+      messagingSenderId: '51177059681',
+      appId: '1:51177059681:web:7afccf9834fb544c1c8120',
     });
     messaging = firebase.messaging();
   }
@@ -47,13 +48,13 @@ const register = async () => {
   const registrations = await navigator.serviceWorker.getRegistrations();
   let registration = null;
   registrations.forEach((reg) => {
-    if (reg.active.scriptURL.search('sw.js') >= 0 && reg.active.state === 'activated') {
+    if (reg.active.scriptURL.search('firebase-messaging-sw.js') >= 0 && reg.active.state === 'activated') {
       registration = reg;
     }
   });
 
   if (registration) {
-    navigator.serviceWorker.register('/sw.js').then((reg) => {
+    navigator.serviceWorker.register('/firebase-messaging-sw.js').then((reg) => {
       registration = reg;
     });
   }
@@ -66,9 +67,9 @@ const register = async () => {
       }
     });
   }
+  messaging.useServiceWorker(registration);
 
   const messagingToken = await messaging.getToken();
-  messaging.useServiceWorker(registration);
   registerToken(messagingToken);
 
   messaging.onTokenRefresh(() => {

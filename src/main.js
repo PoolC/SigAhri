@@ -11,8 +11,11 @@ import './assets/css/index.css';
 Vue.config.productionTip = false;
 Vue.component('Editor', () => import(/* webpackChunkName: "editor" */ '@toast-ui/vue-editor/src/Editor'));
 Vue.component('Viewer', () => import(/* webpackChunkName: "viewer" */ '@toast-ui/vue-editor/src/Viewer'));
+
 Vue.use({
   install(V) {
+    console.log(localStorage.getItem('accessToken'));
+
     // eslint-disable-next-line no-param-reassign
     V.prototype.$api = axios.create({
       baseURL: 'https://api.poolc.org/graphql',

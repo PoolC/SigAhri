@@ -22,25 +22,30 @@ export default {
     Footer,
   },
   created() {
-    this.$api.request({
-      data: `mutation {
-        refreshAccessToken {
-          key
+    if (localStorage.getItem('accessToken')) {
+      this.$api.request({
+        data: `mutation {
+      refreshAccessToken {
+        key
+      }
+    }`,
+      }).then((res) => {
+        if (!('errors' in res.data)) {
+          const token = res.data.data.refreshAccessToken.key;
+          this.$store.dispatch('refresh', token).then(() => {
+            this.stateReady = true;
+          });
         }
-      }`,
-    }).then((res) => {
-      if (!('errors' in res.data)) {
-        const token = res.data.data.refreshAccessToken.key;
-        this.$store.dispatch('refresh', token).then(() => {
-          this.stateReady = true;
-        });
-      } else {
+      }).catch(() => {
         this.$store.dispatch('init').then(() => {
           this.stateReady = true;
         });
-      }
-      console.log('hi');
-    });
+      });
+    } else {
+      this.$store.dispatch('init').then(() => {
+        this.stateReady = true;
+      });
+    }
   },
 };
 </script>

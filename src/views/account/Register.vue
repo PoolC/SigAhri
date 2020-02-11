@@ -129,14 +129,12 @@ export default {
             alert('학번이 중복됩니다.');
           } else {
             alert('오류가 발생하였습니다. 회장에게 문의해 주세요');
-            console.error(data.errors[0]);
           }
         } else {
           alert('신청 완료됐습니다. 담당자 승인 후 회원 기능 이용 가능합니다');
         }
-      }).catch((err) => {
-        console.error('회원가입 중 오류가 발생하였습니다');
-        console.error(err);
+      }).catch(() => {
+        alert('회원가입 중 오류가 발생하였습니다. 회장에게 문의해 주세요');
       });
     },
   },
